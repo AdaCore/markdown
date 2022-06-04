@@ -2,5 +2,4 @@
 *.ads text eol=lf
 *.gpr text eol=lf
 
-testsuite/json/JSON.expected/*.txt -crlf
-source/text/gnat/*.ad[sb] text eol=lf
+testsuite/commonmark/xfails.txt text eol=lf

@@ -4,10 +4,10 @@
 #  SPDX-License-Identifier: Apache-2.0
 #
 
-# Build mode (dev or prod)
+# Build mode (dev, prod or coverage)
 BUILD_MODE=dev
 
-GPRBUILD_FLAGS = -p -j0
+GPRBUILD_FLAGS = -p -j0 -XBUILD_MODE=$(BUILD_MODE)
 PREFIX                 ?= /usr
 GPRDIR                 ?= $(PREFIX)/share/gpr
 LIBDIR                 ?= $(PREFIX)/lib
@@ -26,15 +26,29 @@ GPRINSTALL_FLAGS = --prefix=$(PREFIX) --exec-subdir=$(INSTALL_EXEC_DIR)\
 .PHONY: spellcheck check
 
 all:
-	gprbuild $(GPRBUILD_FLAGS) gnat/markdown.gpr -XBUILD_MODE=$(BUILD_MODE) -cargs $(ADAFLAGS)
+	gprbuild $(GPRBUILD_FLAGS) gnat/markdown.gpr -cargs $(ADAFLAGS)
 
 install:
 	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/markdown.gpr
 
-check:
+build_tests: all
+	gprbuild $(GPRBUILD_FLAGS) -aP gnat -P gnat/tests/commonmark_tests.gpr
+
+check: build_tests check_markdown
+
+check_markdown: commonmark-spec
+	cd commonmark-spec; python3 test/spec_tests.py --program ../.objs/static/tests/commonmark_tests |\
+	  grep -E "^Example|^[0-9]+.passed" |\
+	  tee markdown_tests_result | tail
+	diff -u testsuite/commonmark/xfails.txt commonmark-spec/markdown_tests_result
+
+commonmark-spec:
+	@echo Checkout commonmark repo with:
+	@echo git clone --depth=1 https://github.com/commonmark/commonmark-spec
+	@false
 
 coverage:
-	gcov --verbose .objs/*
+	gcov --verbose .objs/static/*
 
 spellcheck:
 	@STATUS=0; \

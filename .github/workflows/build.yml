@@ -17,6 +17,11 @@ jobs:
         with:
           repository: AdaCore/VSS
           path: subprojects/VSS
+      - name: Get CommonMark Spec
+        uses: actions/checkout@v2
+        with:
+          repository: commonmark/commonmark-spec
+          path: commonmark-spec
       - uses: actions/cache@v2
         with:
           path: ./cached_gnat
