@@ -23,13 +23,18 @@ GPRINSTALL_FLAGS = --prefix=$(PREFIX) --exec-subdir=$(INSTALL_EXEC_DIR)\
  --link-lib-subdir=$(INSTALL_LIBRARY_DIR) --sources-subdir=$(INSTALL_INCLUDE_DIR)
 
 
-.PHONY: spellcheck
+.PHONY: spellcheck check
 
 all:
 	gprbuild $(GPRBUILD_FLAGS) gnat/markdown.gpr -XBUILD_MODE=$(BUILD_MODE) -cargs $(ADAFLAGS)
 
 install:
 	gprinstall $(GPRINSTALL_FLAGS) -p -P gnat/markdown.gpr
+
+check:
+
+coverage:
+	gcov --verbose .objs/*
 
 spellcheck:
 	@STATUS=0; \

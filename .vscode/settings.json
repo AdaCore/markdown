@@ -1,0 +1,14 @@
+{
+    "ada.projectFile": "gnat/markdown.gpr",
+    "ada.renameInComments": true,
+    "[ada]": {
+        "editor.rulers": [80],
+        "files.trimTrailingWhitespace": true
+    },
+    "[gpr]": {
+        "editor.rulers": [80],
+        "files.trimTrailingWhitespace": true
+    },
+    "editor.guides.bracketPairs": "active",
+    "editor.bracketPairColorization.enabled": true,
+}
