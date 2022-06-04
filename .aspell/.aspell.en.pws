@@ -1,9 +1,16 @@
 personal_ws-1.1 en 30
 adacore
+cdata
+cip
+commonmark
+deallocation
+elsif
+parsers
 pragma
 pre
 preelaborable
 preelaborate
-subtype
 spdx
+subtype
+unexpanded
 vss

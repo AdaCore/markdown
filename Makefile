@@ -33,7 +33,7 @@ install:
 
 spellcheck:
 	@STATUS=0; \
-	for J in source/*.ad[sb] README.md; do \
+	for J in `find source -name *.ad[sb]` README.md; do \
 	  sed -e 's/#[^#]*#//g' -e "s/'\([A-Z]\)/ \1/g" $$J |   \
 	  aspell list --lang=en --home-dir=.aspell --ignore-case > /tmp/spell.txt; \
 	  if [ -s /tmp/spell.txt ] ; then \

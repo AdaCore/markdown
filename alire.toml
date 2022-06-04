@@ -10,3 +10,6 @@ licenses = "Apache-2.0"
 
 configuration.disabled = true
 project-files = ["gnat/markdown.gpr"]
+
+[[depends-on]]
+vss = "^22.0.0"

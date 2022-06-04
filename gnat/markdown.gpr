@@ -4,6 +4,8 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
+with "vss_text";
+
 project Markdown is
 
    Superproject := external ("SUPERPROJECT", "");
@@ -20,7 +22,8 @@ project Markdown is
    for Library_Dir use "../.libs/" & Superproject & "/" & Library_Type;
    for Object_Dir  use "../.objs/" & Superproject & "/" & Library_Type;
 
-   for Source_Dirs use ("../source/");
+   for Source_Dirs use
+     ("../source/parser", "../source/parser/implementation");
    for Create_Missing_Dirs use "True";
 
    for Library_Kind use Library_Type;

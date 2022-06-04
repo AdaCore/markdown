@@ -5,5 +5,6 @@
 --
 
 package Markdown is
+   pragma Pure;
 
 end Markdown;
