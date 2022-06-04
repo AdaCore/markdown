@@ -1,0 +1,12 @@
+name = "markdown"
+description = "Markdown parser"
+version = "0.1.0-dev"
+tags = ["markdown", "gfm", "commonmark"]
+
+authors = ["AdaCore"]
+maintainers = ["Max Reznik <reznik@adacore.com>"]
+maintainers-logins = ["reznikmm"]
+licenses = "Apache-2.0"
+
+configuration.disabled = true
+project-files = ["gnat/markdown.gpr"]

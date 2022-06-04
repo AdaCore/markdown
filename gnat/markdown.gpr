@@ -1,0 +1,88 @@
+--
+--  Copyright (C) 2021-2022, AdaCore
+--
+--  SPDX-License-Identifier: Apache-2.0
+--
+
+project Markdown is
+
+   Superproject := external ("SUPERPROJECT", "");
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("MARKDOWN_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+
+   type Markdown_Build_Kind is ("dev", "prod", "coverage");
+   Build_Mode : Markdown_Build_Kind :=
+     external ("MARKDOWN_BUILD_MODE", external ("BUILD_MODE", "prod"));
+
+   for Library_Name use "markdown";
+   for Library_Dir use "../.libs/" & Superproject & "/" & Library_Type;
+   for Object_Dir  use "../.objs/" & Superproject & "/" & Library_Type;
+
+   for Source_Dirs use ("../source/");
+   for Create_Missing_Dirs use "True";
+
+   for Library_Kind use Library_Type;
+
+   Ada_Switches := ();
+   Ada_Coverage_Switches := ();
+   Linker_Options := ();
+
+   case Build_Mode is
+      when "prod" =>
+         Ada_Switches := (
+            --  Compile with optimizations
+            "-O2",
+
+            --  Generate debug information: this is useful to get meaningful
+            --  tracebacks.
+            "-g"
+         );
+
+      when "dev" =>
+         Ada_Switches := (
+            --  Compile with no optimization and with debug information to ease
+            --  investigation in debuggers.
+            "-Og", "-g",
+
+            --  Enable warnings and stylechecks.
+            "-gnatwa",   --  turn on all info/warnings
+            "-gnatygoO",
+              --  g    check standard GNAT style rules
+              --  o    check subprogram bodies in alphabetical order
+              --  O    check overriding indicators
+
+            --  Enable assertions and all validity checking options
+            "-gnata", "-gnatVa",
+
+            --  Enable stack overflow checks
+            "-fstack-check"
+         );
+
+      when "coverage" =>
+         Ada_Switches := (
+            --  Compile with no optimization and with debug information to ease
+            --  investigation in debuggers.
+            "-Og", "-g");
+
+         Ada_Coverage_Switches := (
+            --  Enable coverage code instrumentation.
+            "--coverage");
+
+         Linker_Options := ("--coverage");
+   end case;
+
+   --  All packages below are expected to be used when there is no subproject
+   --  specific switches are necessary. Please keep this packages as simple as
+   --  possible and never hardcode any switches to simplify future support.
+
+   package Compiler is
+      for Default_Switches ("Ada") use Ada_Switches & Ada_Coverage_Switches;
+   end Compiler;
+
+   package Linker is
+      for Linker_Options use Linker_Options;
+   end Linker;
+
+end Markdown;
