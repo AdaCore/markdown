@@ -11,6 +11,7 @@ private with Ada.Finalization;
 private with Markdown.Implementation;
 
 limited with Markdown.Blocks.Paragraphs;
+limited with Markdown.Blocks.Indented_Code;
 
 package Markdown.Blocks is
    pragma Preelaborate;
@@ -18,13 +19,21 @@ package Markdown.Blocks is
    type Block is tagged private;
    --  Block element of a markdown document
 
-   function Is_Paragraph (Self : Block) return Boolean;
+   function Is_Paragraph (Self : Block'Class) return Boolean;
    --  Check if given block is a paragraph
+
+   function Is_Indented_Code_Block (Self : Block'Class) return Boolean;
+   --  Check if given block is an indented code block
 
    function To_Paragraph (Self : Block)
      return Markdown.Blocks.Paragraphs.Paragraph
         with Pre => Self.Is_Paragraph;
    --  Convert the block to a Paragraph
+
+   function To_Indented_Code_Block (Self : Block)
+     return Markdown.Blocks.Indented_Code.Indented_Code_Block
+        with Pre => Self.Is_Indented_Code_Block;
+   --  Convert the block to an indented code block
 
 private
 

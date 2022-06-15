@@ -46,12 +46,12 @@ package body Markdown.Implementation.Paragraphs is
    --------------
 
    procedure Detector
-     (Line : Input_Position;
-      Tag  : in out Ada.Tags.Tag;
-      CIP  : out Can_Interrupt_Paragraph)
+     (Input : Input_Position;
+      Tag   : in out Ada.Tags.Tag;
+      CIP   : out Can_Interrupt_Paragraph)
    is
    begin
-      if Line.First.Has_Element then  --  XXX: use Blank_Pattern here
+      if Input.First.Has_Element then  --  XXX: use Blank_Pattern here
          Tag := Paragraph'Tag;
          CIP := False;
       end if;
