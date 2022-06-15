@@ -9,16 +9,18 @@
 
 with Ada.Wide_Wide_Text_IO;
 
+with VSS.Characters;
+with VSS.Strings.Character_Iterators;
+with VSS.Strings.Cursors.Markers;
 with VSS.Strings;
 
 with Markdown.Annotations;
 with Markdown.Block_Containers;
 with Markdown.Blocks;
 with Markdown.Blocks.Paragraphs;
+with Markdown.Blocks.Indented_Code;
 with Markdown.Documents;
 with Markdown.Parsers;
-with VSS.Strings.Character_Iterators;
-with VSS.Strings.Cursors.Markers;
 
 with HTML_Writers;
 
@@ -107,12 +109,29 @@ procedure Commonmark_Tests is
 
    procedure Print_Block
      (Writer : in out HTML_Writers.Writer;
-      Block  : Markdown.Blocks.Block) is
+      Block  : Markdown.Blocks.Block)
+   is
+      New_Line : VSS.Strings.Virtual_String;
    begin
+      New_Line.Append (VSS.Characters.Virtual_Character'Val (10));
+
       if Block.Is_Paragraph then
          Writer.Start_Element ("p");
          Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
          Writer.End_Element ("p");
+
+      elsif Block.Is_Indented_Code_Block then
+         Writer.Start_Element ("pre");
+         Writer.Start_Element ("code");
+
+         for Line of Block.To_Indented_Code_Block.Text loop
+            Writer.Characters (Line);
+            Writer.Characters (New_Line);
+         end loop;
+
+         Writer.End_Element ("code");
+         Writer.End_Element ("pre");
+
       else
          raise Program_Error;
       end if;

@@ -1,6 +1,5 @@
 Example 1 (lines 356-361) Tabs
 Example 2 (lines 363-368) Tabs
-Example 3 (lines 370-377) Tabs
 Example 4 (lines 383-394) Tabs
 Example 5 (lines 396-408) Tabs
 Example 6 (lines 419-426) Tabs
@@ -14,7 +13,6 @@ Example 14 (lines 510-530) Backslash escapes
 Example 15 (lines 535-539) Backslash escapes
 Example 16 (lines 544-550) Backslash escapes
 Example 17 (lines 556-560) Backslash escapes
-Example 18 (lines 563-568) Backslash escapes
 Example 19 (lines 571-578) Backslash escapes
 Example 20 (lines 581-585) Backslash escapes
 Example 21 (lines 588-592) Backslash escapes
@@ -29,7 +27,6 @@ Example 32 (lines 736-740) Entity and numeric character references
 Example 33 (lines 743-749) Entity and numeric character references
 Example 34 (lines 752-759) Entity and numeric character references
 Example 35 (lines 765-769) Entity and numeric character references
-Example 36 (lines 772-777) Entity and numeric character references
 Example 37 (lines 784-790) Entity and numeric character references
 Example 38 (lines 792-801) Entity and numeric character references
 Example 39 (lines 803-809) Entity and numeric character references
@@ -38,7 +35,6 @@ Example 41 (lines 818-822) Entity and numeric character references
 Example 42 (lines 841-849) Precedence
 Example 43 (lines 880-888) Thematic breaks
 Example 47 (lines 922-930) Thematic breaks
-Example 48 (lines 935-940) Thematic breaks
 Example 50 (lines 954-958) Thematic breaks
 Example 51 (lines 963-967) Thematic breaks
 Example 52 (lines 970-974) Thematic breaks
@@ -55,7 +51,6 @@ Example 65 (lines 1159-1163) ATX headings
 Example 66 (lines 1168-1172) ATX headings
 Example 67 (lines 1177-1181) ATX headings
 Example 68 (lines 1186-1194) ATX headings
-Example 69 (lines 1199-1204) ATX headings
 Example 71 (lines 1218-1224) ATX headings
 Example 72 (lines 1229-1235) ATX headings
 Example 73 (lines 1240-1244) ATX headings
@@ -90,17 +85,12 @@ Example 103 (lines 1673-1683) Setext headings
 Example 104 (lines 1689-1701) Setext headings
 Example 105 (lines 1707-1717) Setext headings
 Example 106 (lines 1722-1732) Setext headings
-Example 107 (lines 1750-1757) Indented code blocks
 Example 108 (lines 1764-1775) Indented code blocks
 Example 109 (lines 1778-1791) Indented code blocks
 Example 110 (lines 1798-1809) Indented code blocks
 Example 111 (lines 1814-1831) Indented code blocks
-Example 112 (lines 1837-1846) Indented code blocks
-Example 114 (lines 1866-1873) Indented code blocks
 Example 115 (lines 1879-1894) Indented code blocks
-Example 116 (lines 1899-1906) Indented code blocks
 Example 117 (lines 1912-1921) Indented code blocks
-Example 118 (lines 1926-1931) Indented code blocks
 Example 119 (lines 1981-1990) Fenced code blocks
 Example 120 (lines 1995-2004) Fenced code blocks
 Example 121 (lines 2008-2014) Fenced code blocks
@@ -116,7 +106,6 @@ Example 130 (lines 2122-2127) Fenced code blocks
 Example 131 (lines 2134-2143) Fenced code blocks
 Example 132 (lines 2146-2157) Fenced code blocks
 Example 133 (lines 2160-2171) Fenced code blocks
-Example 134 (lines 2176-2185) Fenced code blocks
 Example 135 (lines 2191-2198) Fenced code blocks
 Example 136 (lines 2201-2208) Fenced code blocks
 Example 137 (lines 2213-2221) Fenced code blocks
@@ -190,20 +179,17 @@ Example 206 (lines 3349-3355) Link reference definitions
 Example 207 (lines 3364-3367) Link reference definitions
 Example 208 (lines 3372-3379) Link reference definitions
 Example 210 (lines 3394-3399) Link reference definitions
-Example 211 (lines 3405-3413) Link reference definitions
 Example 212 (lines 3419-3429) Link reference definitions
 Example 214 (lines 3449-3458) Link reference definitions
 Example 215 (lines 3460-3468) Link reference definitions
 Example 216 (lines 3470-3477) Link reference definitions
 Example 217 (lines 3483-3496) Link reference definitions
 Example 218 (lines 3504-3512) Link reference definitions
-Example 225 (lines 3602-3609) Paragraphs
 Example 226 (lines 3616-3622) Paragraphs
 Example 227 (lines 3633-3645) Blank lines
 Example 228 (lines 3701-3711) Block quotes
 Example 229 (lines 3716-3726) Block quotes
 Example 230 (lines 3731-3741) Block quotes
-Example 231 (lines 3746-3755) Block quotes
 Example 232 (lines 3761-3771) Block quotes
 Example 233 (lines 3777-3787) Block quotes
 Example 234 (lines 3801-3809) Block quotes
@@ -241,7 +227,6 @@ Example 267 (lines 4396-4402) List items
 Example 268 (lines 4405-4411) List items
 Example 270 (lines 4439-4451) List items
 Example 271 (lines 4456-4468) List items
-Example 272 (lines 4475-4487) List items
 Example 273 (lines 4490-4506) List items
 Example 274 (lines 4512-4528) List items
 Example 276 (lines 4549-4558) List items
@@ -544,4 +529,4 @@ Example 642 (lines 9302-9308) Hard line breaks
 Example 643 (lines 9311-9317) Hard line breaks
 Example 646 (lines 9338-9342) Hard line breaks
 Example 647 (lines 9345-9349) Hard line breaks
-106 passed, 546 failed, 0 errored, 0 skipped
+121 passed, 531 failed, 0 errored, 0 skipped
