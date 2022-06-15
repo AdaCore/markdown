@@ -5,6 +5,7 @@
 --
 
 with "vss_text";
+with "vss_regexp";
 
 project Markdown is
 

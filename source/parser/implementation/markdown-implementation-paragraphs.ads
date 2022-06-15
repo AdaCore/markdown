@@ -21,9 +21,9 @@ package Markdown.Implementation.Paragraphs is
    --  Return nested annotated text
 
    procedure Detector
-     (Line : Input_Position;
-      Tag  : in out Ada.Tags.Tag;
-      CIP  : out Can_Interrupt_Paragraph);
+     (Input : Input_Position;
+      Tag   : in out Ada.Tags.Tag;
+      CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a paragraph
 
 private

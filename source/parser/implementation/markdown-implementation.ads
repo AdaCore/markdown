@@ -94,9 +94,9 @@ package Markdown.Implementation is
    --  shift Line.First to skip the marker.
 
    type Block_Detector is access procedure
-     (Line : Input_Position;
-      Tag  : in out Ada.Tags.Tag;
-      CIP  : out Can_Interrupt_Paragraph);
+     (Input : Input_Position;
+      Tag   : in out Ada.Tags.Tag;
+      CIP   : out Can_Interrupt_Paragraph);
    --  The detector checks if given input line starts some markdown block. If
    --  so it returns Tag of the corresponding block type and CIP if the block
    --  can interrupt a paragraph. The markdown parser then construct an object
