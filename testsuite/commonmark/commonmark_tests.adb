@@ -141,12 +141,8 @@ procedure Commonmark_Tests is
      (Writer : in out HTML_Writers.Writer;
       List   : Markdown.Block_Containers.Block_Container'Class) is
    begin
-      for J in 1 .. List.Length loop
-         declare
-            Block : constant Markdown.Blocks.Block := List.Element (J);
-         begin
-            Print_Block (Writer, Block);
-         end;
+      for Block of List loop
+         Print_Block (Writer, Block);
       end loop;
    end Print_Blocks;
 
