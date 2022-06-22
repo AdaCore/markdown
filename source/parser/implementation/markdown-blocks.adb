@@ -41,17 +41,6 @@ package body Markdown.Blocks is
       end if;
    end Finalize;
 
-   ------------------
-   -- Is_Paragraph --
-   ------------------
-
-   function Is_Paragraph (Self : Block'Class) return Boolean is
-   begin
-      return Self.Data.Assigned
-        and then Self.Data.all in
-          Markdown.Implementation.Paragraphs.Paragraph;
-   end Is_Paragraph;
-
    ----------------------------
    -- Is_Indented_Code_Block --
    ----------------------------
@@ -62,6 +51,17 @@ package body Markdown.Blocks is
         and then Self.Data.all in
           Markdown.Implementation.Indented_Code_Blocks.Indented_Code_Block;
    end Is_Indented_Code_Block;
+
+   ------------------
+   -- Is_Paragraph --
+   ------------------
+
+   function Is_Paragraph (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Markdown.Implementation.Paragraphs.Paragraph;
+   end Is_Paragraph;
 
    ----------------------------
    -- To_Indented_Code_Block --

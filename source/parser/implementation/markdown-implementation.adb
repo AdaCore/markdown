@@ -6,6 +6,28 @@
 
 package body Markdown.Implementation is
 
+   ---------------
+   -- Reference --
+   ---------------
+
+   procedure Reference (Self : Abstract_Block_Access) is
+   begin
+      if Self.Assigned then
+         System.Atomic_Counters.Increment (Self.Counter);
+      end if;
+   end Reference;
+
+   ---------------
+   -- Reference --
+   ---------------
+
+   procedure Reference (Self : Abstract_Container_Block_Access) is
+   begin
+      if Self.Assigned then
+         System.Atomic_Counters.Increment (Self.Counter);
+      end if;
+   end Reference;
+
    ---------------------
    -- Unexpanded_Tail --
    ---------------------
@@ -23,5 +45,31 @@ package body Markdown.Implementation is
          raise Program_Error with "Unimplemented";
       end if;
    end Unexpanded_Tail;
+
+   -----------------
+   -- Unreference --
+   -----------------
+
+   procedure Unreference (Self : in out Abstract_Container_Block_Access) is
+      procedure Free is new Ada.Unchecked_Deallocation
+        (Markdown.Implementation.Abstract_Container_Block'Class,
+         Abstract_Container_Block_Access);
+   begin
+      if not Self.Assigned then
+         null;
+      elsif System.Atomic_Counters.Decrement (Self.Counter) then
+
+         for Item of Self.Children loop
+            if System.Atomic_Counters.Decrement (Item.Counter) then
+               Markdown.Implementation.Free (Item);
+            end if;
+         end loop;
+
+         Free (Self);
+
+      else
+         Self := null;
+      end if;
+   end Unreference;
 
 end Markdown.Implementation;
