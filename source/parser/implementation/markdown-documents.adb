@@ -63,11 +63,8 @@ package body Markdown.Documents is
 
    overriding function Length (Self : Document) return Natural is
    begin
-      if Self.Data.Assigned then
-         return Self.Data.Children.Last_Index;
-      else
-         return 0;
-      end if;
+      return
+        (if Self.Data.Assigned then Self.Data.Children.Last_Index else 0);
    end Length;
 
    -------------

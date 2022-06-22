@@ -4,6 +4,7 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
+with VSS.Characters;
 with VSS.Regular_Expressions;
 
 package body Markdown.Implementation.Indented_Code_Blocks is
@@ -11,12 +12,9 @@ package body Markdown.Implementation.Indented_Code_Blocks is
    Blank_3 : VSS.Regular_Expressions.Regular_Expression;
    --  Zero to 3 whites-paces
 
-   Four_Spaces : VSS.Regular_Expressions.Regular_Expression;
-   --  4 white-spaces
-
-   function Skip_Four_Spaces (Text : VSS.Strings.Virtual_String)
-     return VSS.Strings.Virtual_String;
-   --  Skip first 4 spaces and return rest of text
+   procedure Skip_Four_Spaces
+     (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator);
+   --  Skip first 4 spaces
 
    -----------------
    -- Append_Line --
@@ -33,17 +31,23 @@ package body Markdown.Implementation.Indented_Code_Blocks is
       Anchored_Match : constant VSS.Regular_Expressions.Match_Options :=
         (VSS.Regular_Expressions.Anchored_Match => True);
 
-      Match : VSS.Regular_Expressions.Regular_Expression_Match;
+      Subject : constant VSS.Strings.Virtual_String :=
+        Input.Line.Expanded.Tail_From (Input.First);
+      --  XXX Use Match (From => Input.First) instead of explicit copy?
+
+      Cursor  : VSS.Strings.Character_Iterators.Character_Iterator;
    begin
       if not Blank_3.Is_Valid then
          Blank_3 := VSS.Regular_Expressions.To_Regular_Expression
-           (" ?|  |   ");  --  XXX: Replace with " {0,3}"
+           ("   |  | |");  --  XXX: Replace with " {0,3}"
       end if;
 
-      if Input.Line.Expanded.Starts_With ("    ") then
+      if Subject.Starts_With ("    ") then
          Ok := True;
-         Self.Lines.Append (Skip_Four_Spaces (Input.Line.Expanded));
-      elsif Blank_3.Match (Input.Line.Expanded, Anchored_Match).Has_Match then
+         Cursor.Set_At (Input.First);
+         Skip_Four_Spaces (Cursor);
+         Self.Lines.Append (Input.Line.Unexpanded_Tail (Cursor));
+      elsif Blank_3.Match (Subject, Anchored_Match).Has_Match then
          Ok := True;
          Self.Lines.Append (VSS.Strings.Empty_Virtual_String);
       else
@@ -58,15 +62,16 @@ package body Markdown.Implementation.Indented_Code_Blocks is
    overriding function Create
      (Input : not null access Input_Position) return Indented_Code_Block
    is
+      Subject : constant VSS.Strings.Virtual_String :=
+        Input.Line.Expanded.Tail_From (Input.First);
    begin
-      pragma Assert (Input.Line.Expanded.Starts_With ("    "));
+      pragma Assert (Subject.Starts_With ("    "));
 
       return Result : Indented_Code_Block do
-         Result.Lines.Append (Skip_Four_Spaces (Input.Line.Expanded));
+         Skip_Four_Spaces (Input.First);
+         Result.Lines.Append (Input.Line.Unexpanded_Tail (Input.First));
          --  Shift Input.First to end-of-line
-         while Input.First.Forward loop
-            null;
-         end loop;
+         Input.First.Set_After_Last (Input.Line.Expanded);
       end return;
    end Create;
 
@@ -79,28 +84,32 @@ package body Markdown.Implementation.Indented_Code_Blocks is
       Tag   : in out Ada.Tags.Tag;
       CIP   : out Can_Interrupt_Paragraph)
    is
+      Subject : constant VSS.Strings.Virtual_String :=
+        Input.Line.Expanded.Tail_From (Input.First);
    begin
-      if Input.Line.Expanded.Starts_With ("    ") then
+      if Subject.Starts_With ("    ") then
          Tag := Indented_Code_Block'Tag;
          CIP := False;
       end if;
    end Detector;
 
-   ------------------
+   ----------------------
    -- Skip_Four_Spaces --
-   ------------------
+   ----------------------
 
-   function Skip_Four_Spaces (Text : VSS.Strings.Virtual_String)
-     return VSS.Strings.Virtual_String
+   procedure Skip_Four_Spaces
+     (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator)
    is
-      Match : VSS.Regular_Expressions.Regular_Expression_Match;
+      use type VSS.Characters.Virtual_Character;
    begin
-      if not Four_Spaces.Is_Valid then
-         Four_Spaces := VSS.Regular_Expressions.To_Regular_Expression ("    ");
-      end if;
-      Match := Four_Spaces.Match (Text);
-
-      return Text.Tail_After (Match.Last_Marker);
+      for J in 1 .. 4 loop
+         declare
+            Ok : constant Boolean := Cursor.Element = ' ' and
+              (Cursor.Forward or J = 4);
+         begin
+            pragma Assert (Ok);
+         end;
+      end loop;
    end Skip_Four_Spaces;
 
    ----------
@@ -109,9 +118,33 @@ package body Markdown.Implementation.Indented_Code_Blocks is
 
    function Text
      (Self : Indented_Code_Block)
-      return VSS.String_Vectors.Virtual_String_Vector is
+      return VSS.String_Vectors.Virtual_String_Vector
+   is
+      First : Natural;
+      Last  : Natural;
    begin
-      return Self.Lines;
+      for J in 1 .. Self.Lines.Length loop
+         First := J;
+
+         exit when not Self.Lines (J).Is_Empty;
+      end loop;
+
+      for J in reverse 1 .. Self.Lines.Length loop
+         Last := J;
+
+         exit when not Self.Lines (J).Is_Empty;
+      end loop;
+
+      if First = 1 and Last = Self.Lines.Length then
+         return Self.Lines;
+      else
+         --  Drop leading and trailing empty lines
+         return Result : VSS.String_Vectors.Virtual_String_Vector do
+            for J in First .. Last loop
+               Result.Append (Self.Lines (J));
+            end loop;
+         end return;
+      end if;
    end Text;
 
 end Markdown.Implementation.Indented_Code_Blocks;
