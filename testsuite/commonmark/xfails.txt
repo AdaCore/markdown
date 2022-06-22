@@ -87,10 +87,7 @@ Example 105 (lines 1707-1717) Setext headings
 Example 106 (lines 1722-1732) Setext headings
 Example 108 (lines 1764-1775) Indented code blocks
 Example 109 (lines 1778-1791) Indented code blocks
-Example 110 (lines 1798-1809) Indented code blocks
-Example 111 (lines 1814-1831) Indented code blocks
 Example 115 (lines 1879-1894) Indented code blocks
-Example 117 (lines 1912-1921) Indented code blocks
 Example 119 (lines 1981-1990) Fenced code blocks
 Example 120 (lines 1995-2004) Fenced code blocks
 Example 121 (lines 2008-2014) Fenced code blocks
@@ -241,7 +238,6 @@ Example 284 (lines 4692-4698) List items
 Example 286 (lines 4724-4743) List items
 Example 287 (lines 4748-4767) List items
 Example 288 (lines 4772-4791) List items
-Example 289 (lines 4796-4811) List items
 Example 290 (lines 4826-4845) List items
 Example 291 (lines 4850-4858) List items
 Example 292 (lines 4863-4877) List items
@@ -529,4 +525,4 @@ Example 642 (lines 9302-9308) Hard line breaks
 Example 643 (lines 9311-9317) Hard line breaks
 Example 646 (lines 9338-9342) Hard line breaks
 Example 647 (lines 9345-9349) Hard line breaks
-121 passed, 531 failed, 0 errored, 0 skipped
+125 passed, 527 failed, 0 errored, 0 skipped

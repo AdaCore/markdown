@@ -8,8 +8,6 @@
 
 with VSS.String_Vectors;
 
-with Markdown.Annotations;
-
 package Markdown.Implementation.Indented_Code_Blocks is
    pragma Preelaborate;
 

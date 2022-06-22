@@ -35,9 +35,7 @@ package body Markdown.Implementation.Paragraphs is
       return Result : Paragraph do
          Result.Lines.Append (Input.Line.Unexpanded_Tail (Input.First));
          --  Shift Input.First to end-of-line
-         while Input.First.Forward loop
-            null;
-         end loop;
+         Input.First.Set_After_Last (Input.Line.Expanded);
       end return;
    end Create;
 
