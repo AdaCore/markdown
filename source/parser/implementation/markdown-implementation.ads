@@ -23,6 +23,8 @@ package Markdown.Implementation is
 
    type Abstract_Block_Access is access all Abstract_Block'Class;
 
+   procedure Reference (Self : Abstract_Block_Access);
+
    type Abstract_Block is abstract tagged limited record
       Counter : System.Atomic_Counters.Atomic_Counter;
    end record;
@@ -92,6 +94,13 @@ package Markdown.Implementation is
       Match : out Boolean) is abstract;
    --  Set Match to True if Line has continuation markers for the block. If so
    --  shift Line.First to skip the marker.
+
+   type Abstract_Container_Block_Access is access all
+     Abstract_Container_Block'Class;
+
+   procedure Reference (Self : Abstract_Container_Block_Access);
+
+   procedure Unreference (Self : in out Abstract_Container_Block_Access);
 
    type Block_Detector is access procedure
      (Input : Input_Position;

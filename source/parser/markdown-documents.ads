@@ -26,13 +26,10 @@ package Markdown.Documents is
 
 private
 
-   type Abstract_Container_Block_Access is access all
-     Markdown.Implementation.Abstract_Container_Block'Class;
-
    type Document is new Ada.Finalization.Controlled
      and Markdown.Block_Containers.Block_Container with
    record
-      Data : Abstract_Container_Block_Access;
+      Data : Markdown.Implementation.Abstract_Container_Block_Access;
    end record;
 
    overriding procedure Adjust (Self : in out Document);
