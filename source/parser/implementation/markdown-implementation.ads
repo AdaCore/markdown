@@ -114,4 +114,9 @@ package Markdown.Implementation is
    procedure Free is new Ada.Unchecked_Deallocation
      (Abstract_Block'Class, Abstract_Block_Access);
 
+   procedure Forward
+     (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
+      Count  : VSS.Strings.Character_Index := 1);
+   --  Move Cursor forward
+
 end Markdown.Implementation;
