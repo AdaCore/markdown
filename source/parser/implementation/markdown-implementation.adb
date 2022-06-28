@@ -6,6 +6,25 @@
 
 package body Markdown.Implementation is
 
+   -------------
+   -- Forward --
+   -------------
+
+   procedure Forward
+     (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
+      Count  : VSS.Strings.Character_Index := 1)
+   is
+      use type VSS.Strings.Character_Index;
+   begin
+      for J in 1 .. Count loop
+         declare
+            Ok : constant Boolean := Cursor.Forward or J = Count;
+         begin
+            pragma Assert (Ok);
+         end;
+      end loop;
+   end Forward;
+
    ---------------
    -- Reference --
    ---------------
