@@ -4,7 +4,6 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
-with VSS.Characters;
 with VSS.Regular_Expressions;
 
 package body Markdown.Implementation.Indented_Code_Blocks is

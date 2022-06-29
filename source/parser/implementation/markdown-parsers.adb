@@ -45,6 +45,8 @@ package body Markdown.Parsers is
    begin
       Self.State := Completed;
 
+      Self.Open.First_Element.Wrap_List_Items;
+
       Markdown.Documents.Internals.Set
         (Self.Document, Self.Open.First_Element.all);
    end Complete_Parsing;

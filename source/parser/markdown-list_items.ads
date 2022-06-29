@@ -10,7 +10,7 @@ private with Ada.Finalization;
 
 with Markdown.Block_Containers;
 with Markdown.Blocks;
-private with Markdown.Implementation;
+private with Markdown.Implementation.List_Items;
 
 package Markdown.List_Items is
    pragma Preelaborate;
@@ -19,12 +19,15 @@ package Markdown.List_Items is
      with private;
    --  Markdown list item contains nested block elements
 
+   function Is_Ordered (Self : List_Item'Class) return Boolean;
+   --  Return True if list item has an ordered list marker.
+
 private
 
    type List_Item is new Ada.Finalization.Controlled
      and Markdown.Block_Containers.Block_Container with
    record
-      Data : Markdown.Implementation.Abstract_Container_Block_Access;
+      Data : Markdown.Implementation.List_Items.List_Item_Access;
    end record;
 
    overriding procedure Adjust (Self : in out List_Item);

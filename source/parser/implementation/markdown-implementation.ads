@@ -95,6 +95,9 @@ package Markdown.Implementation is
    --  Set Match to True if Line has continuation markers for the block. If so
    --  shift Line.First to skip the marker.
 
+   procedure Wrap_List_Items (Self : in out Abstract_Container_Block'Class);
+   --  Create List node when needed and move List_Items inside.
+
    type Abstract_Container_Block_Access is access all
      Abstract_Container_Block'Class;
 
