@@ -4,6 +4,8 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
+with System.Atomic_Counters;
+
 with Markdown.Blocks.Internals;
 
 package body Markdown.List_Items is
@@ -14,7 +16,9 @@ package body Markdown.List_Items is
 
    overriding procedure Adjust (Self : in out List_Item) is
    begin
-      Markdown.Implementation.Reference (Self.Data);
+      if Self.Data.Assigned then
+         System.Atomic_Counters.Increment (Self.Data.Counter);
+      end if;
    end Adjust;
 
    -------------
@@ -40,7 +44,15 @@ package body Markdown.List_Items is
 
    overriding procedure Finalize (Self : in out List_Item) is
    begin
-      Markdown.Implementation.Unreference (Self.Data);
+      if Self.Data.Assigned then
+         if System.Atomic_Counters.Decrement (Self.Data.Counter) then
+            Markdown.Implementation.Free
+              (Markdown.Implementation.Abstract_Block_Access (Self.Data));
+
+         else
+            Self.Data := null;
+         end if;
+      end if;
    end Finalize;
 
    --------------
@@ -51,6 +63,15 @@ package body Markdown.List_Items is
    begin
       return not Self.Data.Assigned or else Self.Data.Children.Is_Empty;
    end Is_Empty;
+
+   ----------------
+   -- Is_Ordered --
+   ----------------
+
+   function Is_Ordered (Self : List_Item'Class) return Boolean is
+   begin
+      return Self.Data.Is_Ordered;
+   end Is_Ordered;
 
    ------------
    -- Length --

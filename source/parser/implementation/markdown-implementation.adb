@@ -4,6 +4,9 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
+with Markdown.Implementation.Lists;
+with Markdown.Implementation.List_Items;
+
 package body Markdown.Implementation is
 
    -------------
@@ -90,5 +93,40 @@ package body Markdown.Implementation is
          Self := null;
       end if;
    end Unreference;
+
+   ---------------------
+   -- Wrap_List_Items --
+   ---------------------
+
+   procedure Wrap_List_Items (Self : in out Abstract_Container_Block'Class) is
+      use type Markdown.Implementation.Lists.List_Access;
+
+      Found  : Boolean := False;
+      Result : Block_Vectors.Vector;
+      List   : Markdown.Implementation.Lists.List_Access;
+   begin
+      for Item of Self.Children loop
+         if Item.all in Abstract_Container_Block'Class then
+            Abstract_Container_Block'Class (Item.all).Wrap_List_Items;
+         end if;
+
+         if Item.all in Markdown.Implementation.List_Items.List_Item then
+            if List = null or else not List.Match (Item) then
+               List := new Markdown.Implementation.Lists.List;
+               Result.Append (Abstract_Block_Access (List));
+               Found := True;
+            end if;
+
+            List.Children.Append (Item);
+         else
+            List := null;
+            Result.Append (Item);
+         end if;
+      end loop;
+
+      if Found then
+         Self.Children.Move (Source => Result);
+      end if;
+   end Wrap_List_Items;
 
 end Markdown.Implementation;

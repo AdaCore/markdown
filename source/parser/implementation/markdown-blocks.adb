@@ -7,9 +7,11 @@
 with System.Atomic_Counters;
 
 with Markdown.Blocks.Indented_Code;
+with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
 
 with Markdown.Implementation.Indented_Code_Blocks;
+with Markdown.Implementation.Lists;
 with Markdown.Implementation.Paragraphs;
 
 package body Markdown.Blocks is
@@ -52,6 +54,17 @@ package body Markdown.Blocks is
           Markdown.Implementation.Indented_Code_Blocks.Indented_Code_Block;
    end Is_Indented_Code_Block;
 
+   -------------
+   -- Is_List --
+   -------------
+
+   function Is_List (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Markdown.Implementation.Lists.List;
+   end Is_List;
+
    ------------------
    -- Is_Paragraph --
    ------------------
@@ -72,6 +85,15 @@ package body Markdown.Blocks is
    begin
       return Markdown.Blocks.Indented_Code.From_Block (Self);
    end To_Indented_Code_Block;
+
+   -------------
+   -- To_List --
+   -------------
+
+   function To_List (Self : Block) return Markdown.Blocks.Lists.List is
+   begin
+      return Markdown.Blocks.Lists.From_Block (Self);
+   end To_List;
 
    ------------------
    -- To_Paragraph --

@@ -17,8 +17,9 @@ with VSS.Strings;
 with Markdown.Annotations;
 with Markdown.Block_Containers;
 with Markdown.Blocks;
-with Markdown.Blocks.Paragraphs;
 with Markdown.Blocks.Indented_Code;
+with Markdown.Blocks.Lists;
+with Markdown.Blocks.Paragraphs;
 with Markdown.Documents;
 with Markdown.Parsers;
 
@@ -30,6 +31,10 @@ procedure Commonmark_Tests is
    procedure Print_Block
      (Writer : in out HTML_Writers.Writer;
       Block  : Markdown.Blocks.Block);
+
+   procedure Print_List
+     (Writer : in out HTML_Writers.Writer;
+      List   : Markdown.Blocks.Lists.List);
 
    procedure Print_Blocks
      (Writer : in out HTML_Writers.Writer;
@@ -132,6 +137,8 @@ procedure Commonmark_Tests is
          Writer.End_Element ("code");
          Writer.End_Element ("pre");
 
+      elsif Block.Is_List then
+         Print_List (Writer, Block.To_List);
       else
          raise Program_Error;
       end if;
@@ -145,6 +152,39 @@ procedure Commonmark_Tests is
          Print_Block (Writer, Block);
       end loop;
    end Print_Blocks;
+
+   procedure Print_List
+     (Writer : in out HTML_Writers.Writer;
+      List   : Markdown.Blocks.Lists.List)
+   is
+      Tag : constant VSS.Strings.Virtual_String :=
+        VSS.Strings.To_Virtual_String
+          (if List.Is_Ordered then "ol" else "ul");
+
+      Attr : HTML_Writers.HTML_Attributes;
+   begin
+      if List.Is_Ordered then
+         declare
+            Image : constant Wide_Wide_String := List.Start'Wide_Wide_Image;
+         begin
+            if Image /= " 1" then
+               Attr.Append
+                 (("start",
+                   VSS.Strings.To_Virtual_String (Image (2 .. Image'Last))));
+            end if;
+         end;
+      end if;
+
+      Writer.Start_Element (Tag, Attr);
+
+      for Item of List loop
+         Writer.Start_Element ("li");
+         Print_Blocks (Writer, Item);
+         Writer.End_Element ("li");
+      end loop;
+
+      Writer.End_Element (Tag);
+   end Print_List;
 
    Writer : HTML_Writers.Writer;
    Parser : Markdown.Parsers.Markdown_Parser;

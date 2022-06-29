@@ -26,6 +26,10 @@ package body Markdown.Implementation.List_Items is
    Indent_1 : VSS.Regular_Expressions.Regular_Expression;
    --  One or more spaces at the beginning of a string: "^ +"
 
+   function Marker_Value
+     (Match : VSS.Regular_Expressions.Regular_Expression_Match) return Natural;
+   --  Return numeric marker as an integer
+
    ----------------------------------
    -- Consume_Continuation_Markers --
    ----------------------------------
@@ -81,7 +85,9 @@ package body Markdown.Implementation.List_Items is
       Suffix : constant VSS.Strings.Virtual_String := Match.Captured (3);
    begin
       return Result : List_Item do
+         Result.Is_Ordered := Match.Marker (2).Is_Valid;
          Result.Marker := Match.Captured (1);
+         Result.Marker_Value := Marker_Value (Match);
 
          if Suffix.Character_Length <= 4 and then
            Match.Last_Marker.Character_Index
@@ -125,9 +131,12 @@ package body Markdown.Implementation.List_Items is
    is
       use type VSS.Strings.Character_Count;
 
+      Marker : VSS.Strings.Virtual_String;
       Suffix : VSS.Strings.Virtual_String;
       Number : Natural;
       Match  : VSS.Regular_Expressions.Regular_Expression_Match;
+
+      End_Of_Line_Matched : Boolean;
    begin
       if not Prefix.Is_Valid then  --  Construct Prefix regexp
          Prefix := VSS.Regular_Expressions.To_Regular_Expression
@@ -143,28 +152,27 @@ package body Markdown.Implementation.List_Items is
       Match := Prefix.Match (Input.Line.Expanded, Input.First);
 
       if Match.Has_Match then
+         End_Of_Line_Matched := Match.Last_Marker.Character_Index
+           = Input.Line.Expanded.Character_Length;
+
+         Marker := Match.Captured (1);
          Suffix := Match.Captured (3);
 
-         if Suffix.Character_Length > 10 then
+         if Marker.Character_Length > 10 then
             --  no more than 9 digits in the marker are allowed
+            return;
+         elsif Suffix.Character_Length = 0 and not End_Of_Line_Matched then
+            --  We have non-space characters just after marker. Not a list item
             return;
          end if;
 
          Tag := List_Item'Tag;
 
-         Number :=
-           (if Match.Marker (2).Is_Valid then
-            Natural'Wide_Wide_Value
-              (VSS.Strings.Conversions.To_Wide_Wide_String
-                (Match.Captured (2)))
-            else 0);
+         Number := Marker_Value (Match);
 
          --  Calculate Can_Interrupt_Paragraph
          CIP :=
-           (if Suffix.Character_Length <= 4 and then
-              Match.Last_Marker.Character_Index
-                = Input.Line.Expanded.Character_Length
-            then
+           (if Suffix.Character_Length <= 4 and then End_Of_Line_Matched then
                --  Empty line marker: ^\ {0,3}(Marker)(\ {0,4}$).
                --  An empty list item cannot interrupt a paragraph.
                False
@@ -177,5 +185,40 @@ package body Markdown.Implementation.List_Items is
               True);
       end if;
    end Detector;
+
+   ----------------
+   -- Is_Ordered --
+   ----------------
+
+   function Is_Ordered (Self : List_Item'Class) return Boolean is
+     (Self.Is_Ordered);
+
+   ------------
+   -- Marker --
+   ------------
+
+   function Marker (Self : List_Item'Class)
+     return VSS.Strings.Virtual_String is (Self.Marker);
+
+   function Marker (Self : List_Item'Class) return Natural
+     is (Self.Marker_Value);
+
+   ------------------
+   -- Marker_Value --
+   ------------------
+
+   function Marker_Value
+     (Match : VSS.Regular_Expressions.Regular_Expression_Match)
+        return Natural is
+   begin
+      --  GCC 12 generates wrong code if condition expression is used here
+      if Match.Marker (2).Is_Valid then
+         return Natural'Wide_Wide_Value
+           (VSS.Strings.Conversions.To_Wide_Wide_String
+              (Match.Captured (2)));
+      else
+         return 0;
+      end if;
+   end Marker_Value;
 
 end Markdown.Implementation.List_Items;

@@ -11,38 +11,28 @@ package body Markdown.Block_Containers is
    -------------
 
    function Element (Self : Block_Container'Class; Position : Cursor)
-      return Markdown.Blocks.Block is
-   begin
-      return Self.Element (Position.Index);
-   end Element;
+      return Markdown.Blocks.Block is (Self.Element (Position.Index));
 
    -----------
    -- First --
    -----------
 
    overriding function First (Self : Reversible_Iterator) return Cursor is
-   begin
-      return (Index => (if Self.Last >= 1 then 1 else 0));
-   end First;
+     (Index => (if Self.Last >= 1 then 1 else 0));
 
    -------------
    -- Iterate --
    -------------
 
    function Iterate (Self : Block_Container'Class)
-      return Reversible_Iterator is
-   begin
-      return (Last => Self.Length);
-   end Iterate;
+      return Reversible_Iterator is (Last => Self.Length);
 
    ----------
    -- Last --
    ----------
 
    overriding function Last (Self : Reversible_Iterator) return Cursor is
-   begin
-      return (Index => (if Self.Last >= 1 then 1 else 0));
-   end Last;
+      (Index => (if Self.Last >= 1 then 1 else 0));
 
    ----------
    -- Next --
@@ -62,10 +52,7 @@ package body Markdown.Block_Containers is
    --------------
 
    overriding function Previous
-     (Self : Reversible_Iterator; Position : Cursor) return Cursor
-   is
-   begin
-      return (Index => (if Position.Index > 0 then Position.Index - 1 else 0));
-   end Previous;
+     (Self : Reversible_Iterator; Position : Cursor) return Cursor is
+       (Index => (if Position.Index > 0 then Position.Index - 1 else 0));
 
 end Markdown.Block_Containers;
