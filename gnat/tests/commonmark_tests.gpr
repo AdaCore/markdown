@@ -10,8 +10,10 @@ with "markdown";
 project CommonMark_Tests is
 
    for Object_Dir use "../" & Markdown'Object_Dir & "/tests";
-   for Source_Dirs use ("../../testsuite/commonmark");
-   for Main use ("commonmark_tests.adb");
+   for Source_Dirs use
+     ("../../testsuite/commonmark",
+      "../../testsuite/gnatdoc");
+   for Main use ("commonmark_tests.adb", "gnatdoc_tests.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Markdown.Ada_Switches & ("-gnatW8");

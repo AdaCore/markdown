@@ -5,6 +5,7 @@ cip
 commonmark
 deallocation
 elsif
+gnatdoc
 parsers
 pragma
 pre

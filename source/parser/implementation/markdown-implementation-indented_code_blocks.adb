@@ -4,15 +4,9 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
-with VSS.Regular_Expressions;
+with VSS.Strings.Cursors;
 
 package body Markdown.Implementation.Indented_Code_Blocks is
-
-   Indent_4 : VSS.Regular_Expressions.Regular_Expression;
-   --  4 spaces at the beginning of a string: "^ {4}"
-
-   Blank_3 : VSS.Regular_Expressions.Regular_Expression;
-   --  Zero to 3 whites-paces: " {0,3}"
 
    -----------------
    -- Append_Line --
@@ -26,19 +20,28 @@ package body Markdown.Implementation.Indented_Code_Blocks is
    is
       pragma Unreferenced (CIP);
 
-      Anchored_Match : constant VSS.Regular_Expressions.Match_Options :=
-        (VSS.Regular_Expressions.Anchored_Match => True);
+      use type VSS.Strings.Character_Count;
+
+      Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
+        Indent.Match (Input.Line.Expanded, Input.First);
 
       Cursor  : VSS.Strings.Character_Iterators.Character_Iterator;
    begin
-      if Indent_4.Match (Input.Line.Expanded, Input.First).Has_Match then
+      if Match.Has_Match and then
+        Match.Marker.Character_Length >= Self.Indent
+      then
          Ok := True;
          Cursor.Set_At (Input.First);
          Forward (Cursor, 4);
          Self.Lines.Append (Input.Line.Unexpanded_Tail (Cursor));
-      elsif Blank_3.Match
-        (Input.Line.Expanded, Input.First, Anchored_Match).Has_Match
+      elsif not Input.First.Has_Element
+        or else
+          (Match.Has_Match and then
+            VSS.Strings.Cursors.Abstract_Segment_Cursor'Class
+              (Match.Marker).Last_Character_Index
+                = Input.Line.Expanded.Character_Length)
       then
+         --  Line is empty or contains only spaces and shorten then indent (4)
          Ok := True;
          Self.Lines.Append (VSS.Strings.Empty_Virtual_String);
       else
@@ -68,19 +71,20 @@ package body Markdown.Implementation.Indented_Code_Blocks is
    procedure Detector
      (Input : Input_Position;
       Tag   : in out Ada.Tags.Tag;
-      CIP   : out Can_Interrupt_Paragraph) is
+      CIP   : out Can_Interrupt_Paragraph)
+   is
+      use type VSS.Strings.Character_Count;
+
+      Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
-      if not Blank_3.Is_Valid then  --  Construct Blank_3 regexp
-         Blank_3 := VSS.Regular_Expressions.To_Regular_Expression
-           ("   |  | |");  --  XXX: Replace with " {0,3}"
+      if not Indent.Is_Valid then  --  Construct Indent regexp
+         Indent := VSS.Regular_Expressions.To_Regular_Expression
+           ("^  *");  --  XXX: Replace with "^ +"
       end if;
 
-      if not Indent_4.Is_Valid then  --  Construct Indent_4 regexp
-         Indent_4 := VSS.Regular_Expressions.To_Regular_Expression
-           ("^    ");  --  XXX: Replace with "^ {4}"
-      end if;
+      Match := Indent.Match (Input.Line.Expanded, Input.First);
 
-      if Indent_4.Match (Input.Line.Expanded, Input.First).Has_Match then
+      if Match.Has_Match and then Match.Marker.Character_Length >= 4 then
          Tag := Indented_Code_Block'Tag;
          CIP := False;
       end if;

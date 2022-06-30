@@ -51,7 +51,7 @@ package body Markdown.Blocks is
    begin
       return Self.Data.Assigned
         and then Self.Data.all in
-          Markdown.Implementation.Indented_Code_Blocks.Indented_Code_Block;
+          Implementation.Indented_Code_Blocks.Indented_Code_Block'Class;
    end Is_Indented_Code_Block;
 
    -------------
