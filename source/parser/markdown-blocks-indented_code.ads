@@ -34,7 +34,7 @@ package Markdown.Blocks.Indented_Code is
 private
 
    type Indented_Code_Block_Access is access all
-     Markdown.Implementation.Indented_Code_Blocks.Indented_Code_Block;
+     Markdown.Implementation.Indented_Code_Blocks.Indented_Code_Block'Class;
 
    type Indented_Code_Block is new Ada.Finalization.Controlled with record
       Data : Indented_Code_Block_Access;

@@ -5,7 +5,7 @@
 --
 
 --  This program accepts Markdown on stdin and prints HTML on stdout.
---  See https://github.com/commonmark/commonmark-spec for more details.
+--  It uses gnatdoc specific blocks parsers.
 
 with Ada.Wide_Wide_Text_IO;
 
@@ -13,14 +13,17 @@ with VSS.Strings;
 
 with Markdown.Documents;
 with Markdown.Parsers;
+with Markdown.Parsers.GNATdoc_Enable;
 
 with HTML_Writers;
 with Prints;
 
-procedure Commonmark_Tests is
+procedure GNATdoc_Tests is
    Writer : HTML_Writers.Writer;
    Parser : Markdown.Parsers.Markdown_Parser;
 begin
+   Markdown.Parsers.GNATdoc_Enable (Parser);
+
    while not Ada.Wide_Wide_Text_IO.End_Of_File loop
       declare
          Line : constant Wide_Wide_String := Ada.Wide_Wide_Text_IO.Get_Line;
@@ -34,8 +37,6 @@ begin
    declare
       Document : constant Markdown.Documents.Document := Parser.Document;
    begin
-      --  Writer.Start_Element ("html");
       Prints.Print_Blocks (Writer, Document);
-      --  Writer.End_Element ("html");
    end;
-end Commonmark_Tests;
+end GNATdoc_Tests;

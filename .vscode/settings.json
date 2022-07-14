@@ -1,5 +1,5 @@
 {
-    "ada.projectFile": "gnat/markdown.gpr",
+    "ada.projectFile": "gnat/tests/commonmark_tests.gpr",
     "ada.renameInComments": true,
     "[ada]": {
         "editor.rulers": [80],

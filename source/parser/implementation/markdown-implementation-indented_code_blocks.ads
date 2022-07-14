@@ -6,6 +6,8 @@
 
 --  Internal representation of a indented code blocks
 
+private with VSS.Regular_Expressions;
+
 with VSS.String_Vectors;
 
 package Markdown.Implementation.Indented_Code_Blocks is
@@ -27,7 +29,8 @@ package Markdown.Implementation.Indented_Code_Blocks is
 private
 
    type Indented_Code_Block is new Abstract_Block with record
-      Lines : VSS.String_Vectors.Virtual_String_Vector;
+      Indent : VSS.Strings.Character_Count := 4;  --  Overridden in GNATdoc
+      Lines  : VSS.String_Vectors.Virtual_String_Vector;
    end record;
 
    overriding function Create
@@ -38,5 +41,8 @@ private
       Input : Input_Position;
       CIP   : Can_Interrupt_Paragraph;
       Ok    : in out Boolean);
+
+   Indent : VSS.Regular_Expressions.Regular_Expression;
+   --  Some spaces at the beginning of a string: "^ +"
 
 end Markdown.Implementation.Indented_Code_Blocks;

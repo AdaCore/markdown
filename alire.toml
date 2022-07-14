@@ -13,3 +13,5 @@ project-files = ["gnat/markdown.gpr"]
 
 [[depends-on]]
 vss = "^22.0.0"
+[[pins]]
+vss = { path='../VSS' }
