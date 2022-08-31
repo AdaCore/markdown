@@ -13,6 +13,7 @@ private with Markdown.Implementation;
 limited with Markdown.Blocks.Indented_Code;
 limited with Markdown.Blocks.Lists;
 limited with Markdown.Blocks.Paragraphs;
+limited with Markdown.Blocks.Quotes;
 
 package Markdown.Blocks is
    pragma Preelaborate;
@@ -29,6 +30,9 @@ package Markdown.Blocks is
    function Is_List (Self : Block'Class) return Boolean;
    --  Check if given block is a list of list items
 
+   function Is_Quote (Self : Block'Class) return Boolean;
+   --  Check if given block is a block quote
+
    function To_Paragraph (Self : Block)
      return Markdown.Blocks.Paragraphs.Paragraph
         with Pre => Self.Is_Paragraph;
@@ -37,6 +41,11 @@ package Markdown.Blocks is
    function To_Indented_Code_Block (Self : Block)
      return Markdown.Blocks.Indented_Code.Indented_Code_Block
         with Pre => Self.Is_Indented_Code_Block;
+   --  Convert the block to an indented code block
+
+   function To_Quote (Self : Block)
+     return Markdown.Blocks.Quotes.Quote
+        with Pre => Self.Is_Quote;
    --  Convert the block to an indented code block
 
    function To_List (Self : Block) return Markdown.Blocks.Lists.List

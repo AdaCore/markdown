@@ -9,10 +9,12 @@ with System.Atomic_Counters;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
+with Markdown.Blocks.Quotes;
 
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.Lists;
 with Markdown.Implementation.Paragraphs;
+with Markdown.Implementation.Quotes;
 
 package body Markdown.Blocks is
 
@@ -76,6 +78,17 @@ package body Markdown.Blocks is
           Markdown.Implementation.Paragraphs.Paragraph;
    end Is_Paragraph;
 
+   --------------
+   -- Is_Quote --
+   --------------
+
+   function Is_Quote (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Markdown.Implementation.Quotes.Quote;
+   end Is_Quote;
+
    ----------------------------
    -- To_Indented_Code_Block --
    ----------------------------
@@ -104,5 +117,15 @@ package body Markdown.Blocks is
    begin
       return Markdown.Blocks.Paragraphs.From_Block (Self);
    end To_Paragraph;
+
+   --------------
+   -- To_Quote --
+   --------------
+
+   function To_Quote (Self : Block)
+     return Markdown.Blocks.Quotes.Quote is
+   begin
+      return Markdown.Blocks.Quotes.From_Block (Self);
+   end To_Quote;
 
 end Markdown.Blocks;

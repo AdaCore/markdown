@@ -11,6 +11,9 @@ with VSS.Strings.Character_Iterators;
 
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Paragraphs;
+pragma Warnings (Off, "is not referenced");
+with Markdown.Blocks.Quotes;
+pragma Warnings (On, "is not referenced");
 
 package body Prints is
    pragma Assertion_Policy (Check);
@@ -95,6 +98,11 @@ package body Prints is
          Writer.Start_Element ("p");
          Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
          Writer.End_Element ("p");
+
+      elsif Block.Is_Quote then
+         Writer.Start_Element ("blockquote");
+         Print_Blocks (Writer, Block.To_Quote);
+         Writer.End_Element ("blockquote");
 
       elsif Block.Is_Indented_Code_Block then
          Writer.Start_Element ("pre");
