@@ -48,7 +48,7 @@ commonmark-spec:
 	@false
 
 coverage:
-	gcov --verbose .objs/static/*
+	find .objs/ -name *.o | xargs -s 512 gcov || true
 
 spellcheck:
 	@STATUS=0; \
