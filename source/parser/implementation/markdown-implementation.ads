@@ -15,6 +15,8 @@ with System.Atomic_Counters;
 with VSS.Strings;
 with VSS.Strings.Character_Iterators;
 
+with Markdown.Inline_Parsers;
+
 package Markdown.Implementation is
    pragma Preelaborate;
 
@@ -77,6 +79,11 @@ package Markdown.Implementation is
    --  detected at the given position and it can interrupt a paragraph.
    --  Return Ok if input was appended to the block.
 
+   not overriding procedure Complete_Parsing
+     (Self   : in out Abstract_Block;
+      Parser : Markdown.Inline_Parsers.Inline_Parser) is null;
+   --  Adjust block state at the end of parse process
+
    package Block_Vectors is new Ada.Containers.Vectors
      (Positive, Abstract_Block_Access);
 
@@ -95,8 +102,11 @@ package Markdown.Implementation is
    --  Set Match to True if Line has continuation markers for the block. If so
    --  shift Line.First to skip the marker.
 
-   procedure Wrap_List_Items (Self : in out Abstract_Container_Block'Class);
-   --  Create List node when needed and move List_Items inside.
+   overriding procedure Complete_Parsing
+     (Self   : in out Abstract_Container_Block;
+      Parser : Markdown.Inline_Parsers.Inline_Parser);
+   --  For all container blocks iterate over children and
+   --  create List node when needed and move List_Items inside.
 
    type Abstract_Container_Block_Access is access all
      Abstract_Container_Block'Class;

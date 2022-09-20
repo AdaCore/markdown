@@ -9,6 +9,7 @@ with Ada.Containers.Vectors;
 with Markdown.Documents;
 with VSS.Strings;
 with Markdown.Implementation;
+with Markdown.Inline_Parsers;
 
 package Markdown.Parsers is
    pragma Preelaborate;
@@ -53,6 +54,8 @@ private
       --  Current open non-container block (if any), e.g. paragraph
       Block_Detectors  : Block_Detector_Vectors.Vector;
       --  Known block detectors
+      Inline_Parser : Markdown.Inline_Parsers.Inline_Parser;
+      --  Parser of inline markups (links, smphasis, code spans, etc)
    end record;
 
    procedure Register_Block

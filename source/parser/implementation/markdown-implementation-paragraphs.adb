@@ -24,6 +24,17 @@ package body Markdown.Implementation.Paragraphs is
       end if;
    end Append_Line;
 
+   ----------------------
+   -- Complete_Parsing --
+   ----------------------
+
+   overriding procedure Complete_Parsing
+     (Self   : in out Paragraph;
+      Parser : Markdown.Inline_Parsers.Inline_Parser) is
+   begin
+      Self.Text := Parser.Parse_Inlines (Self.Lines);
+   end Complete_Parsing;
+
    ------------
    -- Create --
    ------------
@@ -54,27 +65,5 @@ package body Markdown.Implementation.Paragraphs is
          CIP := False;
       end if;
    end Detector;
-
-   ----------
-   -- Text --
-   ----------
-
-   function Text (Self : Paragraph)
-     return Markdown.Annotations.Annotated_Text
-   is
-      First : Boolean := True;
-   begin
-      return Result : Markdown.Annotations.Annotated_Text do
-         for Line of Self.Lines loop
-            if First then
-               First := False;
-            else
-               Result.Plain_Text.Append (' ');
-            end if;
-
-            Result.Plain_Text.Append (Line);
-         end loop;
-      end return;
-   end Text;
 
 end Markdown.Implementation.Paragraphs;
