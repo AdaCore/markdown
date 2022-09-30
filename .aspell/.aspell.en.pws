@@ -7,6 +7,7 @@ deallocation
 elsif
 gnatdoc
 parsers
+pos
 pragma
 pre
 preelaborable

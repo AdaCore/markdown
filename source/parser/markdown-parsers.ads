@@ -55,7 +55,7 @@ private
       Block_Detectors  : Block_Detector_Vectors.Vector;
       --  Known block detectors
       Inline_Parser : Markdown.Inline_Parsers.Inline_Parser;
-      --  Parser of inline markups (links, smphasis, code spans, etc)
+      --  Parser of inline markups (links, emphasis, code spans, etc)
    end record;
 
    procedure Register_Block

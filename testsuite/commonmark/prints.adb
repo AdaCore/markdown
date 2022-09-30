@@ -6,8 +6,9 @@
 
 with VSS.Characters;
 with VSS.Strings;
-with VSS.Strings.Cursors.Markers;
 with VSS.Strings.Character_Iterators;
+with VSS.Strings.Cursors.Markers;
+--  with VSS.Strings.Character_Iterators;
 
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Paragraphs;
@@ -18,6 +19,10 @@ pragma Warnings (On, "is not referenced");
 package body Prints is
    pragma Assertion_Policy (Check);
 
+   Tag : constant array
+     (Markdown.Annotations.Emphasis .. Markdown.Annotations.Strong)
+       of VSS.Strings.Virtual_String := ("em", "strong");
+
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
       Text   : Markdown.Annotations.Annotated_Text)
@@ -26,19 +31,19 @@ package body Prints is
 
       procedure Print
         (From  : in out Positive;
-         Next  : in out VSS.Strings.Cursors.Markers.Character_Marker;
-         Limit : VSS.Strings.Character_Iterators.Character_Iterator);
+         Next  : in out VSS.Strings.Character_Iterators.Character_Iterator;
+         Limit : VSS.Strings.Cursors.Abstract_Cursor'Class);
       --  From is an index in Text.Annotation to start from
       --  Next is a not printed yet character in Text.Plain_Text
       --  Dont go after Limit position in Text.Plain_Text
 
       function "<="
         (Segment  : VSS.Strings.Cursors.Markers.Segment_Marker;
-         Position : VSS.Strings.Character_Iterators.Character_Iterator)
+         Position : VSS.Strings.Cursors.Abstract_Cursor'Class)
          return Boolean
       is
         (VSS.Strings.Cursors.Abstract_Cursor'Class (Segment).
-           Last_Character_Index <= Position.Character_Index);
+           Last_Character_Index <= Position.Last_Character_Index);
       --  Check if Segment ends before Position
 
       -----------
@@ -47,34 +52,82 @@ package body Prints is
 
       procedure Print
         (From  : in out Positive;
-         Next  : in out VSS.Strings.Cursors.Markers.Character_Marker;
-         Limit : VSS.Strings.Character_Iterators.Character_Iterator) is
+         Next  : in out VSS.Strings.Character_Iterators.Character_Iterator;
+         Limit : VSS.Strings.Cursors.Abstract_Cursor'Class)
+      is
+         function Before
+           (Segment : VSS.Strings.Cursors.Markers.Segment_Marker)
+            return VSS.Strings.Cursors.Abstract_Cursor'Class;
+
+         ------------
+         -- Before --
+         ------------
+
+         function Before
+           (Segment : VSS.Strings.Cursors.Markers.Segment_Marker)
+            return VSS.Strings.Cursors.Abstract_Cursor'Class
+         is
+            Ignore : Boolean;
+         begin
+            return Iter : VSS.Strings.Character_Iterators.Character_Iterator do
+               Iter.Set_At
+                 (VSS.Strings.Cursors.Abstract_Cursor'Class
+                    (Segment).First_Marker);
+
+               Ignore := Iter.Backward;
+            end return;
+         end Before;
+
+         Ignore : Boolean;
       begin
          while From <= Text.Annotation.Last_Index and then
            Text.Annotation (From).Segment <= Limit
          loop
-            --  Print annotation here
-            null;
-            From := From + 1;
+            declare
+               Item : constant Markdown.Annotations.Annotation :=
+                 Text.Annotation (From);
+            begin
+               From := From + 1;
+
+               Writer.Characters
+                 (Text.Plain_Text.Slice (Next, Before (Item.Segment)));
+
+               Next.Set_At
+                 (VSS.Strings.Cursors.Abstract_Cursor'Class
+                    (Item.Segment).First_Marker);
+
+               case Item.Kind is
+                  when Markdown.Annotations.Emphasis
+                     | Markdown.Annotations.Strong
+                     =>
+
+                     Writer.Start_Element (Tag (Item.Kind));
+
+                     Print
+                       (From,
+                        Next,
+                        VSS.Strings.Cursors.Abstract_Cursor'Class
+                          (Item.Segment).Last_Marker);
+
+                     Writer.End_Element (Tag (Item.Kind));
+
+                  when others =>
+                     null;
+               end case;
+            end;
          end loop;
 
-         if Next.Character_Index <= Limit.Character_Index then
+         if Next.Character_Index <= Limit.Last_Character_Index then
             Writer.Characters (Text.Plain_Text.Slice (Next, Limit));
 
-            declare
-               Iter : VSS.Strings.Character_Iterators.Character_Iterator :=
-                 Text.Plain_Text.At_Character (Limit);
-            begin
-               if Iter.Forward then
-                  Next := Iter.Marker;
-               end if;
-            end;
+            Next.Set_At (Limit.Last_Marker);
+            Ignore := Next.Forward;
          end if;
       end Print;
 
       From  : Positive := Text.Annotation.First_Index;
-      Next  : VSS.Strings.Cursors.Markers.Character_Marker :=
-        Text.Plain_Text.At_First_Character.Marker;
+      Next  : VSS.Strings.Character_Iterators.Character_Iterator :=
+        Text.Plain_Text.At_First_Character;
    begin
       Print
         (From  => From,

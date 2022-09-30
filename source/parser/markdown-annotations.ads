@@ -83,7 +83,7 @@ package Markdown.Annotations is
    package Annotation_Vectors is new
      Ada.Containers.Vectors (Positive, Annotation);
 
-   type Annotated_Text is tagged record
+   type Annotated_Text is tagged limited record
       Plain_Text : VSS.Strings.Virtual_String;
       Annotation : Annotation_Vectors.Vector;
    end record;
