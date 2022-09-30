@@ -32,7 +32,7 @@ package body Markdown.Implementation.Paragraphs is
      (Self   : in out Paragraph;
       Parser : Markdown.Inline_Parsers.Inline_Parser) is
    begin
-      Self.Text := Parser.Parse_Inlines (Self.Lines);
+      Self.Parser := Parser'Unchecked_Access;
    end Complete_Parsing;
 
    ------------

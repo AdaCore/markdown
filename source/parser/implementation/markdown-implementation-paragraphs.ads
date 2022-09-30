@@ -29,8 +29,8 @@ package Markdown.Implementation.Paragraphs is
 private
 
    type Paragraph is new Abstract_Block with record
-      Lines : VSS.String_Vectors.Virtual_String_Vector;
-      Text  : Markdown.Annotations.Annotated_Text;
+      Lines  : VSS.String_Vectors.Virtual_String_Vector;
+      Parser : access constant Markdown.Inline_Parsers.Inline_Parser;
    end record;
 
    overriding function Create
@@ -47,6 +47,7 @@ private
       Parser : Markdown.Inline_Parsers.Inline_Parser);
 
    function Text (Self : Paragraph)
-     return Markdown.Annotations.Annotated_Text is (Self.Text);
+     return Markdown.Annotations.Annotated_Text is
+       (Self.Parser.Parse (Self.Lines));
 
 end Markdown.Implementation.Paragraphs;

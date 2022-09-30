@@ -40,7 +40,6 @@ Example 51 (lines 963-967) Thematic breaks
 Example 52 (lines 970-974) Thematic breaks
 Example 53 (lines 977-981) Thematic breaks
 Example 54 (lines 986-990) Thematic breaks
-Example 56 (lines 1011-1015) Thematic breaks
 Example 57 (lines 1020-1032) Thematic breaks
 Example 58 (lines 1037-1045) Thematic breaks
 Example 59 (lines 1054-1061) Thematic breaks
@@ -269,89 +268,14 @@ Example 344 (lines 6048-6052) Code spans
 Example 345 (lines 6057-6061) Code spans
 Example 346 (lines 6066-6070) Code spans
 Example 349 (lines 6092-6096) Code spans
-Example 350 (lines 6309-6313) Emphasis and strong emphasis
-Example 354 (lines 6348-6352) Emphasis and strong emphasis
-Example 355 (lines 6355-6359) Emphasis and strong emphasis
-Example 356 (lines 6364-6368) Emphasis and strong emphasis
-Example 363 (lines 6428-6432) Emphasis and strong emphasis
-Example 368 (lines 6482-6486) Emphasis and strong emphasis
-Example 369 (lines 6491-6495) Emphasis and strong emphasis
-Example 372 (lines 6523-6527) Emphasis and strong emphasis
-Example 375 (lines 6546-6550) Emphasis and strong emphasis
-Example 376 (lines 6557-6561) Emphasis and strong emphasis
-Example 377 (lines 6566-6570) Emphasis and strong emphasis
-Example 380 (lines 6596-6600) Emphasis and strong emphasis
-Example 381 (lines 6605-6609) Emphasis and strong emphasis
-Example 388 (lines 6665-6669) Emphasis and strong emphasis
-Example 389 (lines 6676-6680) Emphasis and strong emphasis
-Example 392 (lines 6712-6716) Emphasis and strong emphasis
-Example 393 (lines 6719-6725) Emphasis and strong emphasis
-Example 394 (lines 6728-6732) Emphasis and strong emphasis
-Example 395 (lines 6737-6741) Emphasis and strong emphasis
-Example 398 (lines 6769-6773) Emphasis and strong emphasis
-Example 401 (lines 6792-6796) Emphasis and strong emphasis
-Example 402 (lines 6803-6807) Emphasis and strong emphasis
 Example 403 (lines 6815-6819) Emphasis and strong emphasis
-Example 404 (lines 6822-6828) Emphasis and strong emphasis
-Example 405 (lines 6834-6838) Emphasis and strong emphasis
-Example 406 (lines 6841-6845) Emphasis and strong emphasis
-Example 407 (lines 6848-6852) Emphasis and strong emphasis
-Example 408 (lines 6855-6859) Emphasis and strong emphasis
-Example 409 (lines 6862-6866) Emphasis and strong emphasis
-Example 410 (lines 6868-6872) Emphasis and strong emphasis
-Example 411 (lines 6892-6896) Emphasis and strong emphasis
-Example 412 (lines 6905-6909) Emphasis and strong emphasis
-Example 413 (lines 6912-6916) Emphasis and strong emphasis
-Example 414 (lines 6919-6923) Emphasis and strong emphasis
-Example 415 (lines 6930-6934) Emphasis and strong emphasis
-Example 416 (lines 6936-6940) Emphasis and strong emphasis
-Example 417 (lines 6945-6949) Emphasis and strong emphasis
 Example 418 (lines 6952-6956) Emphasis and strong emphasis
 Example 421 (lines 6981-6985) Emphasis and strong emphasis
-Example 422 (lines 6988-6994) Emphasis and strong emphasis
-Example 423 (lines 7000-7004) Emphasis and strong emphasis
-Example 424 (lines 7007-7011) Emphasis and strong emphasis
-Example 425 (lines 7014-7018) Emphasis and strong emphasis
-Example 426 (lines 7021-7025) Emphasis and strong emphasis
-Example 427 (lines 7028-7032) Emphasis and strong emphasis
-Example 428 (lines 7035-7039) Emphasis and strong emphasis
-Example 429 (lines 7042-7046) Emphasis and strong emphasis
-Example 430 (lines 7049-7053) Emphasis and strong emphasis
-Example 431 (lines 7058-7064) Emphasis and strong emphasis
 Example 432 (lines 7067-7071) Emphasis and strong emphasis
 Example 436 (lines 7100-7104) Emphasis and strong emphasis
-Example 437 (lines 7107-7111) Emphasis and strong emphasis
 Example 439 (lines 7121-7125) Emphasis and strong emphasis
-Example 440 (lines 7128-7132) Emphasis and strong emphasis
-Example 441 (lines 7139-7143) Emphasis and strong emphasis
-Example 442 (lines 7146-7150) Emphasis and strong emphasis
-Example 443 (lines 7153-7157) Emphasis and strong emphasis
-Example 444 (lines 7160-7164) Emphasis and strong emphasis
-Example 445 (lines 7167-7171) Emphasis and strong emphasis
-Example 446 (lines 7174-7178) Emphasis and strong emphasis
 Example 448 (lines 7191-7195) Emphasis and strong emphasis
-Example 449 (lines 7198-7202) Emphasis and strong emphasis
 Example 451 (lines 7212-7216) Emphasis and strong emphasis
-Example 452 (lines 7219-7223) Emphasis and strong emphasis
-Example 453 (lines 7226-7230) Emphasis and strong emphasis
-Example 454 (lines 7237-7241) Emphasis and strong emphasis
-Example 455 (lines 7244-7248) Emphasis and strong emphasis
-Example 456 (lines 7251-7255) Emphasis and strong emphasis
-Example 457 (lines 7258-7262) Emphasis and strong emphasis
-Example 458 (lines 7265-7269) Emphasis and strong emphasis
-Example 459 (lines 7275-7279) Emphasis and strong emphasis
-Example 460 (lines 7282-7286) Emphasis and strong emphasis
-Example 461 (lines 7289-7293) Emphasis and strong emphasis
-Example 462 (lines 7296-7300) Emphasis and strong emphasis
-Example 463 (lines 7306-7310) Emphasis and strong emphasis
-Example 464 (lines 7313-7317) Emphasis and strong emphasis
-Example 465 (lines 7324-7328) Emphasis and strong emphasis
-Example 466 (lines 7333-7337) Emphasis and strong emphasis
-Example 467 (lines 7340-7344) Emphasis and strong emphasis
-Example 468 (lines 7349-7353) Emphasis and strong emphasis
-Example 469 (lines 7356-7360) Emphasis and strong emphasis
-Example 470 (lines 7365-7369) Emphasis and strong emphasis
-Example 471 (lines 7372-7376) Emphasis and strong emphasis
 Example 472 (lines 7381-7385) Emphasis and strong emphasis
 Example 473 (lines 7388-7392) Emphasis and strong emphasis
 Example 474 (lines 7395-7399) Emphasis and strong emphasis
@@ -396,7 +320,6 @@ Example 518 (lines 7879-7883) Links
 Example 519 (lines 7886-7890) Links
 Example 520 (lines 7896-7900) Links
 Example 521 (lines 7903-7907) Links
-Example 522 (lines 7913-7917) Links
 Example 523 (lines 7923-7927) Links
 Example 524 (lines 7930-7934) Links
 Example 525 (lines 7937-7941) Links
@@ -473,30 +396,31 @@ Example 602 (lines 8840-8844) Autolinks
 Example 603 (lines 8862-8866) Autolinks
 Example 604 (lines 8869-8873) Autolinks
 Example 605 (lines 8878-8882) Autolinks
-Example 612 (lines 9003-9007) Raw HTML
-Example 613 (lines 9012-9016) Raw HTML
-Example 614 (lines 9021-9027) Raw HTML
-Example 615 (lines 9032-9038) Raw HTML
-Example 616 (lines 9043-9047) Raw HTML
-Example 622 (lines 9103-9107) Raw HTML
-Example 624 (lines 9121-9127) Raw HTML
-Example 627 (lines 9151-9155) Raw HTML
-Example 628 (lines 9160-9164) Raw HTML
-Example 629 (lines 9169-9173) Raw HTML
-Example 630 (lines 9179-9183) Raw HTML
-Example 631 (lines 9188-9192) Raw HTML
-Example 632 (lines 9195-9199) Raw HTML
-Example 633 (lines 9209-9215) Hard line breaks
+Example 612 (lines 9002-9006) Raw HTML
+Example 613 (lines 9011-9015) Raw HTML
+Example 614 (lines 9020-9026) Raw HTML
+Example 615 (lines 9031-9037) Raw HTML
+Example 616 (lines 9042-9046) Raw HTML
+Example 622 (lines 9102-9106) Raw HTML
+Example 624 (lines 9120-9126) Raw HTML
+Example 625 (lines 9128-9135) Raw HTML
+Example 626 (lines 9140-9144) Raw HTML
+Example 627 (lines 9149-9153) Raw HTML
+Example 628 (lines 9158-9162) Raw HTML
+Example 629 (lines 9168-9172) Raw HTML
+Example 630 (lines 9177-9181) Raw HTML
+Example 631 (lines 9184-9188) Raw HTML
+Example 632 (lines 9198-9204) Hard line breaks
+Example 633 (lines 9210-9216) Hard line breaks
 Example 634 (lines 9221-9227) Hard line breaks
 Example 635 (lines 9232-9238) Hard line breaks
-Example 636 (lines 9243-9249) Hard line breaks
-Example 637 (lines 9252-9258) Hard line breaks
-Example 638 (lines 9264-9270) Hard line breaks
-Example 639 (lines 9273-9279) Hard line breaks
-Example 640 (lines 9284-9289) Hard line breaks
-Example 641 (lines 9292-9297) Hard line breaks
-Example 642 (lines 9302-9308) Hard line breaks
-Example 643 (lines 9311-9317) Hard line breaks
-Example 646 (lines 9338-9342) Hard line breaks
-Example 647 (lines 9345-9349) Hard line breaks
-151 passed, 501 failed, 0 errored, 0 skipped
+Example 636 (lines 9241-9247) Hard line breaks
+Example 637 (lines 9253-9259) Hard line breaks
+Example 638 (lines 9262-9268) Hard line breaks
+Example 639 (lines 9273-9278) Hard line breaks
+Example 640 (lines 9281-9286) Hard line breaks
+Example 641 (lines 9291-9297) Hard line breaks
+Example 642 (lines 9300-9306) Hard line breaks
+Example 645 (lines 9327-9331) Hard line breaks
+Example 646 (lines 9334-9338) Hard line breaks
+226 passed, 425 failed, 0 errored, 0 skipped
