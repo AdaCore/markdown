@@ -45,19 +45,10 @@ Example 58 (lines 1037-1045) Thematic breaks
 Example 59 (lines 1054-1061) Thematic breaks
 Example 60 (lines 1067-1079) Thematic breaks
 Example 61 (lines 1084-1094) Thematic breaks
-Example 62 (lines 1113-1127) ATX headings
 Example 65 (lines 1159-1163) ATX headings
 Example 66 (lines 1168-1172) ATX headings
-Example 67 (lines 1177-1181) ATX headings
-Example 68 (lines 1186-1194) ATX headings
-Example 71 (lines 1218-1224) ATX headings
-Example 72 (lines 1229-1235) ATX headings
-Example 73 (lines 1240-1244) ATX headings
-Example 74 (lines 1251-1255) ATX headings
-Example 75 (lines 1260-1264) ATX headings
 Example 76 (lines 1270-1278) ATX headings
 Example 77 (lines 1284-1292) ATX headings
-Example 78 (lines 1295-1303) ATX headings
 Example 79 (lines 1308-1316) ATX headings
 Example 80 (lines 1348-1357) Setext headings
 Example 81 (lines 1362-1369) Setext headings
@@ -182,9 +173,6 @@ Example 217 (lines 3483-3496) Link reference definitions
 Example 218 (lines 3504-3512) Link reference definitions
 Example 226 (lines 3616-3622) Paragraphs
 Example 227 (lines 3633-3645) Blank lines
-Example 228 (lines 3701-3711) Block quotes
-Example 229 (lines 3716-3726) Block quotes
-Example 230 (lines 3731-3741) Block quotes
 Example 232 (lines 3761-3771) Block quotes
 Example 233 (lines 3777-3787) Block quotes
 Example 234 (lines 3801-3809) Block quotes
@@ -396,6 +384,4 @@ Example 639 (lines 9273-9278) Hard line breaks
 Example 640 (lines 9281-9286) Hard line breaks
 Example 641 (lines 9291-9297) Hard line breaks
 Example 642 (lines 9300-9306) Hard line breaks
-Example 645 (lines 9327-9331) Hard line breaks
-Example 646 (lines 9334-9338) Hard line breaks
-251 passed, 400 failed, 0 errored, 0 skipped
+265 passed, 386 failed, 0 errored, 0 skipped

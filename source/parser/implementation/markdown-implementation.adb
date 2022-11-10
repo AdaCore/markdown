@@ -107,6 +107,25 @@ package body Markdown.Implementation is
       end if;
    end Unexpanded_Tail;
 
+   ---------------------
+   -- Unexpanded_Tail --
+   ---------------------
+
+   function Unexpanded_Tail
+     (Self : Input_Line;
+      From : VSS.Strings.Character_Iterators.Character_Iterator;
+      To   : VSS.Strings.Character_Iterators.Character_Iterator)
+        return VSS.Strings.Virtual_String
+   is
+      use type VSS.Strings.Virtual_String;
+   begin
+      if Self.Text = Self.Expanded then
+         return Self.Expanded.Slice (From, To);
+      else
+         raise Program_Error with "Unimplemented";
+      end if;
+   end Unexpanded_Tail;
+
    -----------------
    -- Unreference --
    -----------------

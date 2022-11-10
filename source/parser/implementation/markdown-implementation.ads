@@ -53,6 +53,13 @@ package Markdown.Implementation is
    --  Get From as a position in Self.Expanded and return a slice of Self.Text,
    --  that corresponds to Self.Expanded.Tail (From)
 
+   function Unexpanded_Tail
+     (Self : Input_Line;
+      From : VSS.Strings.Character_Iterators.Character_Iterator;
+      To   : VSS.Strings.Character_Iterators.Character_Iterator)
+        return VSS.Strings.Virtual_String;
+   --  The same as before, but with `To`.
+
    type Input_Line_Access is access constant Input_Line;
 
    type Input_Position is record

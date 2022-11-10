@@ -10,6 +10,7 @@ private with Ada.Finalization;
 
 private with Markdown.Implementation;
 
+limited with Markdown.Blocks.ATX_Headings;
 limited with Markdown.Blocks.Indented_Code;
 limited with Markdown.Blocks.Lists;
 limited with Markdown.Blocks.Paragraphs;
@@ -20,6 +21,9 @@ package Markdown.Blocks is
 
    type Block is tagged private;
    --  Block element of a markdown document
+
+   function Is_ATX_Heading (Self : Block'Class) return Boolean;
+   --  Check if given block is an ATX heading
 
    function Is_Paragraph (Self : Block'Class) return Boolean;
    --  Check if given block is a paragraph
@@ -32,6 +36,11 @@ package Markdown.Blocks is
 
    function Is_Quote (Self : Block'Class) return Boolean;
    --  Check if given block is a block quote
+
+   function To_ATX_Heading (Self : Block)
+     return Markdown.Blocks.ATX_Headings.ATX_Heading
+        with Pre => Self.Is_ATX_Heading;
+   --  Convert the block to an ATX heading
 
    function To_Paragraph (Self : Block)
      return Markdown.Blocks.Paragraphs.Paragraph

@@ -10,6 +10,7 @@ with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors.Markers;
 --  with VSS.Strings.Character_Iterators;
 
+with Markdown.Blocks.ATX_Headings;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Paragraphs;
 pragma Warnings (Off, "is not referenced");
@@ -174,6 +175,17 @@ package body Prints is
          Writer.Start_Element ("p");
          Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
          Writer.End_Element ("p");
+
+      elsif Block.Is_ATX_Heading then
+         declare
+            Image : Wide_Wide_String :=
+              Block.To_ATX_Heading.Level'Wide_Wide_Image;
+         begin
+            Image (1) := 'h';
+            Writer.Start_Element (VSS.Strings.To_Virtual_String (Image));
+            Print_Annotated_Text (Writer, Block.To_ATX_Heading.Text);
+            Writer.End_Element (VSS.Strings.To_Virtual_String (Image));
+         end;
 
       elsif Block.Is_Quote then
          Writer.Start_Element ("blockquote");

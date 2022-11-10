@@ -6,11 +6,13 @@
 
 with System.Atomic_Counters;
 
+with Markdown.Blocks.ATX_Headings;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
 with Markdown.Blocks.Quotes;
 
+with Markdown.Implementation.ATX_Headings;
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.Lists;
 with Markdown.Implementation.Paragraphs;
@@ -44,6 +46,17 @@ package body Markdown.Blocks is
          end if;
       end if;
    end Finalize;
+
+   --------------------
+   -- Is_ATX_Heading --
+   --------------------
+
+   function Is_ATX_Heading (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Implementation.ATX_Headings.ATX_Heading'Class;
+   end Is_ATX_Heading;
 
    ----------------------------
    -- Is_Indented_Code_Block --
@@ -88,6 +101,16 @@ package body Markdown.Blocks is
         and then Self.Data.all in
           Markdown.Implementation.Quotes.Quote;
    end Is_Quote;
+
+   --------------------
+   -- To_ATX_Heading --
+   --------------------
+
+   function To_ATX_Heading (Self : Block)
+     return Markdown.Blocks.ATX_Headings.ATX_Heading is
+   begin
+      return Markdown.Blocks.ATX_Headings.From_Block (Self);
+   end To_ATX_Heading;
 
    ----------------------------
    -- To_Indented_Code_Block --
