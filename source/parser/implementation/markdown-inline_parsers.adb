@@ -8,7 +8,9 @@ pragma Ada_2022;
 with Ada.Containers.Generic_Anonymous_Array_Sort;
 with Ada.Containers.Vectors;
 
+with VSS.Characters;
 with VSS.Implementation.Strings;
+with VSS.Regular_Expressions;
 with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors.Internals;
 with VSS.Strings.Cursors.Markers.Internals;
@@ -55,6 +57,12 @@ package body Markdown.Inline_Parsers is
       From      : Positive := 1;
       To        : Natural := Natural'Last);
 
+   procedure Process_Links
+     (Text      : VSS.Strings.Virtual_String;
+      Markup    : in out Markup_Vectors.Vector;
+      Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
+      Bottom    : Natural := 1);
+
    procedure Forward
      (Marker : in out VSS.Strings.Cursors.Markers.Character_Marker;
       Count  : VSS.Strings.Character_Count);
@@ -67,6 +75,54 @@ package body Markdown.Inline_Parsers is
    procedure Read_Character
      (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
       Result : in out VSS.Strings.Virtual_String);
+
+   procedure Parse_Link_Ahead
+     (Text      : VSS.Strings.Virtual_String;
+      Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
+      Close     : Positive;
+      URL       : out VSS.Strings.Virtual_String;
+      Title     : out VSS.Strings.Virtual_String;
+      Ok        : out Boolean);
+
+   procedure Parse_Link_Destination
+     (Text : VSS.Strings.Virtual_String;
+      From : VSS.Strings.Cursors.Markers.Character_Marker;
+      Last : out VSS.Strings.Cursors.Markers.Character_Marker;
+      URL  : out VSS.Strings.Virtual_String;
+      Ok   : out Boolean);
+
+   Link_Start_Pattern : constant Wide_Wide_String :=
+     "^\]\([\t\n\v\f\r ]*[^\n]";
+   --  `](` with optional spaces plus one non-space character
+
+   Link_Start : VSS.Regular_Expressions.Regular_Expression;
+   --  Regexp of Link_Start_Pattern
+
+   Link_Destination_Pattern : constant Wide_Wide_String :=
+     "^<((?:[^<>\\]|\\[^\n\r])*)>";
+   --  zero or more characters between an opening < and a closing > that
+   --  contains no line breaks or non-escaped < or > characters
+
+   Link_Destination : VSS.Regular_Expressions.Regular_Expression;
+   --  Regexp of Link_Destination_Pattern
+
+   Link_Title_Sub_Pattern : constant Wide_Wide_String :=
+     """(?:[^""\\]|\\[^\f])*""" &
+     --  zero or more characters between straight double-quote characters ("),
+     --  including a " character only if it is backslash-escaped
+     "|'(?:[^'\\]|\\[^\f])*'" &
+     --  zero or more characters between straight single-quote characters ('),
+     --  including a ' character only if it is backslash-escaped
+     "|\((?:[^()\\]|\\[^\f])*\)"
+     --  zero or more characters between matching parentheses ((...)),
+     --  including a ( or ) character only if it is backslash-escaped.
+   ;
+
+   Link_Title_Pattern : constant Wide_Wide_String :=
+     "^[ \t\n\v\f\r]*(" & Link_Title_Sub_Pattern & ")?[ \t\n\v\f\r]*\)";
+
+   Link_Title : VSS.Regular_Expressions.Regular_Expression;
+   --  Regexp of Title_Pattern
 
    -----------------
    -- Find_Markup --
@@ -97,6 +153,7 @@ package body Markdown.Inline_Parsers is
          end if;
       end loop;
 
+      Process_Links (Text, Markup, List);
       Process_Emphasis (Markup, List);
    end Find_Markup;
 
@@ -135,10 +192,184 @@ package body Markdown.Inline_Parsers is
         Lines.Join_Lines (VSS.Strings.LF, False);
       Markup : Markup_Vectors.Vector;
    begin
+      if not Link_Start.Is_Valid then
+         Link_Start := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Link_Start_Pattern));
+
+         Link_Destination := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Link_Destination_Pattern));
+
+         Link_Title := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Link_Title_Pattern));
+      end if;
+
       Self.Find_Markup (Text, Markup);
 
       return To_Annotated_Text (Text, Markup);
    end Parse;
+
+   ----------------------
+   -- Parse_Link_Ahead --
+   ----------------------
+
+   procedure Parse_Link_Ahead
+     (Text      : VSS.Strings.Virtual_String;
+      Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
+      Close     : Positive;
+      URL       : out VSS.Strings.Virtual_String;
+      Title     : out VSS.Strings.Virtual_String;
+      Ok        : out Boolean)
+   is
+      procedure To_Inline_Link
+        (From  : VSS.Strings.Cursors.Markers.Character_Marker;
+         To    : in out VSS.Strings.Cursors.Markers.Character_Marker;
+         Ok    : out Boolean);
+
+      --------------------
+      -- To_Inline_Link --
+      --------------------
+
+      procedure To_Inline_Link
+        (From  : VSS.Strings.Cursors.Markers.Character_Marker;
+         To    : in out VSS.Strings.Cursors.Markers.Character_Marker;
+         Ok    : out Boolean)
+      is
+         Last  : VSS.Strings.Cursors.Markers.Character_Marker;
+         Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
+           Link_Start.Match (Text, From);
+      begin
+         if not Match.Has_Match then
+            Ok := False;  --  No ']('!
+            return;
+         end if;
+
+         Parse_Link_Destination (Text, Match.Last_Marker, Last, URL, Ok);
+
+         if Ok then
+            Forward (Last, 1);  --  Skip last char of destination
+         else  --  no link destination
+            Last := From;
+            Forward (Last, 2);  --  Skip `](`
+         end if;
+
+         declare
+            Match : constant VSS.Regular_Expressions.Regular_Expression_Match
+              := Link_Title.Match (Text, Last);
+         begin
+            Ok := Match.Has_Match;
+
+            if Ok then
+               if Match.Has_Capture (1) then
+                  Title := Match.Captured (1);
+                  --  Drop first and last characters (such as `'` or `"`).
+                  Title := Title.Head_Before (Title.At_Last_Character);
+                  Title := Title.Tail_After (Title.At_First_Character);
+               end if;
+
+               To := Match.Last_Marker;
+               Forward (To, 1);  --  Skip `)`
+            end if;
+         end;
+      end To_Inline_Link;
+
+   begin
+      To_Inline_Link (Delimiter (Close).From, Delimiter (Close).To, Ok);
+   end Parse_Link_Ahead;
+
+   ----------------------------
+   -- Parse_Link_Destination --
+   ----------------------------
+
+   procedure Parse_Link_Destination
+     (Text : VSS.Strings.Virtual_String;
+      From : VSS.Strings.Cursors.Markers.Character_Marker;
+      Last : out VSS.Strings.Cursors.Markers.Character_Marker;
+      URL  : out VSS.Strings.Virtual_String;
+      Ok   : out Boolean)
+   is
+      use all type VSS.Characters.Virtual_Character;
+
+      function Undo_Escape
+        (X : VSS.Strings.Virtual_String) return VSS.Strings.Virtual_String
+          is (X);  -- TO BE DONE
+
+      Cursor : VSS.Strings.Character_Iterators.Character_Iterator;
+
+   begin
+      Cursor.Set_At (From);
+
+      if not Cursor.Has_Element then
+         Ok := False;
+         return;
+
+      elsif Cursor.Element = '<' then
+         declare
+            Match : constant VSS.Regular_Expressions.Regular_Expression_Match
+              := Link_Destination.Match (Text, From);
+         begin
+            Ok := Match.Has_Match;
+
+            if Ok then
+               URL := Undo_Escape (Match.Captured (1));
+               Last := Match.Last_Marker;
+            end if;
+
+            return;
+         end;
+      end if;
+
+      declare
+         Ignore    : Boolean;
+         Is_Escape : Boolean := False;
+         Count     : Natural := 0;  --  Count of unmatched '('
+         Stop      : VSS.Strings.Cursors.Markers.Character_Marker;
+         --  First unbalanced parentheses
+      begin
+
+         while Cursor.Has_Element loop
+            declare
+               Char : constant VSS.Characters.Virtual_Character :=
+                 Cursor.Element;
+            begin
+               if Is_Escape then
+                  Is_Escape := False;
+               elsif Char = '\' then
+                  Is_Escape := True;
+               elsif Char <= ' ' then
+                  exit;
+               elsif Char = '(' then
+                  if Count = 0 then
+                     Stop := Cursor.Marker;
+                  end if;
+
+                  Count := Count + 1;
+               elsif Char = ')' then
+                  if Count = 0 then
+                     exit;
+                  else
+                     Count := Count - 1;
+                  end if;
+               end if;
+
+               Implementation.Forward (Cursor);
+            end;
+         end loop;
+
+         if Count > 0 then
+            Cursor.Set_At (Stop);
+            Ignore := Cursor.Backward;
+         elsif Is_Escape then
+            Ignore := Cursor.Backward;
+            Ignore := Cursor.Backward;
+         else
+            Ignore := Cursor.Backward;
+         end if;
+
+         URL := Undo_Escape (Text.Slice (From, Cursor));
+         Last := Cursor.Marker;
+         Ok := not URL.Is_Empty;
+      end;
+   end Parse_Link_Destination;
 
    ----------------------
    -- Process_Emphasis --
@@ -237,6 +468,90 @@ package body Markdown.Inline_Parsers is
          end;
       end loop;
    end Process_Emphasis;
+
+   -------------------
+   -- Process_Links --
+   -------------------
+
+   procedure Process_Links
+     (Text      : VSS.Strings.Virtual_String;
+      Markup    : in out Markup_Vectors.Vector;
+      Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
+      Bottom    : Natural := 1)
+   is
+      use all type Markdown.Emphasis_Delimiters.Delimiter_Filter_Kind;
+   begin
+      for J in Markdown.Emphasis_Delimiters.Each
+        (Delimiter, Filter => (Kind_Of, ']'))
+      loop
+         declare
+
+            Closer_Index : constant Positive :=
+              Emphasis_Delimiters.Delimiter_Vectors.To_Index (J);
+
+            Closer : Markdown.Emphasis_Delimiters.Delimiter renames
+              Delimiter (J);
+         begin
+            for K in reverse Markdown.Emphasis_Delimiters.Each
+              (Delimiter,
+               Filter => (Kind_Of, '['),
+               From   => Bottom,
+               To     => Closer_Index - 1)
+            loop
+               declare
+
+                  Opener_Index : constant Positive :=
+                    Emphasis_Delimiters.Delimiter_Vectors.To_Index (K);
+
+                  Opener : Markdown.Emphasis_Delimiters.Delimiter renames
+                    Delimiter (K);
+
+                  URL   : VSS.Strings.Virtual_String;
+                  Title : VSS.Strings.Virtual_String;
+                  Ok    : Boolean;
+               begin
+                  Parse_Link_Ahead
+                    (Text,
+                     Delimiter,
+                     --  Opener_Index,
+                     Closer_Index,
+                     URL,
+                     Title,
+                     Ok);
+
+                  if Ok then
+                     declare
+                        First : Inline_Parsers.Markup :=
+                          (Link, Opener.From, Opener.From,
+                           URL, Title.Split_Lines);
+                        Last  : constant Inline_Parsers.Markup :=
+                          (Link, Closer.From, Closer.To,
+                           URL, First.Title);
+                     begin
+                        Forward (First.To, 1);
+                        Markup.Append (First);
+                        Markup.Append (Last);
+
+                        Process_Emphasis
+                          (Markup, Delimiter, Opener_Index, Closer_Index);
+
+                        for M in Markdown.Emphasis_Delimiters.Each
+                          (Delimiter,
+                           Filter => (Kind_Of, '['),
+                           From   => Bottom,
+                           To     => Closer_Index - 1)
+                        loop
+                           Delimiter (M).Is_Deleted := True;
+                        end loop;
+                     end;
+                  end if;
+               end;
+            end loop;
+
+            Closer.Is_Deleted := True;
+         end;
+      end loop;
+   end Process_Links;
 
    --------------------
    -- Read_Character --
@@ -354,7 +669,8 @@ package body Markdown.Inline_Parsers is
                   return (Markdown.Annotations.Strong, Segment);
                end if;
             when Link =>
-               raise Program_Error;
+               return
+                 (Markdown.Annotations.Link, Segment, Item.URL, Item.Title);
          end case;
       end To_Annotation;
 
