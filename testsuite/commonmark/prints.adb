@@ -111,6 +111,29 @@ package body Prints is
 
                      Writer.End_Element (Tag (Item.Kind));
 
+                  when Markdown.Annotations.Link =>
+                     declare
+                        Attr : HTML_Writers.HTML_Attributes;
+                     begin
+                        Attr.Append (("href", Item.Destination));
+
+                        if not Item.Title.Is_Empty then
+                           Attr.Append
+                             (("title",
+                              Item.Title.Join_Lines (VSS.Strings.LF, False)));
+                        end if;
+
+                        Writer.Start_Element ("a", Attr);
+
+                        Print
+                          (From,
+                           Next,
+                           VSS.Strings.Cursors.Abstract_Cursor'Class
+                             (Item.Segment).Last_Marker);
+
+                        Writer.End_Element ("a");
+                     end;
+
                   when others =>
                      null;
                end case;
