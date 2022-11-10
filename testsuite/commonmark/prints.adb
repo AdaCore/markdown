@@ -176,6 +176,10 @@ package body Prints is
          Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
          Writer.End_Element ("p");
 
+      elsif Block.Is_Thematic_Break then
+         Writer.Start_Element ("hr");
+         Writer.End_Element ("hr");
+
       elsif Block.Is_ATX_Heading then
          declare
             Image : Wide_Wide_String :=

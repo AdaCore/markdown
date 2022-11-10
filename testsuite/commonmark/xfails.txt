@@ -33,47 +33,30 @@ Example 39 (lines 803-809) Entity and numeric character references
 Example 40 (lines 811-815) Entity and numeric character references
 Example 41 (lines 818-822) Entity and numeric character references
 Example 42 (lines 841-849) Precedence
-Example 43 (lines 880-888) Thematic breaks
-Example 47 (lines 922-930) Thematic breaks
-Example 50 (lines 954-958) Thematic breaks
-Example 51 (lines 963-967) Thematic breaks
-Example 52 (lines 970-974) Thematic breaks
-Example 53 (lines 977-981) Thematic breaks
-Example 54 (lines 986-990) Thematic breaks
 Example 57 (lines 1020-1032) Thematic breaks
-Example 58 (lines 1037-1045) Thematic breaks
 Example 59 (lines 1054-1061) Thematic breaks
 Example 60 (lines 1067-1079) Thematic breaks
 Example 61 (lines 1084-1094) Thematic breaks
 Example 65 (lines 1159-1163) ATX headings
 Example 66 (lines 1168-1172) ATX headings
 Example 76 (lines 1270-1278) ATX headings
-Example 77 (lines 1284-1292) ATX headings
 Example 79 (lines 1308-1316) ATX headings
 Example 80 (lines 1348-1357) Setext headings
 Example 81 (lines 1362-1369) Setext headings
 Example 82 (lines 1376-1383) Setext headings
 Example 83 (lines 1388-1397) Setext headings
 Example 84 (lines 1403-1416) Setext headings
-Example 85 (lines 1421-1434) Setext headings
 Example 86 (lines 1440-1445) Setext headings
-Example 88 (lines 1461-1472) Setext headings
 Example 89 (lines 1477-1482) Setext headings
 Example 90 (lines 1487-1492) Setext headings
 Example 91 (lines 1498-1511) Setext headings
-Example 92 (lines 1517-1525) Setext headings
 Example 93 (lines 1528-1538) Setext headings
 Example 94 (lines 1541-1549) Setext headings
 Example 95 (lines 1556-1563) Setext headings
 Example 96 (lines 1569-1581) Setext headings
-Example 98 (lines 1598-1604) Setext headings
 Example 99 (lines 1607-1615) Setext headings
-Example 100 (lines 1618-1625) Setext headings
-Example 101 (lines 1628-1636) Setext headings
 Example 102 (lines 1642-1647) Setext headings
 Example 103 (lines 1673-1683) Setext headings
-Example 104 (lines 1689-1701) Setext headings
-Example 105 (lines 1707-1717) Setext headings
 Example 106 (lines 1722-1732) Setext headings
 Example 109 (lines 1778-1791) Indented code blocks
 Example 115 (lines 1879-1894) Indented code blocks
@@ -175,13 +158,11 @@ Example 226 (lines 3616-3622) Paragraphs
 Example 227 (lines 3633-3645) Blank lines
 Example 232 (lines 3761-3771) Block quotes
 Example 233 (lines 3777-3787) Block quotes
-Example 234 (lines 3801-3809) Block quotes
 Example 235 (lines 3821-3833) Block quotes
 Example 237 (lines 3852-3862) Block quotes
 Example 238 (lines 3868-3876) Block quotes
 Example 239 (lines 3892-3897) Block quotes
 Example 240 (lines 3900-3907) Block quotes
-Example 246 (lines 3988-4000) Block quotes
 Example 247 (lines 4006-4014) Block quotes
 Example 250 (lines 4045-4057) Block quotes
 Example 251 (lines 4060-4074) Block quotes
@@ -384,4 +365,4 @@ Example 639 (lines 9273-9278) Hard line breaks
 Example 640 (lines 9281-9286) Hard line breaks
 Example 641 (lines 9291-9297) Hard line breaks
 Example 642 (lines 9300-9306) Hard line breaks
-265 passed, 386 failed, 0 errored, 0 skipped
+284 passed, 367 failed, 0 errored, 0 skipped
