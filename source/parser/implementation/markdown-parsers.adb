@@ -6,6 +6,7 @@
 
 with Ada.Tags.Generic_Dispatching_Constructor;
 
+with Markdown.Implementation.ATX_Headings;
 with Markdown.Implementation.Documents;
 with Markdown.Implementation.Paragraphs;
 with Markdown.Implementation.Quotes;
@@ -234,6 +235,9 @@ package body Markdown.Parsers is
    begin
       Self.Register_Block
         (Markdown.Implementation.Indented_Code_Blocks.Detector'Access);
+
+      Self.Register_Block
+        (Markdown.Implementation.ATX_Headings.Detector'Access);
 
       Self.Register_Block (Markdown.Implementation.List_Items.Detector'Access);
       Self.Register_Block (Markdown.Implementation.Quotes.Detector'Access);
