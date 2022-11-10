@@ -12,6 +12,7 @@ with Markdown.Implementation.Paragraphs;
 with Markdown.Implementation.Quotes;
 with Markdown.Implementation.List_Items;
 with Markdown.Implementation.Indented_Code_Blocks;
+with Markdown.Implementation.Thematic_Breaks;
 with Markdown.Documents.Internals;
 
 package body Markdown.Parsers is
@@ -234,10 +235,13 @@ package body Markdown.Parsers is
      (Self : in out Markdown_Parser'Class) is
    begin
       Self.Register_Block
-        (Markdown.Implementation.Indented_Code_Blocks.Detector'Access);
+        (Markdown.Implementation.Thematic_Breaks.Detector'Access);
 
       Self.Register_Block
         (Markdown.Implementation.ATX_Headings.Detector'Access);
+
+      Self.Register_Block
+        (Markdown.Implementation.Indented_Code_Blocks.Detector'Access);
 
       Self.Register_Block (Markdown.Implementation.List_Items.Detector'Access);
       Self.Register_Block (Markdown.Implementation.Quotes.Detector'Access);

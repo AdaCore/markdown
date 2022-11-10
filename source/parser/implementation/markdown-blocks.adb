@@ -11,12 +11,14 @@ with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
 with Markdown.Blocks.Quotes;
+with Markdown.Blocks.Thematic_Breaks;
 
 with Markdown.Implementation.ATX_Headings;
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.Lists;
 with Markdown.Implementation.Paragraphs;
 with Markdown.Implementation.Quotes;
+with Markdown.Implementation.Thematic_Breaks;
 
 package body Markdown.Blocks is
 
@@ -102,6 +104,17 @@ package body Markdown.Blocks is
           Markdown.Implementation.Quotes.Quote;
    end Is_Quote;
 
+   -----------------------
+   -- Is_Thematic_Break --
+   -----------------------
+
+   function Is_Thematic_Break (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Markdown.Implementation.Thematic_Breaks.Thematic_Break;
+   end Is_Thematic_Break;
+
    --------------------
    -- To_ATX_Heading --
    --------------------
@@ -150,5 +163,15 @@ package body Markdown.Blocks is
    begin
       return Markdown.Blocks.Quotes.From_Block (Self);
    end To_Quote;
+
+   ------------------------
+   -- To_Thematic_Breaks --
+   ------------------------
+
+   function To_Thematic_Breaks (Self : Block)
+     return Markdown.Blocks.Thematic_Breaks.Thematic_Break is
+   begin
+      return Markdown.Blocks.Thematic_Breaks.From_Block (Self);
+   end To_Thematic_Breaks;
 
 end Markdown.Blocks;

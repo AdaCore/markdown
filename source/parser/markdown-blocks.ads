@@ -15,12 +15,17 @@ limited with Markdown.Blocks.Indented_Code;
 limited with Markdown.Blocks.Lists;
 limited with Markdown.Blocks.Paragraphs;
 limited with Markdown.Blocks.Quotes;
+limited with Markdown.
+Blocks.Thematic_Breaks;
 
 package Markdown.Blocks is
    pragma Preelaborate;
 
    type Block is tagged private;
    --  Block element of a markdown document
+
+   function Is_Thematic_Break (Self : Block'Class) return Boolean;
+   --  Check if given block is a thematic breaks
 
    function Is_ATX_Heading (Self : Block'Class) return Boolean;
    --  Check if given block is an ATX heading
@@ -36,6 +41,11 @@ package Markdown.Blocks is
 
    function Is_Quote (Self : Block'Class) return Boolean;
    --  Check if given block is a block quote
+
+   function To_Thematic_Breaks (Self : Block)
+     return Markdown.Blocks.Thematic_Breaks.Thematic_Break
+        with Pre => Self.Is_Thematic_Break;
+   --  Convert the block to a thematic breaks
 
    function To_ATX_Heading (Self : Block)
      return Markdown.Blocks.ATX_Headings.ATX_Heading
