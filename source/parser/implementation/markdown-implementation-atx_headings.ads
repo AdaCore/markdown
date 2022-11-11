@@ -4,7 +4,7 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
---  Internal representation of a markdown ATX_Heading
+--  Internal representation of a markdown ATX heading
 
 with Markdown.Annotations;
 

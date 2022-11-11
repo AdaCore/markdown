@@ -7,6 +7,7 @@
 with System.Atomic_Counters;
 
 with Markdown.Blocks.ATX_Headings;
+with Markdown.Blocks.Fenced_Code;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
@@ -14,6 +15,7 @@ with Markdown.Blocks.Quotes;
 with Markdown.Blocks.Thematic_Breaks;
 
 with Markdown.Implementation.ATX_Headings;
+with Markdown.Implementation.Fenced_Code_Blocks;
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.Lists;
 with Markdown.Implementation.Paragraphs;
@@ -59,6 +61,17 @@ package body Markdown.Blocks is
         and then Self.Data.all in
           Implementation.ATX_Headings.ATX_Heading'Class;
    end Is_ATX_Heading;
+
+   --------------------------
+   -- Is_Fenced_Code_Block --
+   --------------------------
+
+   function Is_Fenced_Code_Block (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Implementation.Fenced_Code_Blocks.Fenced_Code_Block'Class;
+   end Is_Fenced_Code_Block;
 
    ----------------------------
    -- Is_Indented_Code_Block --
@@ -125,6 +138,16 @@ package body Markdown.Blocks is
       return Markdown.Blocks.ATX_Headings.From_Block (Self);
    end To_ATX_Heading;
 
+   --------------------------
+   -- To_Fenced_Code_Block --
+   --------------------------
+
+   function To_Fenced_Code_Block (Self : Block)
+     return Markdown.Blocks.Fenced_Code.Fenced_Code_Block is
+   begin
+      return Markdown.Blocks.Fenced_Code.From_Block (Self);
+   end To_Fenced_Code_Block;
+
    ----------------------------
    -- To_Indented_Code_Block --
    ----------------------------
@@ -164,14 +187,14 @@ package body Markdown.Blocks is
       return Markdown.Blocks.Quotes.From_Block (Self);
    end To_Quote;
 
-   ------------------------
-   -- To_Thematic_Breaks --
-   ------------------------
+   -----------------------
+   -- To_Thematic_Break --
+   -----------------------
 
-   function To_Thematic_Breaks (Self : Block)
+   function To_Thematic_Break (Self : Block)
      return Markdown.Blocks.Thematic_Breaks.Thematic_Break is
    begin
       return Markdown.Blocks.Thematic_Breaks.From_Block (Self);
-   end To_Thematic_Breaks;
+   end To_Thematic_Break;
 
 end Markdown.Blocks;

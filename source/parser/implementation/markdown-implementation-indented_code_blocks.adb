@@ -78,8 +78,7 @@ package body Markdown.Implementation.Indented_Code_Blocks is
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
       if not Indent.Is_Valid then  --  Construct Indent regexp
-         Indent := VSS.Regular_Expressions.To_Regular_Expression
-           ("^  *");  --  XXX: Replace with "^ +"
+         Indent := VSS.Regular_Expressions.To_Regular_Expression ("^ +");
       end if;
 
       Match := Indent.Match (Input.Line.Expanded, Input.First);
@@ -98,8 +97,8 @@ package body Markdown.Implementation.Indented_Code_Blocks is
      (Self : Indented_Code_Block)
       return VSS.String_Vectors.Virtual_String_Vector
    is
-      First : Natural;
-      Last  : Natural;
+      First : Positive := 1;
+      Last  : Natural := 0;
    begin
       for J in 1 .. Self.Lines.Length loop
          First := J;

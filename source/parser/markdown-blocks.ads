@@ -11,12 +11,12 @@ private with Ada.Finalization;
 private with Markdown.Implementation;
 
 limited with Markdown.Blocks.ATX_Headings;
+limited with Markdown.Blocks.Fenced_Code;
 limited with Markdown.Blocks.Indented_Code;
 limited with Markdown.Blocks.Lists;
 limited with Markdown.Blocks.Paragraphs;
 limited with Markdown.Blocks.Quotes;
-limited with Markdown.
-Blocks.Thematic_Breaks;
+limited with Markdown.Blocks.Thematic_Breaks;
 
 package Markdown.Blocks is
    pragma Preelaborate;
@@ -30,19 +30,22 @@ package Markdown.Blocks is
    function Is_ATX_Heading (Self : Block'Class) return Boolean;
    --  Check if given block is an ATX heading
 
-   function Is_Paragraph (Self : Block'Class) return Boolean;
-   --  Check if given block is a paragraph
-
    function Is_Indented_Code_Block (Self : Block'Class) return Boolean;
    --  Check if given block is an indented code block
 
-   function Is_List (Self : Block'Class) return Boolean;
-   --  Check if given block is a list of list items
+   function Is_Fenced_Code_Block (Self : Block'Class) return Boolean;
+   --  Check if given block is an indented code block
+
+   function Is_Paragraph (Self : Block'Class) return Boolean;
+   --  Check if given block is a paragraph
 
    function Is_Quote (Self : Block'Class) return Boolean;
    --  Check if given block is a block quote
 
-   function To_Thematic_Breaks (Self : Block)
+   function Is_List (Self : Block'Class) return Boolean;
+   --  Check if given block is a list of list items
+
+   function To_Thematic_Break (Self : Block)
      return Markdown.Blocks.Thematic_Breaks.Thematic_Break
         with Pre => Self.Is_Thematic_Break;
    --  Convert the block to a thematic breaks
@@ -52,15 +55,20 @@ package Markdown.Blocks is
         with Pre => Self.Is_ATX_Heading;
    --  Convert the block to an ATX heading
 
-   function To_Paragraph (Self : Block)
-     return Markdown.Blocks.Paragraphs.Paragraph
-        with Pre => Self.Is_Paragraph;
-   --  Convert the block to a Paragraph
-
    function To_Indented_Code_Block (Self : Block)
      return Markdown.Blocks.Indented_Code.Indented_Code_Block
         with Pre => Self.Is_Indented_Code_Block;
    --  Convert the block to an indented code block
+
+   function To_Fenced_Code_Block (Self : Block)
+     return Markdown.Blocks.Fenced_Code.Fenced_Code_Block
+        with Pre => Self.Is_Fenced_Code_Block;
+   --  Convert the block to an fenced code block
+
+   function To_Paragraph (Self : Block)
+     return Markdown.Blocks.Paragraphs.Paragraph
+        with Pre => Self.Is_Paragraph;
+   --  Convert the block to a Paragraph
 
    function To_Quote (Self : Block)
      return Markdown.Blocks.Quotes.Quote

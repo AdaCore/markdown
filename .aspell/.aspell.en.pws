@@ -1,6 +1,8 @@
 personal_ws-1.1 en 30
 adacore
 atx
+backtick
+backticks
 cdata
 cip
 commonmark
@@ -20,3 +22,4 @@ unexpanded
 unreference
 unreferenced
 vss
+whitespace
