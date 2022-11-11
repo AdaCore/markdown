@@ -5,12 +5,14 @@
 --
 
 with VSS.Characters;
+with VSS.String_Vectors;
 with VSS.Strings;
 with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors.Markers;
 --  with VSS.Strings.Character_Iterators;
 
 with Markdown.Blocks.ATX_Headings;
+with Markdown.Blocks.Fenced_Code;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Paragraphs;
 pragma Warnings (Off, "is not referenced");
@@ -195,6 +197,32 @@ package body Prints is
          Writer.Start_Element ("blockquote");
          Print_Blocks (Writer, Block.To_Quote);
          Writer.End_Element ("blockquote");
+
+      elsif Block.Is_Fenced_Code_Block then
+         declare
+            Info : constant VSS.Strings.Virtual_String :=
+              Block.To_Fenced_Code_Block.Info_String;
+
+            List : constant VSS.String_Vectors.Virtual_String_Vector :=
+              Info.Split (' ');
+
+            Attr : HTML_Writers.HTML_Attributes;
+         begin
+            if not Info.Is_Empty then
+               Attr.Append (("class", List (1)));
+            end if;
+
+            Writer.Start_Element ("pre");
+            Writer.Start_Element ("code", Attr);
+
+            for Line of Block.To_Fenced_Code_Block.Text loop
+               Writer.Characters (Line);
+               Writer.Characters (New_Line);
+            end loop;
+
+            Writer.End_Element ("code");
+            Writer.End_Element ("pre");
+         end;
 
       elsif Block.Is_Indented_Code_Block then
          Writer.Start_Element ("pre");

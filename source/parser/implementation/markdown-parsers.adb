@@ -6,14 +6,15 @@
 
 with Ada.Tags.Generic_Dispatching_Constructor;
 
+with Markdown.Documents.Internals;
 with Markdown.Implementation.ATX_Headings;
 with Markdown.Implementation.Documents;
+with Markdown.Implementation.Fenced_Code_Blocks;
+with Markdown.Implementation.Indented_Code_Blocks;
+with Markdown.Implementation.List_Items;
 with Markdown.Implementation.Paragraphs;
 with Markdown.Implementation.Quotes;
-with Markdown.Implementation.List_Items;
-with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.Thematic_Breaks;
-with Markdown.Documents.Internals;
 
 package body Markdown.Parsers is
 
@@ -232,20 +233,17 @@ package body Markdown.Parsers is
    ---------------------------------
 
    procedure Register_Common_Mark_Blocks
-     (Self : in out Markdown_Parser'Class) is
+     (Self : in out Markdown_Parser'Class)
+   is
+      package MI renames Markdown.Implementation;
    begin
-      Self.Register_Block
-        (Markdown.Implementation.Thematic_Breaks.Detector'Access);
-
-      Self.Register_Block
-        (Markdown.Implementation.ATX_Headings.Detector'Access);
-
-      Self.Register_Block
-        (Markdown.Implementation.Indented_Code_Blocks.Detector'Access);
-
-      Self.Register_Block (Markdown.Implementation.List_Items.Detector'Access);
-      Self.Register_Block (Markdown.Implementation.Quotes.Detector'Access);
-      Self.Register_Block (Markdown.Implementation.Paragraphs.Detector'Access);
+      Self.Register_Block (MI.Thematic_Breaks.Detector'Access);
+      Self.Register_Block (MI.ATX_Headings.Detector'Access);
+      Self.Register_Block (MI.Indented_Code_Blocks.Detector'Access);
+      Self.Register_Block (MI.Fenced_Code_Blocks.Detector'Access);
+      Self.Register_Block (MI.List_Items.Detector'Access);
+      Self.Register_Block (MI.Quotes.Detector'Access);
+      Self.Register_Block (MI.Paragraphs.Detector'Access);
    end Register_Common_Mark_Blocks;
 
    -------------------

@@ -13,7 +13,6 @@ Example 14 (lines 510-530) Backslash escapes
 Example 15 (lines 535-539) Backslash escapes
 Example 16 (lines 544-550) Backslash escapes
 Example 17 (lines 556-560) Backslash escapes
-Example 19 (lines 571-578) Backslash escapes
 Example 20 (lines 581-585) Backslash escapes
 Example 21 (lines 588-592) Backslash escapes
 Example 22 (lines 598-602) Backslash escapes
@@ -60,26 +59,10 @@ Example 103 (lines 1673-1683) Setext headings
 Example 106 (lines 1722-1732) Setext headings
 Example 109 (lines 1778-1791) Indented code blocks
 Example 115 (lines 1879-1894) Indented code blocks
-Example 119 (lines 1981-1990) Fenced code blocks
-Example 120 (lines 1995-2004) Fenced code blocks
 Example 121 (lines 2008-2014) Fenced code blocks
-Example 122 (lines 2019-2028) Fenced code blocks
-Example 123 (lines 2031-2040) Fenced code blocks
-Example 124 (lines 2045-2054) Fenced code blocks
-Example 125 (lines 2057-2066) Fenced code blocks
-Example 126 (lines 2072-2076) Fenced code blocks
 Example 127 (lines 2079-2089) Fenced code blocks
-Example 128 (lines 2092-2103) Fenced code blocks
 Example 129 (lines 2108-2117) Fenced code blocks
-Example 130 (lines 2122-2127) Fenced code blocks
-Example 131 (lines 2134-2143) Fenced code blocks
-Example 132 (lines 2146-2157) Fenced code blocks
-Example 133 (lines 2160-2171) Fenced code blocks
-Example 135 (lines 2191-2198) Fenced code blocks
-Example 136 (lines 2201-2208) Fenced code blocks
-Example 137 (lines 2213-2221) Fenced code blocks
 Example 138 (lines 2227-2233) Fenced code blocks
-Example 139 (lines 2236-2244) Fenced code blocks
 Example 140 (lines 2250-2261) Fenced code blocks
 Example 141 (lines 2267-2279) Fenced code blocks
 Example 142 (lines 2289-2300) Fenced code blocks
@@ -87,7 +70,6 @@ Example 143 (lines 2303-2314) Fenced code blocks
 Example 144 (lines 2317-2322) Fenced code blocks
 Example 145 (lines 2327-2333) Fenced code blocks
 Example 146 (lines 2338-2345) Fenced code blocks
-Example 147 (lines 2350-2357) Fenced code blocks
 Example 148 (lines 2429-2444) HTML blocks
 Example 149 (lines 2458-2477) HTML blocks
 Example 150 (lines 2480-2488) HTML blocks
@@ -148,7 +130,6 @@ Example 206 (lines 3349-3355) Link reference definitions
 Example 207 (lines 3364-3367) Link reference definitions
 Example 208 (lines 3372-3379) Link reference definitions
 Example 210 (lines 3394-3399) Link reference definitions
-Example 212 (lines 3419-3429) Link reference definitions
 Example 214 (lines 3449-3458) Link reference definitions
 Example 215 (lines 3460-3468) Link reference definitions
 Example 216 (lines 3470-3477) Link reference definitions
@@ -169,7 +150,6 @@ Example 251 (lines 4060-4074) Block quotes
 Example 255 (lines 4191-4200) List items
 Example 257 (lines 4217-4227) List items
 Example 260 (lines 4279-4292) List items
-Example 263 (lines 4328-4350) List items
 Example 265 (lines 4378-4384) List items
 Example 267 (lines 4396-4402) List items
 Example 268 (lines 4405-4411) List items
@@ -213,7 +193,6 @@ Example 320 (lines 5715-5729) Lists
 Example 321 (lines 5735-5753) Lists
 Example 322 (lines 5758-5764) Lists
 Example 323 (lines 5767-5778) Lists
-Example 324 (lines 5784-5798) Lists
 Example 325 (lines 5803-5818) Lists
 Example 326 (lines 5821-5846) Lists
 Example 327 (lines 5855-5859) Inlines
@@ -365,4 +344,4 @@ Example 639 (lines 9273-9278) Hard line breaks
 Example 640 (lines 9281-9286) Hard line breaks
 Example 641 (lines 9291-9297) Hard line breaks
 Example 642 (lines 9300-9306) Hard line breaks
-284 passed, 367 failed, 0 errored, 0 skipped
+305 passed, 346 failed, 0 errored, 0 skipped

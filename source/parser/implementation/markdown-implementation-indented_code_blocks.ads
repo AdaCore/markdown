@@ -4,7 +4,7 @@
 --  SPDX-License-Identifier: Apache-2.0
 --
 
---  Internal representation of a indented code blocks
+--  Internal representation of an indented code block
 
 private with VSS.Regular_Expressions;
 
