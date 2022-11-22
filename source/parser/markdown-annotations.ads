@@ -12,7 +12,6 @@ with Ada.Containers.Vectors;
 
 with VSS.Strings;
 with VSS.String_Vectors;
-with VSS.Strings.Cursors.Markers;
 
 package Markdown.Annotations is
    pragma Preelaborate;
@@ -43,7 +42,8 @@ package Markdown.Annotations is
    --  A vector of HTML attributes
 
    type Annotation (Kind : Annotation_Kind := Link) is record
-      Segment : VSS.Strings.Cursors.Markers.Segment_Marker;
+      From : VSS.Strings.Character_Index := 1;
+      To   : VSS.Strings.Character_Count := 0;
       --  Corresponding segment in the plain text
 
       case Kind is

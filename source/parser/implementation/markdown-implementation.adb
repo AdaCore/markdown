@@ -51,9 +51,7 @@ package body Markdown.Implementation is
 
    procedure Forward
      (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
-      Count  : VSS.Strings.Character_Index := 1)
-   is
-      use type VSS.Strings.Character_Index;
+      Count  : VSS.Strings.Character_Index := 1) is
    begin
       for J in 1 .. Count loop
          declare

@@ -12,7 +12,6 @@ Example 12 (lines 490-494) Backslash escapes
 Example 14 (lines 510-530) Backslash escapes
 Example 15 (lines 535-539) Backslash escapes
 Example 16 (lines 544-550) Backslash escapes
-Example 17 (lines 556-560) Backslash escapes
 Example 20 (lines 581-585) Backslash escapes
 Example 21 (lines 588-592) Backslash escapes
 Example 22 (lines 598-602) Backslash escapes
@@ -25,7 +24,6 @@ Example 31 (lines 729-733) Entity and numeric character references
 Example 32 (lines 736-740) Entity and numeric character references
 Example 33 (lines 743-749) Entity and numeric character references
 Example 34 (lines 752-759) Entity and numeric character references
-Example 35 (lines 765-769) Entity and numeric character references
 Example 37 (lines 784-790) Entity and numeric character references
 Example 38 (lines 792-801) Entity and numeric character references
 Example 39 (lines 803-809) Entity and numeric character references
@@ -59,7 +57,6 @@ Example 103 (lines 1673-1683) Setext headings
 Example 106 (lines 1722-1732) Setext headings
 Example 109 (lines 1778-1791) Indented code blocks
 Example 115 (lines 1879-1894) Indented code blocks
-Example 121 (lines 2008-2014) Fenced code blocks
 Example 127 (lines 2079-2089) Fenced code blocks
 Example 129 (lines 2108-2117) Fenced code blocks
 Example 138 (lines 2227-2233) Fenced code blocks
@@ -68,7 +65,6 @@ Example 141 (lines 2267-2279) Fenced code blocks
 Example 142 (lines 2289-2300) Fenced code blocks
 Example 143 (lines 2303-2314) Fenced code blocks
 Example 144 (lines 2317-2322) Fenced code blocks
-Example 145 (lines 2327-2333) Fenced code blocks
 Example 146 (lines 2338-2345) Fenced code blocks
 Example 148 (lines 2429-2444) HTML blocks
 Example 149 (lines 2458-2477) HTML blocks
@@ -195,27 +191,9 @@ Example 322 (lines 5758-5764) Lists
 Example 323 (lines 5767-5778) Lists
 Example 325 (lines 5803-5818) Lists
 Example 326 (lines 5821-5846) Lists
-Example 327 (lines 5855-5859) Inlines
-Example 328 (lines 5887-5891) Code spans
-Example 329 (lines 5898-5902) Code spans
-Example 330 (lines 5908-5912) Code spans
-Example 331 (lines 5916-5920) Code spans
-Example 332 (lines 5925-5929) Code spans
-Example 333 (lines 5934-5938) Code spans
 Example 334 (lines 5942-5948) Code spans
-Example 335 (lines 5953-5961) Code spans
-Example 336 (lines 5963-5969) Code spans
-Example 337 (lines 5974-5979) Code spans
-Example 338 (lines 5991-5995) Code spans
-Example 339 (lines 6002-6006) Code spans
-Example 340 (lines 6008-6012) Code spans
-Example 341 (lines 6020-6024) Code spans
-Example 342 (lines 6029-6033) Code spans
-Example 343 (lines 6039-6043) Code spans
 Example 344 (lines 6048-6052) Code spans
-Example 345 (lines 6057-6061) Code spans
 Example 346 (lines 6066-6070) Code spans
-Example 349 (lines 6092-6096) Code spans
 Example 436 (lines 7100-7104) Emphasis and strong emphasis
 Example 439 (lines 7121-7125) Emphasis and strong emphasis
 Example 448 (lines 7191-7195) Emphasis and strong emphasis
@@ -244,7 +222,6 @@ Example 516 (lines 7863-7867) Links
 Example 519 (lines 7886-7890) Links
 Example 521 (lines 7903-7907) Links
 Example 523 (lines 7923-7927) Links
-Example 524 (lines 7930-7934) Links
 Example 525 (lines 7937-7941) Links
 Example 526 (lines 7975-7981) Links
 Example 527 (lines 7990-7996) Links
@@ -340,8 +317,6 @@ Example 635 (lines 9232-9238) Hard line breaks
 Example 636 (lines 9241-9247) Hard line breaks
 Example 637 (lines 9253-9259) Hard line breaks
 Example 638 (lines 9262-9268) Hard line breaks
-Example 639 (lines 9273-9278) Hard line breaks
-Example 640 (lines 9281-9286) Hard line breaks
 Example 641 (lines 9291-9297) Hard line breaks
 Example 642 (lines 9300-9306) Hard line breaks
-305 passed, 346 failed, 0 errored, 0 skipped
+330 passed, 321 failed, 0 errored, 0 skipped

@@ -8,6 +8,7 @@ with Ada.Tags.Generic_Dispatching_Constructor;
 
 with Markdown.Documents.Internals;
 with Markdown.Implementation.ATX_Headings;
+with Markdown.Implementation.Code_Spans;
 with Markdown.Implementation.Documents;
 with Markdown.Implementation.Fenced_Code_Blocks;
 with Markdown.Implementation.Indented_Code_Blocks;
@@ -244,6 +245,9 @@ package body Markdown.Parsers is
       Self.Register_Block (MI.List_Items.Detector'Access);
       Self.Register_Block (MI.Quotes.Detector'Access);
       Self.Register_Block (MI.Paragraphs.Detector'Access);
+
+      Self.Inline_Parser.Register
+        (Markdown.Implementation.Code_Spans.Parse_Code_Span'Access);
    end Register_Common_Mark_Blocks;
 
    -------------------

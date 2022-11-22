@@ -14,6 +14,7 @@ with System.Atomic_Counters;
 
 with VSS.Strings;
 with VSS.Strings.Character_Iterators;
+with VSS.Strings.Cursors;
 
 with Markdown.Inline_Parsers;
 
@@ -138,5 +139,12 @@ package Markdown.Implementation is
      (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
       Count  : VSS.Strings.Character_Index := 1);
    --  Move Cursor forward
+
+   use type VSS.Strings.Character_Index;
+
+   function "<"
+     (Left, Right : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
+       return Boolean is
+         (Left.Character_Index < Right.Character_Index);
 
 end Markdown.Implementation;
