@@ -20,8 +20,6 @@ package body Markdown.Implementation.Indented_Code_Blocks is
    is
       pragma Unreferenced (CIP);
 
-      use type VSS.Strings.Character_Count;
-
       Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
         Indent.Match (Input.Line.Expanded, Input.First);
 
@@ -73,8 +71,6 @@ package body Markdown.Implementation.Indented_Code_Blocks is
       Tag   : in out Ada.Tags.Tag;
       CIP   : out Can_Interrupt_Paragraph)
    is
-      use type VSS.Strings.Character_Count;
-
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
       if not Indent.Is_Valid then  --  Construct Indent regexp

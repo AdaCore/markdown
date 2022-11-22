@@ -39,8 +39,6 @@ package body Markdown.Implementation.List_Items is
       Input : in out Input_Position;
       Ok    : out Boolean)
    is
-      use type VSS.Strings.Character_Count;
-
       Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
         Indent_1.Match (Input.Line.Expanded, Input.First);
    begin
@@ -77,8 +75,6 @@ package body Markdown.Implementation.List_Items is
    overriding function Create
      (Input : not null access Input_Position) return List_Item
    is
-      use type VSS.Strings.Character_Count;
-
       Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
         Prefix.Match (Input.Line.Expanded, Input.First);
 
@@ -129,8 +125,6 @@ package body Markdown.Implementation.List_Items is
       Tag   : in out Ada.Tags.Tag;
       CIP   : out Can_Interrupt_Paragraph)
    is
-      use type VSS.Strings.Character_Count;
-
       Marker : VSS.Strings.Virtual_String;
       Suffix : VSS.Strings.Virtual_String;
       Number : Natural;

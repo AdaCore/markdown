@@ -28,7 +28,6 @@ package body Markdown.Implementation.Fenced_Code_Blocks is
    is
       pragma Unreferenced (CIP);
 
-      use type VSS.Strings.Character_Count;
       use type VSS.Characters.Virtual_Character;
 
       Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=

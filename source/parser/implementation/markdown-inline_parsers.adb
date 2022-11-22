@@ -13,12 +13,10 @@ with VSS.Implementation.Strings;
 with VSS.Regular_Expressions;
 with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors.Internals;
-with VSS.Strings.Cursors.Markers.Internals;
-with VSS.Strings.Cursors.Markers;
-with VSS.Strings.Internals;
 with VSS.Strings;
 
 with Markdown.Implementation;
+with VSS.Strings.Cursors.Markers;
 
 package body Markdown.Inline_Parsers is
 
@@ -47,8 +45,10 @@ package body Markdown.Inline_Parsers is
    package Markup_Vectors is new Ada.Containers.Vectors (Markup_Index, Markup);
 
    procedure Find_Markup
-     (Self   : Inline_Parser;
+     (Self   : Inline_Parser'Class;
       Text   : VSS.Strings.Virtual_String;
+      From   : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : out Markup_Vectors.Vector);
 
    procedure Process_Emphasis
@@ -68,8 +68,9 @@ package body Markdown.Inline_Parsers is
       Count  : VSS.Strings.Character_Count);
 
    function To_Annotated_Text
-     (Text   : VSS.Strings.Virtual_String;
-      Markup : Markup_Vectors.Vector)
+     (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      Markup : Markup_Vectors.Vector;
+      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
       return Markdown.Annotations.Annotated_Text;
 
    procedure Read_Character
@@ -90,6 +91,14 @@ package body Markdown.Inline_Parsers is
       Last : out VSS.Strings.Cursors.Markers.Character_Marker;
       URL  : out VSS.Strings.Virtual_String;
       Ok   : out Boolean);
+
+   procedure Append
+     (Self  : in out Markdown.Annotations.Annotated_Text;
+      Value : Markdown.Annotations.Annotated_Text);
+
+   function "<"
+     (Left, Right : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
+       return Boolean renames Markdown.Implementation."<";
 
    Link_Start_Pattern : constant Wide_Wide_String :=
      "^\]\([\t\n\v\f\r ]*[^\n]";
@@ -124,19 +133,43 @@ package body Markdown.Inline_Parsers is
    Link_Title : VSS.Regular_Expressions.Regular_Expression;
    --  Regexp of Title_Pattern
 
+   ------------
+   -- Append --
+   ------------
+
+   procedure Append
+     (Self  : in out Markdown.Annotations.Annotated_Text;
+      Value : Markdown.Annotations.Annotated_Text) is
+   begin
+      for X of Value.Annotation loop
+         declare
+            use type VSS.Strings.Character_Count;
+
+            Next : Markdown.Annotations.Annotation := X;
+         begin
+            Next.From := Next.From + Self.Plain_Text.Character_Length;
+            Next.To := Next.To + Self.Plain_Text.Character_Length;
+            Self.Annotation.Append (Next);
+         end;
+      end loop;
+
+      Self.Plain_Text.Append (Value.Plain_Text);
+   end Append;
+
    -----------------
    -- Find_Markup --
    -----------------
 
    procedure Find_Markup
-     (Self   : Inline_Parser;
+     (Self   : Inline_Parser'Class;
       Text   : VSS.Strings.Virtual_String;
+      From   : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : out Markup_Vectors.Vector)
    is
       pragma Unreferenced (Self);
 
-      Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
-        Text.At_First_Character;
+      Cursor : VSS.Strings.Character_Iterators.Character_Iterator;
 
       Is_Delimiter : Boolean;
       Item         : Emphasis_Delimiters.Delimiter;
@@ -144,8 +177,9 @@ package body Markdown.Inline_Parsers is
       List         : Emphasis_Delimiters.Delimiter_Vectors.Vector;
    begin
       Scanner.Reset;
+      Cursor.Set_At (From);
 
-      while Cursor.Has_Element loop
+      while Cursor < Limit loop
          Scanner.Read_Delimiter (Text, Cursor, Item, Is_Delimiter);
 
          if Is_Delimiter then
@@ -184,13 +218,16 @@ package body Markdown.Inline_Parsers is
    -----------
 
    function Parse
-     (Self  : Inline_Parser;
+     (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
         return Markdown.Annotations.Annotated_Text
    is
       Text : constant VSS.Strings.Virtual_String :=
         Lines.Join_Lines (VSS.Strings.LF, False);
-      Markup : Markup_Vectors.Vector;
+
+      State  : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
+      Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
+        Text.At_First_Character;
    begin
       if not Link_Start.Is_Valid then
          Link_Start := VSS.Regular_Expressions.To_Regular_Expression
@@ -203,9 +240,48 @@ package body Markdown.Inline_Parsers is
            (VSS.Strings.To_Virtual_String (Link_Title_Pattern));
       end if;
 
-      Self.Find_Markup (Text, Markup);
+      Simple_Inline_Parsers.Initialize
+        (Self.Parsers, Text, Text.At_First_Character, State);
 
-      return To_Annotated_Text (Text, Markup);
+      return Result : Markdown.Annotations.Annotated_Text do
+         while Cursor.Has_Element loop
+            declare
+               Markup : Markup_Vectors.Vector;
+               Span   : Simple_Inline_Parsers.Inline_Span;
+               Ignore : Boolean;
+            begin
+
+               Simple_Inline_Parsers.Get_Next_Inline
+                 (Self.Parsers, Text, State, Span);
+
+               if Span.Is_Set then
+                  if Cursor < Span.From then
+                     Self.Find_Markup (Text, Cursor, Span.From, Markup);
+
+                     Append
+                       (Result,
+                        To_Annotated_Text (Cursor, Markup, Span.From));
+                  end if;
+
+                  Append (Result, (Span.Plain_Text, Span.Annotation));
+                  Cursor.Set_At (Span.To);
+                  Ignore := Cursor.Forward;
+
+               else
+
+                  Self.Find_Markup
+                    (Text, Cursor, Text.After_Last_Character, Markup);
+
+                  Append
+                    (Result,
+                     To_Annotated_Text
+                       (Cursor, Markup, Text.After_Last_Character));
+
+                  Cursor.Set_After_Last (Text);
+               end if;
+            end;
+         end loop;
+      end return;
    end Parse;
 
    ----------------------
@@ -565,13 +641,25 @@ package body Markdown.Inline_Parsers is
       Markdown.Implementation.Forward (Cursor);
    end Read_Character;
 
+   --------------
+   -- Register --
+   --------------
+
+   procedure Register
+     (Self  : in out Inline_Parser'Class;
+      Value : not null Simple_Inline_Parsers.Simple_Inline_Parser_Access) is
+   begin
+      Self.Parsers.Append (Value);
+   end Register;
+
    -----------------------
    -- To_Annotated_Text --
    -----------------------
 
    function To_Annotated_Text
-     (Text   : VSS.Strings.Virtual_String;
-      Markup : Markup_Vectors.Vector)
+     (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      Markup : Markup_Vectors.Vector;
+      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
       return Markdown.Annotations.Annotated_Text
    is
       use type VSS.Strings.Character_Index;
@@ -591,8 +679,7 @@ package body Markdown.Inline_Parsers is
           [others => (Index => 1, others => <>)];
 
       function To_Annotation
-        (Text : in out VSS.Strings.Virtual_String;
-         Info : Annotation_Info) return Markdown.Annotations.Annotation;
+        (Info : Annotation_Info) return Markdown.Annotations.Annotation;
 
       function Next_Char
         (Text : VSS.Strings.Virtual_String)
@@ -649,28 +736,27 @@ package body Markdown.Inline_Parsers is
       -------------------
 
       function To_Annotation
-        (Text : in out VSS.Strings.Virtual_String;
-         Info : Annotation_Info) return Markdown.Annotations.Annotation
+        (Info : Annotation_Info) return Markdown.Annotations.Annotation
       is
-         function Segment return VSS.Strings.Cursors.Markers.Segment_Marker is
-           (VSS.Strings.Cursors.Markers.Internals.New_Segment_Marker
-              (VSS.Strings.Internals.To_Magic_String_Access
-                 (Text'Unchecked_Access).all,
-               Info.From,
-               Info.To));
-
          Item : Inline_Parsers.Markup renames Markup (Info.Markup);
       begin
          case Item.Kind is
             when Emphasis =>
                if Item.To.Character_Index - Item.From.Character_Index = 1 then
-                  return (Markdown.Annotations.Emphasis, Segment);
+                  return (Markdown.Annotations.Emphasis,
+                          VSS.Strings.Character_Index (Info.From.Index),
+                          VSS.Strings.Character_Count (Info.To.Index));
                else
-                  return (Markdown.Annotations.Strong, Segment);
+                  return (Markdown.Annotations.Strong,
+                          VSS.Strings.Character_Index (Info.From.Index),
+                          VSS.Strings.Character_Count (Info.To.Index));
                end if;
             when Link =>
-               return
-                 (Markdown.Annotations.Link, Segment, Item.URL, Item.Title);
+               return (Markdown.Annotations.Link,
+                       VSS.Strings.Character_Index (Info.From.Index),
+                       VSS.Strings.Character_Count (Info.To.Index),
+                       Item.URL,
+                       Item.Title);
          end case;
       end To_Annotation;
 
@@ -681,9 +767,10 @@ package body Markdown.Inline_Parsers is
 
       Index  : Positive := Map'First;
       Last   : Natural := 0;  --  Annotation index
-      Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
-        Text.At_First_Character;
+      Cursor : VSS.Strings.Character_Iterators.Character_Iterator;
    begin
+      Cursor.Set_At (Start);
+
       for J in Map'Range loop
          Map (J) := Markup_Index (J);
       end loop;
@@ -693,7 +780,7 @@ package body Markdown.Inline_Parsers is
       return Result : Markdown.Annotations.Annotated_Text do
 
          --  Fill Result.Plain_Text and annotation info List
-         while Cursor.Has_Element loop
+         while Cursor.Has_Element and Cursor < Limit loop
             if Index in Map'Range and then
               From (Index) = Cursor.Character_Index
             then
@@ -724,8 +811,7 @@ package body Markdown.Inline_Parsers is
          Result.Annotation.Append ((others => <>), Natural'Pos (Last));
 
          for X of List loop
-            Result.Annotation.Replace_Element
-              (X.Index, To_Annotation (Result.Plain_Text, X));
+            Result.Annotation.Replace_Element (X.Index, To_Annotation (X));
          end loop;
       end return;
 
