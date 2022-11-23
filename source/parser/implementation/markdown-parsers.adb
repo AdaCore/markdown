@@ -8,6 +8,7 @@ with Ada.Tags.Generic_Dispatching_Constructor;
 
 with Markdown.Documents.Internals;
 with Markdown.Implementation.ATX_Headings;
+with Markdown.Implementation.Auto_Links;
 with Markdown.Implementation.Code_Spans;
 with Markdown.Implementation.Documents;
 with Markdown.Implementation.Fenced_Code_Blocks;
@@ -248,6 +249,8 @@ package body Markdown.Parsers is
 
       Self.Inline_Parser.Register
         (Markdown.Implementation.Code_Spans.Parse_Code_Span'Access);
+      Self.Inline_Parser.Register
+        (Markdown.Implementation.Auto_Links.Parse_Auto_Link'Access);
    end Register_Common_Mark_Blocks;
 
    -------------------

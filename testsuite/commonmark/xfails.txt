@@ -12,7 +12,6 @@ Example 12 (lines 490-494) Backslash escapes
 Example 14 (lines 510-530) Backslash escapes
 Example 15 (lines 535-539) Backslash escapes
 Example 16 (lines 544-550) Backslash escapes
-Example 20 (lines 581-585) Backslash escapes
 Example 21 (lines 588-592) Backslash escapes
 Example 22 (lines 598-602) Backslash escapes
 Example 23 (lines 605-611) Backslash escapes
@@ -193,7 +192,6 @@ Example 325 (lines 5803-5818) Lists
 Example 326 (lines 5821-5846) Lists
 Example 334 (lines 5942-5948) Code spans
 Example 344 (lines 6048-6052) Code spans
-Example 346 (lines 6066-6070) Code spans
 Example 436 (lines 7100-7104) Emphasis and strong emphasis
 Example 439 (lines 7121-7125) Emphasis and strong emphasis
 Example 448 (lines 7191-7195) Emphasis and strong emphasis
@@ -203,8 +201,6 @@ Example 475 (lines 7402-7406) Emphasis and strong emphasis
 Example 476 (lines 7409-7413) Emphasis and strong emphasis
 Example 477 (lines 7416-7420) Emphasis and strong emphasis
 Example 478 (lines 7423-7427) Emphasis and strong emphasis
-Example 479 (lines 7430-7434) Emphasis and strong emphasis
-Example 480 (lines 7437-7441) Emphasis and strong emphasis
 Example 490 (lines 7594-7600) Links
 Example 492 (lines 7613-7617) Links
 Example 493 (lines 7622-7630) Links
@@ -222,7 +218,6 @@ Example 516 (lines 7863-7867) Links
 Example 519 (lines 7886-7890) Links
 Example 521 (lines 7903-7907) Links
 Example 523 (lines 7923-7927) Links
-Example 525 (lines 7937-7941) Links
 Example 526 (lines 7975-7981) Links
 Example 527 (lines 7990-7996) Links
 Example 528 (lines 7999-8005) Links
@@ -284,17 +279,6 @@ Example 588 (lines 8686-8692) Images
 Example 590 (lines 8709-8715) Images
 Example 591 (lines 8721-8727) Images
 Example 592 (lines 8733-8739) Images
-Example 593 (lines 8766-8770) Autolinks
-Example 594 (lines 8773-8777) Autolinks
-Example 595 (lines 8780-8784) Autolinks
-Example 596 (lines 8789-8793) Autolinks
-Example 597 (lines 8801-8805) Autolinks
-Example 598 (lines 8808-8812) Autolinks
-Example 599 (lines 8815-8819) Autolinks
-Example 600 (lines 8822-8826) Autolinks
-Example 602 (lines 8840-8844) Autolinks
-Example 603 (lines 8862-8866) Autolinks
-Example 604 (lines 8869-8873) Autolinks
 Example 605 (lines 8878-8882) Autolinks
 Example 612 (lines 9002-9006) Raw HTML
 Example 613 (lines 9011-9015) Raw HTML
@@ -319,4 +303,4 @@ Example 637 (lines 9253-9259) Hard line breaks
 Example 638 (lines 9262-9268) Hard line breaks
 Example 641 (lines 9291-9297) Hard line breaks
 Example 642 (lines 9300-9306) Hard line breaks
-330 passed, 321 failed, 0 errored, 0 skipped
+346 passed, 305 failed, 0 errored, 0 skipped
