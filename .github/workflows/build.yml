@@ -11,24 +11,24 @@ jobs:
     name: Build
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Get VSS
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: AdaCore/VSS
           path: subprojects/VSS
       - name: Get CommonMark Spec
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: commonmark/commonmark-spec
           path: commonmark-spec
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: ./cached_gnat
           key: ${{ runner.os }}-alire_v2
           restore-keys: ${{ runner.os }}-alire_v2
       - name: Get GNAT toolchain with alire
-        uses: alire-project/setup-alire@v1
+        uses: alire-project/setup-alire@v2
         with:
           toolchain: gnat_native^12 gprbuild^22
           toolchain_dir: ./cached_gnat
@@ -40,5 +40,5 @@ jobs:
           make all check coverage BUILD_MODE=${{ matrix.build_mode }}
           make install PREFIX=/tmp BUILD_MODE=${{ matrix.build_mode }}
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         if: ${{ matrix.build_mode == 'coverage' }}
