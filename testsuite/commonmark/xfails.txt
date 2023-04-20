@@ -148,7 +148,6 @@ Example 260 (lines 4279-4292) List items
 Example 265 (lines 4378-4384) List items
 Example 267 (lines 4396-4402) List items
 Example 268 (lines 4405-4411) List items
-Example 271 (lines 4456-4468) List items
 Example 276 (lines 4549-4558) List items
 Example 278 (lines 4593-4614) List items
 Example 279 (lines 4619-4626) List items
@@ -156,9 +155,6 @@ Example 280 (lines 4633-4642) List items
 Example 281 (lines 4647-4657) List items
 Example 282 (lines 4662-4672) List items
 Example 283 (lines 4677-4687) List items
-Example 286 (lines 4724-4743) List items
-Example 287 (lines 4748-4767) List items
-Example 288 (lines 4772-4791) List items
 Example 290 (lines 4826-4845) List items
 Example 291 (lines 4850-4858) List items
 Example 292 (lines 4863-4877) List items
@@ -178,9 +174,7 @@ Example 307 (lines 5406-5428) Lists
 Example 308 (lines 5436-5454) Lists
 Example 309 (lines 5457-5480) Lists
 Example 310 (lines 5488-5506) Lists
-Example 311 (lines 5509-5527) Lists
 Example 312 (lines 5533-5547) Lists
-Example 313 (lines 5553-5570) Lists
 Example 317 (lines 5642-5660) Lists
 Example 318 (lines 5665-5684) Lists
 Example 319 (lines 5691-5709) Lists
@@ -303,4 +297,4 @@ Example 637 (lines 9253-9259) Hard line breaks
 Example 638 (lines 9262-9268) Hard line breaks
 Example 641 (lines 9291-9297) Hard line breaks
 Example 642 (lines 9300-9306) Hard line breaks
-346 passed, 305 failed, 0 errored, 0 skipped
+352 passed, 299 failed, 0 errored, 0 skipped

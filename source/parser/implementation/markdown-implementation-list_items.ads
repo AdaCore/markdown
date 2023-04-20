@@ -35,8 +35,10 @@ private
    type List_Item is new Abstract_Container_Block with record
       Is_Ordered             : Boolean;
       Marker                 : VSS.Strings.Virtual_String;
-      Marker_Value           : Natural;
+      --  Marker it-self, like `-`, `11.`, etc.
+      Marker_Value           : Natural;  --  Marker value if ordered, like 11
       Marker_Width           : VSS.Strings.Character_Count;
+      --  Number of spaces to skip in subsequent lines
       Starts_With_Blank_Line : Boolean := False;
       --  The item starts with an empty line
       Ends_With_Blank_Line   : Boolean := False;

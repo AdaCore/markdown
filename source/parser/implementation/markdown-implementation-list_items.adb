@@ -15,10 +15,10 @@ package body Markdown.Implementation.List_Items is
    Ordered_List_Marker : constant Wide_Wide_String := "([0-9][0-9]*)[.)]";
 
    Marker_Pattern : constant Wide_Wide_String :=
-     "^(?:   |  | |)(" &          --  1 group (after spaces)
-     Bullet_List_Marker & "|" &
-     Ordered_List_Marker & ")" &  --  2 group (inside Ordered_List_Marker)
-     "( *)";                      --  3 group (after the marker)
+     "^((?:   |  | |)(" &        --  1 group (indent + marker), 2 group (the
+     Bullet_List_Marker & "|" &  --    marker it-self)
+     Ordered_List_Marker &       --  3 group (inside Ordered_List_Marker)
+     ")) *";
 
    Prefix : VSS.Regular_Expressions.Regular_Expression;
    --  Regexp of Marker_Pattern
@@ -78,37 +78,37 @@ package body Markdown.Implementation.List_Items is
       Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
         Prefix.Match (Input.Line.Expanded, Input.First);
 
-      Suffix : constant VSS.Strings.Virtual_String := Match.Captured (3);
+      Suffix_Length : constant VSS.Strings.Character_Count :=
+        Match.Marker.Character_Length - Match.Marker (1).Character_Length;
    begin
       return Result : List_Item do
-         Result.Is_Ordered := Match.Marker (2).Is_Valid;
-         Result.Marker := Match.Captured (1);
+         Result.Is_Ordered := Match.Marker (3).Is_Valid;
+         Result.Marker := Match.Captured (2);
          Result.Marker_Value := Marker_Value (Match);
 
-         if Suffix.Character_Length <= 4 and then
+         if Suffix_Length <= 4 and then
            Match.Last_Marker.Character_Index
              = Input.Line.Expanded.Character_Length
          then
             --  Empty line marker: ^\ {0,3}(Marker)(\ {0,4}$).
-            Result.Marker_Width := Result.Marker.Character_Length + 1;
+            Result.Marker_Width := Match.Marker (1).Character_Length + 1;
             Result.First_Line := True;
             Result.Starts_With_Blank_Line := True;
             --  Shift Input.First to end-of-line
             Input.First.Set_After_Last (Input.Line.Expanded);
 
-         elsif Suffix.Character_Length > 4 then
+         elsif Suffix_Length > 4 then
             --  Indented code in the list item
 
-            Result.Marker_Width := Result.Marker.Character_Length + 1;
+            Result.Marker_Width := Match.Marker (1).Character_Length + 1;
 
-            Input.First.Set_At (Match.Last_Marker (1));
+            Input.First.Set_At (Match.Last_Marker (1));  --  at marker end
             --  Skip 1 space after marker
             Forward (Input.First, 2);
 
          else
 
-            Result.Marker_Width := Result.Marker.Character_Length +
-              Suffix.Character_Length;
+            Result.Marker_Width := Match.Marker.Character_Length;
             --  Skip marker and all spaces if any
             Input.First.Set_At (Match.Last_Marker);
             Forward (Input.First);
@@ -126,10 +126,10 @@ package body Markdown.Implementation.List_Items is
       CIP   : out Can_Interrupt_Paragraph)
    is
       Marker : VSS.Strings.Virtual_String;
-      Suffix : VSS.Strings.Virtual_String;
       Number : Natural;
       Match  : VSS.Regular_Expressions.Regular_Expression_Match;
 
+      Suffix_Length       : VSS.Strings.Character_Count;
       End_Of_Line_Matched : Boolean;
    begin
       if not Prefix.Is_Valid then  --  Construct Prefix regexp
@@ -149,13 +149,15 @@ package body Markdown.Implementation.List_Items is
          End_Of_Line_Matched := Match.Last_Marker.Character_Index
            = Input.Line.Expanded.Character_Length;
 
-         Marker := Match.Captured (1);
-         Suffix := Match.Captured (3);
+         Marker := Match.Captured (2);
+
+         Suffix_Length :=
+           Match.Marker.Character_Length - Match.Marker (1).Character_Length;
 
          if Marker.Character_Length > 10 then
             --  no more than 9 digits in the marker are allowed
             return;
-         elsif Suffix.Character_Length = 0 and not End_Of_Line_Matched then
+         elsif Suffix_Length = 0 and not End_Of_Line_Matched then
             --  We have non-space characters just after marker. Not a list item
             return;
          end if;
@@ -166,11 +168,11 @@ package body Markdown.Implementation.List_Items is
 
          --  Calculate Can_Interrupt_Paragraph
          CIP :=
-           (if Suffix.Character_Length <= 4 and then End_Of_Line_Matched then
+           (if Suffix_Length <= 4 and then End_Of_Line_Matched then
                --  Empty line marker: ^\ {0,3}(Marker)(\ {0,4}$).
                --  An empty list item cannot interrupt a paragraph.
                False
-            elsif Match.Marker (2).Is_Valid then
+            elsif Match.Marker (3).Is_Valid then
                --  Check if numbered item is `1`
 
                Number = 1
@@ -206,10 +208,10 @@ package body Markdown.Implementation.List_Items is
         return Natural is
    begin
       --  GCC 12 generates wrong code if condition expression is used here
-      if Match.Marker (2).Is_Valid then
+      if Match.Marker (3).Is_Valid then
          return Natural'Wide_Wide_Value
            (VSS.Strings.Conversions.To_Wide_Wide_String
-              (Match.Captured (2)));
+              (Match.Captured (3)));
       else
          return 0;
       end if;
