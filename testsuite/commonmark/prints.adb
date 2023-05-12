@@ -24,7 +24,7 @@ package body Prints is
 
    Tag : constant array
      (Markdown.Annotations.Emphasis .. Markdown.Annotations.Strong)
-       of VSS.Strings.Virtual_String := ("em", "strong");
+       of VSS.Strings.Virtual_String := ["em", "strong"];
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;

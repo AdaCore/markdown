@@ -30,7 +30,8 @@ package Markdown.Implementation is
 
    type Abstract_Block is abstract tagged limited record
       Counter : System.Atomic_Counters.Atomic_Counter;
-   end record;
+   end record
+     with No_Task_Parts;
 
    function Assigned (Value : access Abstract_Block'Class) return Boolean is
      (Value /= null);
