@@ -76,7 +76,8 @@ package body Markdown.Implementation.Code_Spans is
                Plain := Text.Slice (Start, Stop);
 
                Vector.Append
-                 ((Kind => Markdown.Annotations.Code_Span,
+                 (Markdown.Annotations.Annotation'
+                  (Kind => Markdown.Annotations.Code_Span,
                    From => 1,
                    To   => Plain.Character_Length));
 

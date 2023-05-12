@@ -41,7 +41,7 @@ package Markdown.Annotations is
      (Positive, HTML_Attribute);
    --  A vector of HTML attributes
 
-   type Annotation (Kind : Annotation_Kind := Link) is record
+   type Annotation (Kind : Annotation_Kind := Annotation_Kind'First) is record
       From : VSS.Strings.Character_Index := 1;
       To   : VSS.Strings.Character_Count := 0;
       --  Corresponding segment in the plain text
