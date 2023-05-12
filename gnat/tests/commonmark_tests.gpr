@@ -16,7 +16,7 @@ project CommonMark_Tests is
    for Main use ("commonmark_tests.adb", "gnatdoc_tests.adb");
 
    package Compiler is
-      for Default_Switches ("Ada") use Markdown.Ada_Switches & ("-gnatW8");
+      for Default_Switches ("Ada") use Markdown.Ada_Compiler_Switches & ("-gnatW8");
    end Compiler;
 
    package Binder is

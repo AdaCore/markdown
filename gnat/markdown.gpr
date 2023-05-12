@@ -6,6 +6,7 @@
 
 with "vss_text";
 with "vss_regexp";
+with "../config/markdown_config.gpr";
 
 project Markdown is
 
@@ -29,60 +30,53 @@ project Markdown is
 
    for Library_Kind use Library_Type;
 
-   Ada_Switches := ();
-   Ada_Coverage_Switches := ();
+   Markdown_Ada_Compiler_Switches := ();
+   Coverage_Ada_Compiler_Switches := ();
    Linker_Options := ();
 
    case Build_Mode is
       when "prod" =>
-         Ada_Switches := (
-            --  Compile with optimizations
-            "-O2",
-
+         Markdown_Ada_Compiler_Switches := (
             --  Generate debug information: this is useful to get meaningful
             --  tracebacks.
             "-g"
          );
 
       when "dev" =>
-         Ada_Switches := (
-            --  Compile with no optimization and with debug information to ease
-            --  investigation in debuggers.
-            "-Og", "-g",
-
+         Markdown_Ada_Compiler_Switches := (
             --  Enable warnings and stylechecks.
-            "-gnatwa",   --  turn on all info/warnings
-            "-gnatygoO",
+            "-gnatygo",
               --  g    check standard GNAT style rules
               --  o    check subprogram bodies in alphabetical order
-              --  O    check overriding indicators
 
-            --  Enable assertions and all validity checking options
-            "-gnata", "-gnatVa",
+            --  Enable assertions
+            "-gnata",
 
             --  Enable stack overflow checks
             "-fstack-check"
          );
 
       when "coverage" =>
-         Ada_Switches := (
-            --  Compile with no optimization and with debug information to ease
-            --  investigation in debuggers.
-            "-Og", "-g");
+         Markdown_Ada_Compiler_Switches := ();
 
-         Ada_Coverage_Switches := (
+         Coverage_Ada_Compiler_Switches := (
             --  Enable coverage code instrumentation.
             "--coverage");
 
          Linker_Options := ("--coverage");
    end case;
 
+   Ada_Compiler_Switches :=
+     Markdown_Config.Ada_Compiler_Switches
+       & Markdown_Ada_Compiler_Switches
+       & Coverage_Ada_Compiler_Switches;
+
    --  All packages below are expected to be used when there is no subproject
    --  specific switches are necessary. Please keep this packages as simple as
    --  possible and never hardcode any switches to simplify future support.
 
    package Compiler is
-      for Default_Switches ("Ada") use Ada_Switches & Ada_Coverage_Switches;
+      for Default_Switches ("Ada") use Ada_Compiler_Switches;
    end Compiler;
 
    package Linker is
