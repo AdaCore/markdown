@@ -56,7 +56,8 @@ package body Markdown.Implementation.Auto_Links is
             end if;
 
             Vector.Append
-              ((Kind        => Markdown.Annotations.Link,
+              (Markdown.Annotations.Annotation'
+               (Kind        => Markdown.Annotations.Link,
                 From        => 1,
                 To          => Plain.Character_Length,
                 Destination => URL,
