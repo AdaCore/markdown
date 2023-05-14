@@ -9,6 +9,7 @@ commonmark
 deallocation
 elsif
 gnatdoc
+llvm
 mailto
 parsers
 pos

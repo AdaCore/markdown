@@ -30,22 +30,24 @@ project Markdown is
 
    for Library_Kind use Library_Type;
 
-   Markdown_Ada_Compiler_Switches := ();
+   Markdown_Ada_Compiler_Switches := (
+            --  Disable short-circuit requirements
+            "-gnaty-B"
+   );
+
    Coverage_Ada_Compiler_Switches := ();
    Linker_Options := ();
 
    case Build_Mode is
       when "prod" =>
-         Markdown_Ada_Compiler_Switches := (
+         Markdown_Ada_Compiler_Switches := Markdown_Ada_Compiler_Switches & (
             --  Generate debug information: this is useful to get meaningful
             --  tracebacks.
             "-g"
          );
 
       when "dev" =>
-         Markdown_Ada_Compiler_Switches := (
-            --  Enable warnings and stylechecks.
-            "-gnatygo",
+         Markdown_Ada_Compiler_Switches := Markdown_Ada_Compiler_Switches & (
               --  g    check standard GNAT style rules
               --  o    check subprogram bodies in alphabetical order
 
@@ -57,7 +59,7 @@ project Markdown is
          );
 
       when "coverage" =>
-         Markdown_Ada_Compiler_Switches := ();
+         Markdown_Ada_Compiler_Switches := Markdown_Ada_Compiler_Switches & ();
 
          Coverage_Ada_Compiler_Switches := (
             --  Enable coverage code instrumentation.
