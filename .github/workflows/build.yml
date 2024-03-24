@@ -22,21 +22,15 @@ jobs:
         with:
           repository: commonmark/commonmark-spec
           path: commonmark-spec
-      - uses: actions/cache@v3
-        with:
-          path: ./cached_gnat
-          key: ${{ runner.os }}-alire_v2
-          restore-keys: ${{ runner.os }}-alire_v2
       - name: Get GNAT toolchain with alire
         uses: alire-project/setup-alire@v2
         with:
-          toolchain: gnat_native^12 gprbuild^22
-          toolchain_dir: ./cached_gnat
+          toolchain: gnat_native^13 gprbuild^22
       - name: Build and test
         shell: bash
         run: |
-          export PATH=`ls -d $PWD/cached_gnat/*/bin |tr '\n' ':'`$PATH
-          export GPR_PROJECT_PATH=$PWD/subprojects/VSS/gnat
+          alr pin vss --use=$PWD/subprojects/VSS
+          eval `alr printenv`
           make all check coverage BUILD_MODE=${{ matrix.build_mode }}
           make install PREFIX=/tmp BUILD_MODE=${{ matrix.build_mode }}
       - name: Upload coverage to Codecov
