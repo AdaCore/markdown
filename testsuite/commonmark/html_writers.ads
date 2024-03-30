@@ -7,6 +7,7 @@
 with Ada.Containers.Doubly_Linked_Lists;
 
 with VSS.Strings;
+with VSS.String_Vectors;
 
 package HTML_Writers is
 
@@ -37,6 +38,10 @@ package HTML_Writers is
      (Self       : in out Writer;
       Local_Name : VSS.Strings.Virtual_String;
       Attributes : HTML_Attributes'Class := No_Attributes);
+
+   procedure Raw_HTML
+     (Self : in out Writer;
+      Text : VSS.String_Vectors.Virtual_String_Vector);
 
 private
 

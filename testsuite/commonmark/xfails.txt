@@ -12,14 +12,12 @@ Example 12 (lines 489-493) Backslash escapes
 Example 14 (lines 509-529) Backslash escapes
 Example 15 (lines 534-538) Backslash escapes
 Example 16 (lines 543-549) Backslash escapes
-Example 21 (lines 587-591) Backslash escapes
 Example 22 (lines 597-601) Backslash escapes
 Example 23 (lines 604-610) Backslash escapes
 Example 24 (lines 613-620) Backslash escapes
 Example 25 (lines 649-657) Entity and numeric character references
 Example 26 (lines 668-672) Entity and numeric character references
 Example 27 (lines 681-685) Entity and numeric character references
-Example 31 (lines 728-732) Entity and numeric character references
 Example 32 (lines 735-739) Entity and numeric character references
 Example 33 (lines 742-748) Entity and numeric character references
 Example 34 (lines 751-758) Entity and numeric character references
@@ -66,49 +64,11 @@ Example 143 (lines 2302-2313) Fenced code blocks
 Example 144 (lines 2316-2321) Fenced code blocks
 Example 146 (lines 2337-2344) Fenced code blocks
 Example 148 (lines 2428-2443) HTML blocks
-Example 149 (lines 2457-2476) HTML blocks
-Example 150 (lines 2479-2487) HTML blocks
-Example 151 (lines 2492-2498) HTML blocks
-Example 152 (lines 2503-2513) HTML blocks
-Example 153 (lines 2519-2527) HTML blocks
-Example 154 (lines 2530-2538) HTML blocks
-Example 155 (lines 2542-2551) HTML blocks
-Example 156 (lines 2558-2564) HTML blocks
-Example 157 (lines 2567-2573) HTML blocks
-Example 158 (lines 2579-2585) HTML blocks
-Example 159 (lines 2591-2595) HTML blocks
-Example 160 (lines 2598-2606) HTML blocks
-Example 161 (lines 2615-2625) HTML blocks
-Example 162 (lines 2632-2640) HTML blocks
-Example 163 (lines 2645-2653) HTML blocks
-Example 164 (lines 2656-2664) HTML blocks
-Example 165 (lines 2667-2673) HTML blocks
-Example 166 (lines 2682-2690) HTML blocks
-Example 167 (lines 2697-2707) HTML blocks
 Example 168 (lines 2715-2719) HTML blocks
-Example 169 (lines 2731-2747) HTML blocks
-Example 170 (lines 2752-2766) HTML blocks
 Example 171 (lines 2771-2787) HTML blocks
-Example 172 (lines 2791-2807) HTML blocks
-Example 173 (lines 2814-2824) HTML blocks
 Example 174 (lines 2827-2838) HTML blocks
 Example 175 (lines 2841-2851) HTML blocks
-Example 176 (lines 2856-2862) HTML blocks
-Example 177 (lines 2865-2871) HTML blocks
-Example 178 (lines 2877-2885) HTML blocks
-Example 179 (lines 2890-2902) HTML blocks
-Example 180 (lines 2908-2922) HTML blocks
-Example 181 (lines 2927-2931) HTML blocks
-Example 182 (lines 2936-2964) HTML blocks
-Example 183 (lines 2970-2978) HTML blocks
-Example 184 (lines 2981-2989) HTML blocks
-Example 185 (lines 2995-3005) HTML blocks
-Example 186 (lines 3012-3022) HTML blocks
 Example 187 (lines 3027-3035) HTML blocks
-Example 188 (lines 3068-3078) HTML blocks
-Example 189 (lines 3081-3089) HTML blocks
-Example 190 (lines 3103-3123) HTML blocks
-Example 191 (lines 3130-3151) HTML blocks
 Example 192 (lines 3179-3185) Link reference definitions
 Example 193 (lines 3188-3196) Link reference definitions
 Example 194 (lines 3199-3205) Link reference definitions
@@ -172,7 +132,6 @@ Example 303 (lines 5283-5293) Lists
 Example 305 (lines 5370-5378) Lists
 Example 307 (lines 5405-5427) Lists
 Example 308 (lines 5435-5453) Lists
-Example 309 (lines 5456-5479) Lists
 Example 310 (lines 5487-5505) Lists
 Example 312 (lines 5532-5546) Lists
 Example 317 (lines 5641-5659) Lists
@@ -298,4 +257,4 @@ Example 638 (lines 9267-9273) Hard line breaks
 Example 639 (lines 9276-9282) Hard line breaks
 Example 642 (lines 9305-9311) Hard line breaks
 Example 643 (lines 9314-9320) Hard line breaks
-352 passed, 300 failed, 0 errored, 0 skipped
+393 passed, 259 failed, 0 errored, 0 skipped

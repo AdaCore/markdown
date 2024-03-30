@@ -49,6 +49,7 @@ package body HTML_Writers is
          Self.Tag.Clear;
       end if;
    end Close_Tag;
+
    -----------------
    -- End_Element --
    -----------------
@@ -153,6 +154,21 @@ package body HTML_Writers is
 
       return Result;
    end Escape;
+
+   --------------
+   -- Raw_HTML --
+   --------------
+
+   procedure Raw_HTML
+     (Self : in out Writer;
+      Text : VSS.String_Vectors.Virtual_String_Vector) is
+   begin
+      Self.Close_Tag;
+
+      for Line of Text loop
+         Ada.Wide_Wide_Text_IO.Put_Line (+Line);
+      end loop;
+   end Raw_HTML;
 
    -------------------
    -- Start_Element --
