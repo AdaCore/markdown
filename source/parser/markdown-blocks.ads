@@ -12,6 +12,7 @@ private with Markdown.Implementation;
 
 limited with Markdown.Blocks.ATX_Headings;
 limited with Markdown.Blocks.Fenced_Code;
+limited with Markdown.Blocks.HTML;
 limited with Markdown.Blocks.Indented_Code;
 limited with Markdown.Blocks.Lists;
 limited with Markdown.Blocks.Paragraphs;
@@ -35,6 +36,9 @@ package Markdown.Blocks is
 
    function Is_Fenced_Code_Block (Self : Block'Class) return Boolean;
    --  Check if given block is an indented code block
+
+   function Is_HTML_Block (Self : Block'Class) return Boolean;
+   --  Check if given block is a raw html block
 
    function Is_Paragraph (Self : Block'Class) return Boolean;
    --  Check if given block is a paragraph
@@ -64,6 +68,11 @@ package Markdown.Blocks is
      return Markdown.Blocks.Fenced_Code.Fenced_Code_Block
         with Pre => Self.Is_Fenced_Code_Block;
    --  Convert the block to an fenced code block
+
+   function To_HTML_Block (Self : Block)
+     return Markdown.Blocks.HTML.HTML_Block
+        with Pre => Self.Is_HTML_Block;
+   --  Convert the block to a raw html block
 
    function To_Paragraph (Self : Block)
      return Markdown.Blocks.Paragraphs.Paragraph
