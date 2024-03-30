@@ -13,6 +13,7 @@ with VSS.Strings.Cursors.Markers;
 
 with Markdown.Blocks.ATX_Headings;
 with Markdown.Blocks.Fenced_Code;
+with Markdown.Blocks.HTML;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Paragraphs;
 pragma Warnings (Off, "is not referenced");
@@ -234,6 +235,10 @@ package body Prints is
 
       elsif Block.Is_List then
          Print_List (Writer, Block.To_List);
+
+      elsif Block.Is_HTML_Block then
+         Writer.Raw_HTML (Block.To_HTML_Block.Text);
+
       else
          raise Program_Error;
       end if;

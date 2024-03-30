@@ -8,6 +8,7 @@ with System.Atomic_Counters;
 
 with Markdown.Blocks.ATX_Headings;
 with Markdown.Blocks.Fenced_Code;
+with Markdown.Blocks.HTML;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
@@ -16,6 +17,7 @@ with Markdown.Blocks.Thematic_Breaks;
 
 with Markdown.Implementation.ATX_Headings;
 with Markdown.Implementation.Fenced_Code_Blocks;
+with Markdown.Implementation.HTML_Blocks;
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.Lists;
 with Markdown.Implementation.Paragraphs;
@@ -72,6 +74,17 @@ package body Markdown.Blocks is
         and then Self.Data.all in
           Implementation.Fenced_Code_Blocks.Fenced_Code_Block'Class;
    end Is_Fenced_Code_Block;
+
+   -------------------
+   -- Is_HTML_Block --
+   -------------------
+
+   function Is_HTML_Block (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Implementation.HTML_Blocks.HTML_Block'Class;
+   end Is_HTML_Block;
 
    ----------------------------
    -- Is_Indented_Code_Block --
@@ -147,6 +160,16 @@ package body Markdown.Blocks is
    begin
       return Markdown.Blocks.Fenced_Code.From_Block (Self);
    end To_Fenced_Code_Block;
+
+   -------------------
+   -- To_HTML_Block --
+   -------------------
+
+   function To_HTML_Block (Self : Block)
+     return Markdown.Blocks.HTML.HTML_Block is
+   begin
+      return Markdown.Blocks.HTML.From_Block (Self);
+   end To_HTML_Block;
 
    ----------------------------
    -- To_Indented_Code_Block --

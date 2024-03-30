@@ -12,6 +12,7 @@ with Markdown.Implementation.Auto_Links;
 with Markdown.Implementation.Code_Spans;
 with Markdown.Implementation.Documents;
 with Markdown.Implementation.Fenced_Code_Blocks;
+with Markdown.Implementation.HTML_Blocks;
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.List_Items;
 with Markdown.Implementation.Paragraphs;
@@ -243,6 +244,7 @@ package body Markdown.Parsers is
       Self.Register_Block (MI.ATX_Headings.Detector'Access);
       Self.Register_Block (MI.Indented_Code_Blocks.Detector'Access);
       Self.Register_Block (MI.Fenced_Code_Blocks.Detector'Access);
+      Self.Register_Block (MI.HTML_Blocks.Detector'Access);
       Self.Register_Block (MI.List_Items.Detector'Access);
       Self.Register_Block (MI.Quotes.Detector'Access);
       Self.Register_Block (MI.Paragraphs.Detector'Access);

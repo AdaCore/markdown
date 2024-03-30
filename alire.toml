@@ -1,6 +1,6 @@
 name = "markdown"
 description = "Markdown parser"
-version = "0.1.0-dev"
+version = "25.0.0-dev"
 tags = ["markdown", "gfm", "commonmark"]
 
 authors = ["AdaCore"]
@@ -18,6 +18,4 @@ generate_c = false
 "*".ada_version = "Ada2022"
 
 [[depends-on]]
-vss = "^22.0.0"
-[[pins]]
-vss = { path='../VSS' }
+vss = ">=22.0.0"
