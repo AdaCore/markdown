@@ -26,11 +26,7 @@ Example 38 (lines 791-800) Entity and numeric character references
 Example 39 (lines 802-808) Entity and numeric character references
 Example 40 (lines 810-814) Entity and numeric character references
 Example 41 (lines 817-821) Entity and numeric character references
-Example 42 (lines 840-848) Precedence
-Example 57 (lines 1019-1031) Thematic breaks
 Example 59 (lines 1053-1060) Thematic breaks
-Example 60 (lines 1066-1078) Thematic breaks
-Example 61 (lines 1083-1093) Thematic breaks
 Example 65 (lines 1158-1162) ATX headings
 Example 66 (lines 1167-1171) ATX headings
 Example 76 (lines 1269-1277) ATX headings
@@ -45,14 +41,11 @@ Example 89 (lines 1476-1481) Setext headings
 Example 90 (lines 1486-1491) Setext headings
 Example 91 (lines 1497-1510) Setext headings
 Example 93 (lines 1527-1537) Setext headings
-Example 94 (lines 1540-1548) Setext headings
 Example 95 (lines 1555-1562) Setext headings
 Example 96 (lines 1568-1580) Setext headings
-Example 99 (lines 1606-1614) Setext headings
 Example 102 (lines 1641-1646) Setext headings
 Example 103 (lines 1672-1682) Setext headings
 Example 106 (lines 1721-1731) Setext headings
-Example 109 (lines 1777-1790) Indented code blocks
 Example 115 (lines 1878-1893) Indented code blocks
 Example 127 (lines 2078-2088) Fenced code blocks
 Example 129 (lines 2107-2116) Fenced code blocks
@@ -94,7 +87,6 @@ Example 226 (lines 3615-3621) Paragraphs
 Example 227 (lines 3632-3644) Blank lines
 Example 232 (lines 3760-3770) Block quotes
 Example 233 (lines 3776-3786) Block quotes
-Example 235 (lines 3820-3832) Block quotes
 Example 237 (lines 3851-3861) Block quotes
 Example 238 (lines 3867-3875) Block quotes
 Example 239 (lines 3891-3896) Block quotes
@@ -102,47 +94,17 @@ Example 240 (lines 3899-3906) Block quotes
 Example 247 (lines 4005-4013) Block quotes
 Example 250 (lines 4044-4056) Block quotes
 Example 251 (lines 4059-4073) Block quotes
-Example 255 (lines 4190-4199) List items
-Example 257 (lines 4216-4226) List items
-Example 260 (lines 4278-4291) List items
-Example 265 (lines 4377-4383) List items
-Example 267 (lines 4395-4401) List items
-Example 268 (lines 4404-4410) List items
-Example 276 (lines 4548-4557) List items
-Example 278 (lines 4592-4613) List items
-Example 279 (lines 4618-4625) List items
 Example 280 (lines 4632-4641) List items
-Example 281 (lines 4646-4656) List items
-Example 282 (lines 4661-4671) List items
-Example 283 (lines 4676-4686) List items
 Example 290 (lines 4825-4844) List items
 Example 291 (lines 4849-4857) List items
 Example 292 (lines 4862-4876) List items
 Example 293 (lines 4879-4893) List items
-Example 294 (lines 4907-4928) List items
-Example 295 (lines 4933-4945) List items
-Example 296 (lines 4950-4961) List items
-Example 297 (lines 4966-4976) List items
-Example 298 (lines 4981-4991) List items
-Example 299 (lines 4994-5008) List items
 Example 300 (lines 5013-5027) List items
-Example 301 (lines 5249-5261) Lists
-Example 302 (lines 5264-5276) Lists
-Example 303 (lines 5283-5293) Lists
-Example 305 (lines 5370-5378) Lists
 Example 307 (lines 5405-5427) Lists
-Example 308 (lines 5435-5453) Lists
-Example 310 (lines 5487-5505) Lists
 Example 312 (lines 5532-5546) Lists
 Example 317 (lines 5641-5659) Lists
 Example 318 (lines 5664-5683) Lists
 Example 319 (lines 5690-5708) Lists
-Example 320 (lines 5714-5728) Lists
-Example 321 (lines 5734-5752) Lists
-Example 322 (lines 5757-5763) Lists
-Example 323 (lines 5766-5777) Lists
-Example 325 (lines 5802-5817) Lists
-Example 326 (lines 5820-5845) Lists
 Example 334 (lines 5941-5947) Code spans
 Example 344 (lines 6047-6051) Code spans
 Example 354 (lines 6347-6357) Emphasis and strong emphasis
@@ -257,4 +219,4 @@ Example 638 (lines 9267-9273) Hard line breaks
 Example 639 (lines 9276-9282) Hard line breaks
 Example 642 (lines 9305-9311) Hard line breaks
 Example 643 (lines 9314-9320) Hard line breaks
-393 passed, 259 failed, 0 errored, 0 skipped
+431 passed, 221 failed, 0 errored, 0 skipped

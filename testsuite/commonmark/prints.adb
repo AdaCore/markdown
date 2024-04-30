@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -163,17 +163,22 @@ package body Prints is
    -----------------
 
    procedure Print_Block
-     (Writer : in out HTML_Writers.Writer;
-      Block  : Markdown.Blocks.Block)
+     (Writer   : in out HTML_Writers.Writer;
+      Block    : Markdown.Blocks.Block;
+      Is_Tight : Boolean)
    is
       New_Line : VSS.Strings.Virtual_String;
    begin
       New_Line.Append (VSS.Characters.Virtual_Character'Val (10));
 
       if Block.Is_Paragraph then
-         Writer.Start_Element ("p");
-         Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
-         Writer.End_Element ("p");
+         if Is_Tight then
+            Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
+         else
+            Writer.Start_Element ("p");
+            Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
+            Writer.End_Element ("p");
+         end if;
 
       elsif Block.Is_Thematic_Break then
          Writer.Start_Element ("hr");
@@ -192,7 +197,7 @@ package body Prints is
 
       elsif Block.Is_Quote then
          Writer.Start_Element ("blockquote");
-         Print_Blocks (Writer, Block.To_Quote);
+         Print_Blocks (Writer, Block.To_Quote, Is_Tight => False);
          Writer.End_Element ("blockquote");
 
       elsif Block.Is_Fenced_Code_Block then
@@ -245,11 +250,12 @@ package body Prints is
    end Print_Block;
 
    procedure Print_Blocks
-     (Writer : in out HTML_Writers.Writer;
-      List   : Markdown.Block_Containers.Block_Container'Class) is
+     (Writer   : in out HTML_Writers.Writer;
+      List     : Markdown.Block_Containers.Block_Container'Class;
+      Is_Tight : Boolean) is
    begin
       for Block of List loop
-         Print_Block (Writer, Block);
+         Print_Block (Writer, Block, Is_Tight);
       end loop;
    end Print_Blocks;
 
@@ -279,7 +285,7 @@ package body Prints is
 
       for Item of List loop
          Writer.Start_Element ("li");
-         Print_Blocks (Writer, Item);
+         Print_Blocks (Writer, Item, Is_Tight => not List.Is_Loose);
          Writer.End_Element ("li");
       end loop;
 

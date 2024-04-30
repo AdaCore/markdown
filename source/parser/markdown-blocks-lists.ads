@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -23,6 +23,11 @@ package Markdown.Blocks.Lists is
 
    function Is_Ordered (Self : List'Class) return Boolean;
    --  Return True if list has an ordered list markers.
+
+   function Is_Loose (Self : List'Class) return Boolean;
+   --  A list is loose if any of its constituent list items are separated by
+   --  blank lines, or if any of its constituent list items directly contain
+   --  two block-level elements with a blank line between them.
 
    function Start (Self : List'Class) return Natural
      with Pre => Self.Is_Ordered;

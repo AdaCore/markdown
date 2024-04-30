@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -35,7 +35,7 @@ begin
       Document : constant Markdown.Documents.Document := Parser.Document;
    begin
       --  Writer.Start_Element ("html");
-      Prints.Print_Blocks (Writer, Document);
+      Prints.Print_Blocks (Writer, Document, Is_Tight => False);
       --  Writer.End_Element ("html");
    end;
 end Commonmark_Tests;

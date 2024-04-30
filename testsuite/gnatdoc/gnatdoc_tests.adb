@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -37,6 +37,6 @@ begin
    declare
       Document : constant Markdown.Documents.Document := Parser.Document;
    begin
-      Prints.Print_Blocks (Writer, Document);
+      Prints.Print_Blocks (Writer, Document, Is_Tight => False);
    end;
 end GNATdoc_Tests;
