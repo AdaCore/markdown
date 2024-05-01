@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -62,5 +62,14 @@ private
      (Self     : in out Markdown_Parser'Class;
       Detector : Block_Detector);
    --  Let the parser know a new block kind
+
+   procedure Register_Block
+     (Self     : in out Markdown_Parser'Class;
+      Detector : Block_Detector;
+      Replace  : Block_Detector);
+   --  Replace registered block with new one
+
+   procedure Register_Common_Mark_Blocks (Self : in out Markdown_Parser'Class);
+   --  Register CommonMark block detectors
 
 end Markdown.Parsers;

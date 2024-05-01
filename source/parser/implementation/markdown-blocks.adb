@@ -117,9 +117,9 @@ package body Markdown.Blocks is
    begin
       return Self.Data.Assigned
         and then Self.Data.all in
-          Markdown.Implementation.Paragraphs.Paragraph
-        and then Markdown.Implementation.Paragraphs.Paragraph (Self.Data.all)
-                  .Table_Columns = 0;
+          Markdown.Implementation.Paragraphs.Paragraph'Class
+        and then Markdown.Implementation.Paragraphs.Paragraph'Class
+          (Self.Data.all).Table_Columns = 0;
    end Is_Paragraph;
 
    --------------
@@ -141,9 +141,9 @@ package body Markdown.Blocks is
    begin
       return Self.Data.Assigned
         and then Self.Data.all in
-          Markdown.Implementation.Paragraphs.Paragraph
-        and then Markdown.Implementation.Paragraphs.Paragraph (Self.Data.all)
-                  .Table_Columns > 0;
+          Markdown.Implementation.Paragraphs.Paragraph'Class
+        and then Markdown.Implementation.Paragraphs.Paragraph'Class
+          (Self.Data.all).Table_Columns > 0;
    end Is_Table;
 
    -----------------------

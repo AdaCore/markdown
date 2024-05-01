@@ -45,7 +45,7 @@ package Markdown.Blocks.Tables is
 private
 
    type Paragraph_Access is access all
-     Markdown.Implementation.Paragraphs.Paragraph;
+     Markdown.Implementation.Paragraphs.Paragraph'Class;
 
    type Table is new Ada.Finalization.Controlled with record
       Data : Paragraph_Access;
