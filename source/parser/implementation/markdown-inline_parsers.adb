@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -13,7 +13,6 @@ with VSS.Implementation.Strings;
 with VSS.Regular_Expressions;
 with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors.Internals;
-with VSS.Strings;
 
 with Markdown.Implementation;
 with VSS.Strings.Cursors.Markers;
@@ -218,12 +217,10 @@ package body Markdown.Inline_Parsers is
    -----------
 
    function Parse
-     (Self  : Inline_Parser'Class;
-      Lines : VSS.String_Vectors.Virtual_String_Vector)
-        return Markdown.Annotations.Annotated_Text
+     (Self : Inline_Parser'Class;
+      Text : VSS.Strings.Virtual_String)
+      return Markdown.Annotations.Annotated_Text
    is
-      Text : constant VSS.Strings.Virtual_String :=
-        Lines.Join_Lines (VSS.Strings.LF, False);
 
       State  : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
       Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
