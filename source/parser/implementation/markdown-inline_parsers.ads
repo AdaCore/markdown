@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -8,6 +8,7 @@
 --  items.
 
 with VSS.String_Vectors;
+with VSS.Strings;
 
 with Markdown.Annotations;
 with Markdown.Simple_Inline_Parsers;
@@ -29,11 +30,22 @@ package Markdown.Inline_Parsers is
       Lines : VSS.String_Vectors.Virtual_String_Vector)
      return Markdown.Annotations.Annotated_Text;
 
+   function Parse
+     (Self : Inline_Parser'Class;
+      Text : VSS.Strings.Virtual_String)
+     return Markdown.Annotations.Annotated_Text;
+
 private
 
    type Inline_Parser is tagged limited record
       Scanner : Markdown.Emphasis_Delimiters.Scanner;
       Parsers : Markdown.Simple_Inline_Parsers.Simple_Parser_Vectors.Vector;
    end record;
+
+   function Parse
+     (Self  : Inline_Parser'Class;
+      Lines : VSS.String_Vectors.Virtual_String_Vector)
+        return Markdown.Annotations.Annotated_Text is
+          (Self.Parse (Lines.Join_Lines (VSS.Strings.LF, False)));
 
 end Markdown.Inline_Parsers;

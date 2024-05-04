@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -31,6 +31,9 @@ package Markdown.Implementation.List_Items is
      with Pre => Self.Is_Ordered;
    --  List item marker as an integer
 
+   function Has_Blank_Line (Self : List_Item'Class) return Boolean;
+   function Ends_With_Blank_Line (Self : List_Item'Class) return Boolean;
+
 private
    type List_Item is new Abstract_Container_Block with record
       Is_Ordered             : Boolean;
@@ -57,4 +60,9 @@ private
       Input : in out Input_Position;
       Ok    : out Boolean);
 
+   function Has_Blank_Line (Self : List_Item'Class) return Boolean is
+     (Self.Has_Blank_Line);
+
+   function Ends_With_Blank_Line (Self : List_Item'Class) return Boolean is
+     (Self.Ends_With_Blank_Line);
 end Markdown.Implementation.List_Items;

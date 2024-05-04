@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -8,11 +8,13 @@
 --  See https://github.com/commonmark/commonmark-spec for more details.
 
 with Ada.Wide_Wide_Text_IO;
+with Ada.Command_Line;
 
 with VSS.Strings;
 
 with Markdown.Documents;
 with Markdown.Parsers;
+with Markdown.Parsers.Enable_GFM;
 
 with HTML_Writers;
 with Prints;
@@ -21,6 +23,12 @@ procedure Commonmark_Tests is
    Writer : HTML_Writers.Writer;
    Parser : Markdown.Parsers.Markdown_Parser;
 begin
+   if Ada.Command_Line.Argument_Count > 0
+     and then Ada.Command_Line.Argument (1) = "--gfm"
+   then
+      Markdown.Parsers.Enable_GFM (Parser);
+   end if;
+
    while not Ada.Wide_Wide_Text_IO.End_Of_File loop
       declare
          Line : constant Wide_Wide_String := Ada.Wide_Wide_Text_IO.Get_Line;
@@ -35,7 +43,7 @@ begin
       Document : constant Markdown.Documents.Document := Parser.Document;
    begin
       --  Writer.Start_Element ("html");
-      Prints.Print_Blocks (Writer, Document);
+      Prints.Print_Blocks (Writer, Document, Is_Tight => False);
       --  Writer.End_Element ("html");
    end;
 end Commonmark_Tests;

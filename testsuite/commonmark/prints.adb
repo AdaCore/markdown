@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -16,6 +16,7 @@ with Markdown.Blocks.Fenced_Code;
 with Markdown.Blocks.HTML;
 with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Paragraphs;
+with Markdown.Blocks.Tables;
 pragma Warnings (Off, "is not referenced");
 with Markdown.Blocks.Quotes;
 pragma Warnings (On, "is not referenced");
@@ -26,6 +27,26 @@ package body Prints is
    Tag : constant array
      (Markdown.Annotations.Emphasis .. Markdown.Annotations.Strong)
        of VSS.Strings.Virtual_String := ["em", "strong"];
+
+   Left : constant HTML_Writers.HTML_Attribute_Lists.List :=
+     [("align", "left")];
+
+   Right : constant HTML_Writers.HTML_Attribute_Lists.List :=
+     [("align", "right")];
+
+   Center : constant HTML_Writers.HTML_Attribute_Lists.List :=
+     [("align", "center")];
+
+   Cell_Allign : constant array (Markdown.Blocks.Tables.Columt_Alignment) of
+     HTML_Writers.HTML_Attributes :=
+       [HTML_Writers.No_Attributes,
+        (Left with null record),
+        (Right with null record),
+        (Center with null record)];
+
+   procedure Print_Table
+     (Writer : in out HTML_Writers.Writer;
+      Table  : Markdown.Blocks.Tables.Table);
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
@@ -163,17 +184,22 @@ package body Prints is
    -----------------
 
    procedure Print_Block
-     (Writer : in out HTML_Writers.Writer;
-      Block  : Markdown.Blocks.Block)
+     (Writer   : in out HTML_Writers.Writer;
+      Block    : Markdown.Blocks.Block;
+      Is_Tight : Boolean)
    is
       New_Line : VSS.Strings.Virtual_String;
    begin
       New_Line.Append (VSS.Characters.Virtual_Character'Val (10));
 
       if Block.Is_Paragraph then
-         Writer.Start_Element ("p");
-         Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
-         Writer.End_Element ("p");
+         if Is_Tight then
+            Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
+         else
+            Writer.Start_Element ("p");
+            Print_Annotated_Text (Writer, Block.To_Paragraph.Text);
+            Writer.End_Element ("p");
+         end if;
 
       elsif Block.Is_Thematic_Break then
          Writer.Start_Element ("hr");
@@ -192,7 +218,7 @@ package body Prints is
 
       elsif Block.Is_Quote then
          Writer.Start_Element ("blockquote");
-         Print_Blocks (Writer, Block.To_Quote);
+         Print_Blocks (Writer, Block.To_Quote, Is_Tight => False);
          Writer.End_Element ("blockquote");
 
       elsif Block.Is_Fenced_Code_Block then
@@ -239,17 +265,21 @@ package body Prints is
       elsif Block.Is_HTML_Block then
          Writer.Raw_HTML (Block.To_HTML_Block.Text);
 
+      elsif Block.Is_Table then
+         Print_Table (Writer, Block.To_Table);
+
       else
          raise Program_Error;
       end if;
    end Print_Block;
 
    procedure Print_Blocks
-     (Writer : in out HTML_Writers.Writer;
-      List   : Markdown.Block_Containers.Block_Container'Class) is
+     (Writer   : in out HTML_Writers.Writer;
+      List     : Markdown.Block_Containers.Block_Container'Class;
+      Is_Tight : Boolean) is
    begin
       for Block of List loop
-         Print_Block (Writer, Block);
+         Print_Block (Writer, Block, Is_Tight);
       end loop;
    end Print_Blocks;
 
@@ -279,11 +309,53 @@ package body Prints is
 
       for Item of List loop
          Writer.Start_Element ("li");
-         Print_Blocks (Writer, Item);
+         Print_Blocks (Writer, Item, Is_Tight => not List.Is_Loose);
          Writer.End_Element ("li");
       end loop;
 
       Writer.End_Element (Tag);
    end Print_List;
+
+   -----------------
+   -- Print_Table --
+   -----------------
+
+   procedure Print_Table
+     (Writer : in out HTML_Writers.Writer;
+      Table  : Markdown.Blocks.Tables.Table) is
+   begin
+      Writer.Start_Element ("table");
+      Writer.Start_Element ("thead");
+      Writer.Start_Element ("tr");
+
+      for J in 1 .. Table.Columns loop
+         Writer.Start_Element ("th", Cell_Allign (Table.Alignment (J)));
+         Print_Annotated_Text (Writer, Table.Header (J));
+         Writer.End_Element ("th");
+      end loop;
+
+      Writer.End_Element ("tr");
+      Writer.End_Element ("thead");
+
+      if Table.Rows > 0 then
+         Writer.Start_Element ("tbody");
+
+         for Row in 1 .. Table.Rows loop
+            Writer.Start_Element ("tr");
+
+            for J in 1 .. Table.Columns loop
+               Writer.Start_Element ("td", Cell_Allign (Table.Alignment (J)));
+               Print_Annotated_Text (Writer, Table.Cell (Row, J));
+               Writer.End_Element ("td");
+            end loop;
+
+            Writer.End_Element ("tr");
+         end loop;
+
+         Writer.End_Element ("tbody");
+      end if;
+
+      Writer.End_Element ("table");
+   end Print_Table;
 
 end Prints;

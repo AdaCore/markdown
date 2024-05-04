@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -25,6 +25,23 @@ package Markdown.Implementation.Paragraphs is
       Tag   : in out Ada.Tags.Tag;
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a paragraph
+
+   function Table_Columns (Self : Paragraph) return Natural is (0);
+   --  If paragraph contains a table (GFM extension) return columns count
+
+   function Table_Rows (Self : Paragraph) return Natural is (0);
+   --  If paragraph contains a table (GFM extension) return rows count
+
+   function Table_Cell
+     (Self   : Paragraph;
+      Row    : Positive;
+      Column : Positive) return Markdown.Annotations.Annotated_Text is
+        (raise Constraint_Error);
+   --  If paragraph contains a table (GFM extension) return a cell
+
+   function Table_Column_Alignment
+     (Self : Paragraph; Column : Positive) return Natural is (0);
+   --  return 0 for undefined alignment, 1, 2, 3 for left, right and center
 
 private
 

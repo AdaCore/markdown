@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -17,6 +17,7 @@ limited with Markdown.Blocks.Indented_Code;
 limited with Markdown.Blocks.Lists;
 limited with Markdown.Blocks.Paragraphs;
 limited with Markdown.Blocks.Quotes;
+limited with Markdown.Blocks.Tables;
 limited with Markdown.Blocks.Thematic_Breaks;
 
 package Markdown.Blocks is
@@ -48,6 +49,9 @@ package Markdown.Blocks is
 
    function Is_List (Self : Block'Class) return Boolean;
    --  Check if given block is a list of list items
+
+   function Is_Table (Self : Block'Class) return Boolean;
+   --  Check if given block is a table (GFM extension)
 
    function To_Thematic_Break (Self : Block)
      return Markdown.Blocks.Thematic_Breaks.Thematic_Break
@@ -87,6 +91,11 @@ package Markdown.Blocks is
    function To_List (Self : Block) return Markdown.Blocks.Lists.List
      with Pre => Self.Is_List;
    --  Convert the block to a list
+
+   function To_Table (Self : Block)
+     return Markdown.Blocks.Tables.Table
+        with Pre => Self.Is_Table;
+   --  Convert the block to a table block
 
 private
 

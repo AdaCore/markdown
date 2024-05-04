@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -25,6 +25,11 @@ package Markdown.Implementation.Lists is
    function Match
      (Self : List'Class;
       Item : Abstract_Block_Access) return Boolean;
+
+   function Is_Loose (Self : List'Class) return Boolean;
+   --  A list is loose if any of its constituent list items are separated by
+   --  blank lines, or if any of its constituent list items directly contain
+   --  two block-level elements with a blank line between them.
 
 private
    type List is new Abstract_Container_Block with record

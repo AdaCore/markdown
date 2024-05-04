@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -13,6 +13,7 @@ with Markdown.Blocks.Indented_Code;
 with Markdown.Blocks.Lists;
 with Markdown.Blocks.Paragraphs;
 with Markdown.Blocks.Quotes;
+with Markdown.Blocks.Tables;
 with Markdown.Blocks.Thematic_Breaks;
 
 with Markdown.Implementation.ATX_Headings;
@@ -116,7 +117,9 @@ package body Markdown.Blocks is
    begin
       return Self.Data.Assigned
         and then Self.Data.all in
-          Markdown.Implementation.Paragraphs.Paragraph;
+          Markdown.Implementation.Paragraphs.Paragraph'Class
+        and then Markdown.Implementation.Paragraphs.Paragraph'Class
+          (Self.Data.all).Table_Columns = 0;
    end Is_Paragraph;
 
    --------------
@@ -129,6 +132,19 @@ package body Markdown.Blocks is
         and then Self.Data.all in
           Markdown.Implementation.Quotes.Quote;
    end Is_Quote;
+
+   --------------
+   -- Is_Table --
+   --------------
+
+   function Is_Table (Self : Block'Class) return Boolean is
+   begin
+      return Self.Data.Assigned
+        and then Self.Data.all in
+          Markdown.Implementation.Paragraphs.Paragraph'Class
+        and then Markdown.Implementation.Paragraphs.Paragraph'Class
+          (Self.Data.all).Table_Columns > 0;
+   end Is_Table;
 
    -----------------------
    -- Is_Thematic_Break --
@@ -209,6 +225,16 @@ package body Markdown.Blocks is
    begin
       return Markdown.Blocks.Quotes.From_Block (Self);
    end To_Quote;
+
+   --------------
+   -- To_Table --
+   --------------
+
+   function To_Table (Self : Block)
+     return Markdown.Blocks.Tables.Table is
+   begin
+      return Markdown.Blocks.Tables.From_Block (Self);
+   end To_Table;
 
    -----------------------
    -- To_Thematic_Break --

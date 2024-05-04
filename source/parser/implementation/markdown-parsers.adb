@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -20,9 +20,6 @@ with Markdown.Implementation.Quotes;
 with Markdown.Implementation.Thematic_Breaks;
 
 package body Markdown.Parsers is
-
-   procedure Register_Common_Mark_Blocks (Self : in out Markdown_Parser'Class);
-   --  Register CommonMark block detectors
 
    procedure Find_Block_Start
      (Self : Markdown_Parser'Class;
@@ -229,6 +226,25 @@ package body Markdown.Parsers is
       Detector : Block_Detector) is
    begin
       Self.Block_Detectors.Append (Detector);
+   end Register_Block;
+
+   --------------------
+   -- Register_Block --
+   --------------------
+
+   procedure Register_Block
+     (Self     : in out Markdown_Parser'Class;
+      Detector : Block_Detector;
+      Replace  : Block_Detector)
+   is
+      Found : constant Block_Detector_Vectors.Cursor :=
+        Self.Block_Detectors.Find (Replace);
+   begin
+      if Block_Detector_Vectors.Has_Element (Found) then
+         Self.Block_Detectors (Found) := Detector;
+      else
+         raise Constraint_Error;
+      end if;
    end Register_Block;
 
    ---------------------------------

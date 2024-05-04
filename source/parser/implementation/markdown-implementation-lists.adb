@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -9,6 +9,29 @@ with VSS.Characters;
 with Markdown.Implementation.List_Items;
 
 package body Markdown.Implementation.Lists is
+
+   --------------
+   -- Is_Loose --
+   --------------
+
+   function Is_Loose (Self : List'Class) return Boolean is
+      Ends_Blank : Boolean := False;
+      Result     : Boolean := False;
+   begin
+      for Child of Self.Children loop
+         declare
+            Item : Markdown.Implementation.List_Items.List_Item renames
+              Markdown.Implementation.List_Items.List_Item (Child.all);
+         begin
+            Result := Item.Has_Blank_Line or Ends_Blank;
+            Ends_Blank := Item.Ends_With_Blank_Line;
+
+            exit when Result;
+         end;
+      end loop;
+
+      return Result;
+   end Is_Loose;
 
    ----------------
    -- Is_Ordered --

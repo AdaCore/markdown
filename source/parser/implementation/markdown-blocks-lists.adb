@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -79,6 +79,13 @@ package body Markdown.Blocks.Lists is
       return (Ada.Finalization.Controlled with Data =>
                List_Access (Self.Data));
    end From_Block;
+
+   --------------
+   -- Is_Loose --
+   --------------
+
+   function Is_Loose (Self : List'Class) return Boolean is
+     (Self.Data.Is_Loose);
 
    ----------------
    -- Is_Ordered --
