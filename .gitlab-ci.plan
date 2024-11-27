@@ -1,0 +1,6 @@
+# GNATdoc is used to test changes because markdown.anod doesn't support testing.
+
+def build_test_(qualifier={}):
+    with defaults(qualifier=qualifier):
+        anod_build("gnatdoc4")
+        anod_test("gnatdoc4")
