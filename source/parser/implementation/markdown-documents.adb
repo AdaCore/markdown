@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -13,8 +13,12 @@ package body Markdown.Documents is
    ------------
 
    overriding procedure Adjust (Self : in out Document) is
+      use type Markdown.Implementation.Abstract_Container_Block_Access;
+
    begin
-      Markdown.Implementation.Reference (Self.Data);
+      if Self.Data /= null then
+         Markdown.Implementation.Reference (Self.Data);
+      end if;
    end Adjust;
 
    -------------
@@ -40,8 +44,12 @@ package body Markdown.Documents is
    --------------
 
    overriding procedure Finalize (Self : in out Document) is
+      use type Markdown.Implementation.Abstract_Container_Block_Access;
+
    begin
-      Markdown.Implementation.Unreference (Self.Data);
+      if Self.Data /= null then
+         Markdown.Implementation.Unreference (Self.Data);
+      end if;
    end Finalize;
 
    --------------
