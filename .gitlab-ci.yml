@@ -1,65 +1,14 @@
-# In this CI, we should only work in reaction to a Merge Request
-
-workflow:
-
-  rules:
-
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-
-      when: always
-
-variables:
-   PIP_INDEX_URL: https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.adacore-it.com/api/v4/projects/it%2Fpackage-registry/packages/pypi/simple
-
-.basic-setup:
-  - |
-    set -x
-    export PATH=/it/e3/bin:$PATH
-  - . ~/.aws_container_credentials
-
 stages:
-  - build_and_test
-  - build_dependent
+  - test
+  - check
 
-#########
-# BUILD #
-#########
+include:
+# Issue check
+  - component: $CI_SERVER_FQDN/eng/gitlab-templates/check-issue@~latest
 
-build_and_test:
-  services:
-     - image:sandbox
-  stage: build_and_test
-  script:
-    - !reference [.basic-setup]
-
-    - |
-      # Install GNAT (with gcov) and gcovr
-      anod install --sandbox-dir /it/wave gnatall
-      python3 -m pip install gcovr
-      anod install --sandbox-dir /it/wave vss
-
-      # Fetch tests' data
-      PACKAGE=commonmark-spec.tar.bz2
-      DATA_URL=https://gitlab.adacore-it.com/api/v4/projects/eng%2Fide%2Fmarkdown
-      curl -L --header "JOB-TOKEN: $CI_JOB_TOKEN" \
-        $DATA_URL/packages/generic/$PACKAGE/0.0.0/$PACKAGE |\
-        tar xjf -
-
-      # Build Markdown and run tests
-      ( eval $(anod printenv --sandbox-dir /it/wave gnatall) ;\
-        eval $(anod printenv --sandbox-dir /it/wave vss) ;\
-        make BUILD_MODE=coverage check ;\
-        ENABLE_GCOV=y gcovr --print-summary --cobertura gcov.xml )
-
-    # Run spell checker
-    - make spellcheck_json
-
-  coverage: /^\s*lines:\s*\d+.\d+\%/
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: gcov.xml
-      codequality:
-        - spellcheck.json
-
+# Build and test
+  - component: $CI_SERVER_FQDN/eng/gitlab-templates/test@~latest
+    inputs:
+      anod-args: run build_test_$ACI_TRACK
+      cpus: 8
+      needs: []
