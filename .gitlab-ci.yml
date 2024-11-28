@@ -9,6 +9,6 @@ include:
 # Build and test
   - component: $CI_SERVER_FQDN/eng/gitlab-templates/test@~latest
     inputs:
-      anod-args: run build_test_$ACI_TRACK
+      anod-args: run build_test_$ACI_TRACK --latest
       cpus: 8
       needs: []
