@@ -14,7 +14,7 @@ package body Markdown.Blocks.HTML is
 
    overriding procedure Adjust (Self : in out HTML_Block) is
    begin
-      if Self.Data.Assigned then
+      if Markdown.Implementation.Is_Assigned (Self.Data) then
          System.Atomic_Counters.Increment (Self.Data.Counter);
       end if;
    end Adjust;
@@ -25,7 +25,7 @@ package body Markdown.Blocks.HTML is
 
    overriding procedure Finalize (Self : in out HTML_Block) is
    begin
-      if Self.Data.Assigned then
+      if Markdown.Implementation.Is_Assigned (Self.Data) then
          if System.Atomic_Counters.Decrement (Self.Data.Counter) then
             Markdown.Implementation.Free
               (Markdown.Implementation.Abstract_Block_Access (Self.Data));
