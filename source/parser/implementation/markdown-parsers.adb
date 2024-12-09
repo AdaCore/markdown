@@ -175,7 +175,7 @@ package body Markdown.Parsers is
       --  Try to append Input to Self.Open_Leaf if any, taking CIP into account
       if not Match then
          Self.Open_Leaf := null;
-      elsif Self.Open_Leaf.Assigned then
+      elsif Markdown.Implementation.Is_Assigned (Self.Open_Leaf) then
          Match := False;
          Self.Open_Leaf.Append_Line (Input, CIP, Match);
 
@@ -189,7 +189,9 @@ package body Markdown.Parsers is
 
       --  Otherwise create new blocks
       if not Done and Input.First.Has_Element then
-         while Tag /= Ada.Tags.No_Tag and not New_Leaf.Assigned loop
+         while Tag /= Ada.Tags.No_Tag
+           and not Markdown.Implementation.Is_Assigned (New_Leaf)
+         loop
             Create_Block (Input, Tag, New_Containers, New_Leaf);
             Self.Find_Block_Start (Input, Tag, CIP);
          end loop;
@@ -200,7 +202,7 @@ package body Markdown.Parsers is
 
       Self.Open.Move (Source => Open);  --  Replace Self.Open with Open
 
-      if New_Leaf.Assigned then
+      if Markdown.Implementation.Is_Assigned (New_Leaf) then
          if New_Containers.Is_Empty then
             Self.Open.Last_Element.Children.Append (New_Leaf);
          end if;
