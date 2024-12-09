@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -71,7 +71,7 @@ package body Markdown.Implementation is
 
    procedure Reference (Self : Abstract_Block_Access) is
    begin
-      if Self.Assigned then
+      if Markdown.Implementation.Is_Assigned (Self) then
          System.Atomic_Counters.Increment (Self.Counter);
       end if;
    end Reference;
@@ -82,7 +82,7 @@ package body Markdown.Implementation is
 
    procedure Reference (Self : Abstract_Container_Block_Access) is
    begin
-      if Self.Assigned then
+      if Markdown.Implementation.Is_Assigned (Self) then
          System.Atomic_Counters.Increment (Self.Counter);
       end if;
    end Reference;
@@ -133,10 +133,10 @@ package body Markdown.Implementation is
         (Markdown.Implementation.Abstract_Container_Block'Class,
          Abstract_Container_Block_Access);
    begin
-      if not Self.Assigned then
+      if not Markdown.Implementation.Is_Assigned (Self) then
          null;
-      elsif System.Atomic_Counters.Decrement (Self.Counter) then
 
+      elsif System.Atomic_Counters.Decrement (Self.Counter) then
          for Item of Self.Children loop
             if System.Atomic_Counters.Decrement (Item.Counter) then
                Markdown.Implementation.Free (Item);

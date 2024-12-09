@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -14,7 +14,7 @@ package body Markdown.List_Items.Internals is
      (Self : in out List_Item;
       Data : Markdown.Implementation.Abstract_Block_Access) is
    begin
-      pragma Assert (not Self.Data.Assigned);
+      pragma Assert (not Markdown.Implementation.Is_Assigned (Self.Data));
       Self.Data :=
         Markdown.Implementation.List_Items.List_Item_Access (Data);
    end Set;
