@@ -24,8 +24,8 @@ package body Markdown.Blocks.Tables is
    ---------------
 
    function Alignment
-     (Self : Table; Column : Positive) return Columt_Alignment is
-       (Columt_Alignment'Val (Self.Data.Table_Column_Alignment (Column)));
+     (Self : Table; Column : Positive) return Column_Alignment is
+       (Column_Alignment'Val (Self.Data.Table_Column_Alignment (Column)));
 
    ----------
    -- Cell --

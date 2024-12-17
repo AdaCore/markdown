@@ -31,10 +31,10 @@ package Markdown.Blocks.Tables is
      return Markdown.Annotations.Annotated_Text;
    --  Return annotated text nested in a cell
 
-   type Columt_Alignment is (Undefined, Left, Right, Center);
+   type Column_Alignment is (Undefined, Left, Right, Center);
 
    function Alignment
-     (Self : Table; Column : Positive) return Columt_Alignment;
+     (Self : Table; Column : Positive) return Column_Alignment;
 
    function To_Block (Self : Table) return Markdown.Blocks.Block;
    --  Convert to Block type
