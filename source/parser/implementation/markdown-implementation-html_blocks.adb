@@ -75,22 +75,24 @@ package body Markdown.Implementation.HTML_Blocks is
      "ul";
 
    Tag_Name  : constant Wide_Wide_String := "[a-zA-Z][a-zA-Z0-9\-]*";
-   Attr_Name : constant Wide_Wide_String := "[a-zA-Z_:][a-zA-Z0-9_.:\-]*";
+   Attribute_Name : constant Wide_Wide_String := "[a-zA-Z_:][a-zA-Z0-9_.:\-]*";
 
-   Unquoted_Attr_Value : constant Wide_Wide_String := "[^ \t\v\f""'=<>`]+";
-   Single_Quoted_Attr_Value : constant Wide_Wide_String := "'[^']*'";
-   Double_Quoted_Attr_Value : constant Wide_Wide_String := """[^""]*""";
+   Unquoted_Attribute_Value : constant Wide_Wide_String :=
+     "[^ \t\v\f""'=<>`]+";
 
-   Attr_Value : constant Wide_Wide_String :=
-     Unquoted_Attr_Value & "|" &
-     Single_Quoted_Attr_Value & "|" &
-     Double_Quoted_Attr_Value;
+   Single_Quoted_Attribute_Value : constant Wide_Wide_String := "'[^']*'";
+   Double_Quoted_Attribute_Value : constant Wide_Wide_String := """[^""]*""";
 
-   Attr_Value_Spec : constant Wide_Wide_String :=
-     "[ \t]*=[ \t]*(?:" & Attr_Value & ")";
+   Attribute_Value : constant Wide_Wide_String :=
+     Unquoted_Attribute_Value & "|" &
+     Single_Quoted_Attribute_Value & "|" &
+     Double_Quoted_Attribute_Value;
+
+   Attribute_Value_Spec : constant Wide_Wide_String :=
+     "[ \t]*=[ \t]*(?:" & Attribute_Value & ")";
 
    Attribute : constant Wide_Wide_String :=
-     "[ \t]+" & Attr_Name & "(?:" & Attr_Value_Spec & ")?";
+     "[ \t]+" & Attribute_Name & "(?:" & Attribute_Value_Spec & ")?";
 
    Open_Tag : constant Wide_Wide_String :=
      "<" & Tag_Name & "(?:" & Attribute & ")*[ \t]*/?>";
@@ -132,7 +134,7 @@ package body Markdown.Implementation.HTML_Blocks is
    Blank_Pattern : VSS.Regular_Expressions.Regular_Expression;
    --  Blank line pattern
 
-   procedure Initialze_Patterns;
+   procedure Initialize_Patterns;
 
    -----------------
    -- Append_Line --
@@ -213,7 +215,7 @@ package body Markdown.Implementation.HTML_Blocks is
    is
    begin
       if not Open_Pattern.Is_Valid then
-         Initialze_Patterns;
+         Initialize_Patterns;
       end if;
 
       declare
@@ -230,11 +232,11 @@ package body Markdown.Implementation.HTML_Blocks is
       end;
    end Detector;
 
-   ------------------------
-   -- Initialze_Patterns --
-   ------------------------
+   -------------------------
+   -- Initialize_Patterns --
+   -------------------------
 
-   procedure Initialze_Patterns is
+   procedure Initialize_Patterns is
       function "+"
         (Pattern : Wide_Wide_String)
           return VSS.Regular_Expressions.Regular_Expression is
@@ -254,6 +256,6 @@ package body Markdown.Implementation.HTML_Blocks is
          5 => +"\]\]>"];
 
       Blank_Pattern := +"[ \t]*";
-   end Initialze_Patterns;
+   end Initialize_Patterns;
 
 end Markdown.Implementation.HTML_Blocks;

@@ -71,7 +71,7 @@ package body Markdown.Implementation is
 
    procedure Reference (Self : Abstract_Block_Access) is
    begin
-      if Markdown.Implementation.Is_Assigned (Self) then
+      if Is_Assigned (Self) then
          System.Atomic_Counters.Increment (Self.Counter);
       end if;
    end Reference;
@@ -82,7 +82,7 @@ package body Markdown.Implementation is
 
    procedure Reference (Self : Abstract_Container_Block_Access) is
    begin
-      if Markdown.Implementation.Is_Assigned (Self) then
+      if Is_Assigned (Self) then
          System.Atomic_Counters.Increment (Self.Counter);
       end if;
    end Reference;

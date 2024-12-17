@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -38,5 +38,10 @@ private
    overriding function Element
      (Self  : List_Item;
       Index : Positive) return Markdown.Blocks.Block;
+
+   function Is_Assigned
+     (Value : access Markdown.Implementation.Abstract_Block'Class)
+       return Boolean
+         renames Markdown.Implementation.Is_Assigned;
 
 end Markdown.List_Items;

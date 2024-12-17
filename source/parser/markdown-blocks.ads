@@ -106,4 +106,9 @@ private
    overriding procedure Adjust (Self : in out Block);
    overriding procedure Finalize (Self : in out Block);
 
+   function Is_Assigned
+     (Value : access Markdown.Implementation.Abstract_Block'Class)
+       return Boolean
+         renames Markdown.Implementation.Is_Assigned;
+
 end Markdown.Blocks;

@@ -37,7 +37,7 @@ package body Prints is
    Center : constant HTML_Writers.HTML_Attribute_Lists.List :=
      [("align", "center")];
 
-   Cell_Allign : constant array (Markdown.Blocks.Tables.Columt_Alignment) of
+   Cell_Allign : constant array (Markdown.Blocks.Tables.Column_Alignment) of
      HTML_Writers.HTML_Attributes :=
        [HTML_Writers.No_Attributes,
         (Left with null record),

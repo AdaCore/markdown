@@ -8,15 +8,18 @@ with Markdown.Blocks.Internals;
 
 package body Markdown.Documents is
 
+   function Is_Assigned
+     (Value : access Markdown.Implementation.Abstract_Block'Class)
+       return Boolean
+         renames Markdown.Implementation.Is_Assigned;
+
    ------------
    -- Adjust --
    ------------
 
    overriding procedure Adjust (Self : in out Document) is
-      use type Markdown.Implementation.Abstract_Container_Block_Access;
-
    begin
-      if Self.Data /= null then
+      if Is_Assigned (Self.Data) then
          Markdown.Implementation.Reference (Self.Data);
       end if;
    end Adjust;
@@ -44,10 +47,8 @@ package body Markdown.Documents is
    --------------
 
    overriding procedure Finalize (Self : in out Document) is
-      use type Markdown.Implementation.Abstract_Container_Block_Access;
-
    begin
-      if Self.Data /= null then
+      if Is_Assigned (Self.Data) then
          Markdown.Implementation.Unreference (Self.Data);
       end if;
    end Finalize;
@@ -59,7 +60,7 @@ package body Markdown.Documents is
    overriding function Is_Empty (Self : Document) return Boolean is
    begin
       return
-        not Markdown.Implementation.Is_Assigned (Self.Data)
+        not Is_Assigned (Self.Data)
           or else Self.Data.Children.Is_Empty;
    end Is_Empty;
 
@@ -70,7 +71,7 @@ package body Markdown.Documents is
    overriding function Length (Self : Document) return Natural is
    begin
       return
-        (if Markdown.Implementation.Is_Assigned (Self.Data)
+        (if Is_Assigned (Self.Data)
            then Self.Data.Children.Last_Index else 0);
    end Length;
 

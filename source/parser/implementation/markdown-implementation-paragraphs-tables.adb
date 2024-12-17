@@ -32,7 +32,7 @@ package body Markdown.Implementation.Paragraphs.Tables is
       Cells : out VSS.String_Vectors.Virtual_String_Vector;
       Weak  : Boolean);
    --  Split Text into table cells vector according to GFM rules.
-   --  If Weak = True then accept a first cell exev when it doesn't end with
+   --  If Weak = True then accept a first cell even when it doesn't end with
    --  a pipe (|).
 
    function Is_Delimiter (Cell : VSS.Strings.Virtual_String) return Boolean is
