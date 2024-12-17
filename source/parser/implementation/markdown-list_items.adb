@@ -16,7 +16,7 @@ package body Markdown.List_Items is
 
    overriding procedure Adjust (Self : in out List_Item) is
    begin
-      if Markdown.Implementation.Is_Assigned (Self.Data) then
+      if Is_Assigned (Self.Data) then
          System.Atomic_Counters.Increment (Self.Data.Counter);
       end if;
    end Adjust;
@@ -44,7 +44,7 @@ package body Markdown.List_Items is
 
    overriding procedure Finalize (Self : in out List_Item) is
    begin
-      if Markdown.Implementation.Is_Assigned (Self.Data) then
+      if Is_Assigned (Self.Data) then
          if System.Atomic_Counters.Decrement (Self.Data.Counter) then
             Markdown.Implementation.Free
               (Markdown.Implementation.Abstract_Block_Access (Self.Data));
@@ -62,7 +62,7 @@ package body Markdown.List_Items is
    overriding function Is_Empty (Self : List_Item) return Boolean is
    begin
       return
-        not Markdown.Implementation.Is_Assigned (Self.Data)
+        not Is_Assigned (Self.Data)
           or else Self.Data.Children.Is_Empty;
    end Is_Empty;
 
@@ -82,7 +82,7 @@ package body Markdown.List_Items is
    overriding function Length (Self : List_Item) return Natural is
    begin
       return
-        (if Markdown.Implementation.Is_Assigned (Self.Data)
+        (if Is_Assigned (Self.Data)
            then Self.Data.Children.Last_Index else 0);
    end Length;
 

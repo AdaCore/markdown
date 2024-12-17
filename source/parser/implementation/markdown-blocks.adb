@@ -33,7 +33,7 @@ package body Markdown.Blocks is
 
    overriding procedure Adjust (Self : in out Block) is
    begin
-      if Markdown.Implementation.Is_Assigned (Self.Data) then
+      if Is_Assigned (Self.Data) then
          System.Atomic_Counters.Increment (Self.Data.Counter);
       end if;
    end Adjust;
@@ -44,7 +44,7 @@ package body Markdown.Blocks is
 
    overriding procedure Finalize (Self : in out Block) is
    begin
-      if Markdown.Implementation.Is_Assigned (Self.Data) then
+      if Is_Assigned (Self.Data) then
          if System.Atomic_Counters.Decrement (Self.Data.Counter) then
             Markdown.Implementation.Free (Self.Data);
 
@@ -60,7 +60,7 @@ package body Markdown.Blocks is
 
    function Is_ATX_Heading (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Implementation.ATX_Headings.ATX_Heading'Class;
    end Is_ATX_Heading;
@@ -71,7 +71,7 @@ package body Markdown.Blocks is
 
    function Is_Fenced_Code_Block (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Implementation.Fenced_Code_Blocks.Fenced_Code_Block'Class;
    end Is_Fenced_Code_Block;
@@ -82,7 +82,7 @@ package body Markdown.Blocks is
 
    function Is_HTML_Block (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Implementation.HTML_Blocks.HTML_Block'Class;
    end Is_HTML_Block;
@@ -93,7 +93,7 @@ package body Markdown.Blocks is
 
    function Is_Indented_Code_Block (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Implementation.Indented_Code_Blocks.Indented_Code_Block'Class;
    end Is_Indented_Code_Block;
@@ -104,7 +104,7 @@ package body Markdown.Blocks is
 
    function Is_List (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Markdown.Implementation.Lists.List;
    end Is_List;
@@ -115,7 +115,7 @@ package body Markdown.Blocks is
 
    function Is_Paragraph (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Markdown.Implementation.Paragraphs.Paragraph'Class
         and then Markdown.Implementation.Paragraphs.Paragraph'Class
@@ -128,7 +128,7 @@ package body Markdown.Blocks is
 
    function Is_Quote (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Markdown.Implementation.Quotes.Quote;
    end Is_Quote;
@@ -139,7 +139,7 @@ package body Markdown.Blocks is
 
    function Is_Table (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Markdown.Implementation.Paragraphs.Paragraph'Class
         and then Markdown.Implementation.Paragraphs.Paragraph'Class
@@ -152,7 +152,7 @@ package body Markdown.Blocks is
 
    function Is_Thematic_Break (Self : Block'Class) return Boolean is
    begin
-      return Markdown.Implementation.Is_Assigned (Self.Data)
+      return Is_Assigned (Self.Data)
         and then Self.Data.all in
           Markdown.Implementation.Thematic_Breaks.Thematic_Break;
    end Is_Thematic_Break;

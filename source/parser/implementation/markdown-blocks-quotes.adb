@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -55,7 +55,7 @@ package body Markdown.Blocks.Quotes is
      return Quote is
    begin
       pragma Assert
-        (not Markdown.Implementation.Is_Assigned (Self.Data)
+        (not Is_Assigned (Self.Data)
            or else Self.Data.all in Implementation.Quotes.Quote'Class);
 
       System.Atomic_Counters.Increment (Self.Data.Counter);
@@ -72,7 +72,7 @@ package body Markdown.Blocks.Quotes is
    overriding function Is_Empty (Self : Quote) return Boolean is
    begin
       return
-        not Markdown.Implementation.Is_Assigned (Self.Data)
+        not Is_Assigned (Self.Data)
           or else Self.Data.Children.Is_Empty;
    end Is_Empty;
 
@@ -83,7 +83,7 @@ package body Markdown.Blocks.Quotes is
    overriding function Length (Self : Quote) return Natural is
    begin
       return
-        (if Markdown.Implementation.Is_Assigned (Self.Data)
+        (if Is_Assigned (Self.Data)
            then Self.Data.Children.Last_Index else 0);
    end Length;
 

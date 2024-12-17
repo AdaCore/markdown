@@ -14,7 +14,7 @@ package body Markdown.Blocks.Internals is
      (Self : in out Block;
       Data : Markdown.Implementation.Abstract_Block_Access) is
    begin
-      pragma Assert (not Markdown.Implementation.Is_Assigned (Self.Data));
+      pragma Assert (not Is_Assigned (Self.Data));
       Self.Data := Data;
    end Set;
 
