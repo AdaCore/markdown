@@ -50,7 +50,9 @@ package body Markdown.Documents is
 
    overriding function Is_Empty (Self : Document) return Boolean is
    begin
-      return not Self.Data.Assigned or else Self.Data.Children.Is_Empty;
+      return
+        not Markdown.Implementation.Is_Assigned (Self.Data)
+          or else Self.Data.Children.Is_Empty;
    end Is_Empty;
 
    ------------
@@ -60,7 +62,8 @@ package body Markdown.Documents is
    overriding function Length (Self : Document) return Natural is
    begin
       return
-        (if Self.Data.Assigned then Self.Data.Children.Last_Index else 0);
+        (if Markdown.Implementation.Is_Assigned (Self.Data)
+           then Self.Data.Children.Last_Index else 0);
    end Length;
 
 end Markdown.Documents;

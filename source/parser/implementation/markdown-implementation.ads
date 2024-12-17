@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2024, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -33,7 +33,7 @@ package Markdown.Implementation is
    end record
      with No_Task_Parts;
 
-   function Assigned (Value : access Abstract_Block'Class) return Boolean is
+   function Is_Assigned (Value : access Abstract_Block'Class) return Boolean is
      (Value /= null);
    --  If Value is not null
 
