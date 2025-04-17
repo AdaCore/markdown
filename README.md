@@ -1,7 +1,6 @@
 # Markdown
 
 [![Build](https://github.com/AdaCore/markdown/workflows/Build/badge.svg)](https://github.com/AdaCore/markdown/actions)
-[![codecov](https://codecov.io/gh/AdaCore/markdown/branch/master/graph/badge.svg)](https://codecov.io/gh/AdaCore/markdown)
 
 > Markdown parser in Ada
 

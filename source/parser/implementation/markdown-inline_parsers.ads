@@ -13,7 +13,6 @@ with VSS.Strings;
 with Markdown.Annotations;
 with Markdown.Simple_Inline_Parsers;
 
---  private
 private with Markdown.Emphasis_Delimiters;
 
 package Markdown.Inline_Parsers is

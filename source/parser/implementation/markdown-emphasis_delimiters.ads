@@ -16,12 +16,12 @@ private
 package Markdown.Emphasis_Delimiters is
    pragma Preelaborate;
 
-   type Delimiter_Kind is ('*', '_', '[', ']');
-   --  A kind of delimiters used in emphasis or links
+   type Delimiter_Kind is ('*', '_', '[', ']', '!');
+   --  A kind of delimiters used in emphasis, links or images. '!' means `![`.
 
    subtype Emphasis_Kind is Delimiter_Kind range '*' .. '_';
 
-   type Delimiter (Kind       : Delimiter_Kind := '*') is record
+   type Delimiter (Kind : Delimiter_Kind := '*') is record
       From       : VSS.Strings.Cursors.Markers.Character_Marker;
       --  Where the delimiter starts
       Is_Deleted : Boolean := False;  --  Marker for ignorance
@@ -32,7 +32,7 @@ package Markdown.Emphasis_Delimiters is
             Is_Active : Boolean;
             Can_Open  : Boolean;
             Can_Close : Boolean;
-         when '[' =>
+         when '[' | '!' =>
             null;
          when ']' =>
             To : VSS.Strings.Cursors.Markers.Character_Marker;
@@ -59,6 +59,7 @@ package Markdown.Emphasis_Delimiters is
    --  preceded or followed by a non-backslash-escaped `_` character.
    --
    --  For a link, a delimiter run is just `[` or `]` characters.
+   --  For an image, a delimiter run is just `![` string or `]` character.
    --
    --  Return `Found = True` and Item if the delimiter is found.
    --  Move Cursor after delimiter or forward one character if not found.
@@ -69,13 +70,14 @@ package Markdown.Emphasis_Delimiters is
    type Delimiter_Filter_Kind is
      (Any_Element,
       Kind_Of,
+      Link_Or_Image,
       Emphasis_Close,
       Emphasis_Open);
 
    type Delimiter_Filter (Kind : Delimiter_Filter_Kind := Any_Element) is
       record
          case Kind is
-            when Any_Element | Emphasis_Close =>
+            when Any_Element | Emphasis_Close | Link_Or_Image =>
                null;
             when Kind_Of =>
                Given_Kind : Delimiter_Kind;
@@ -106,6 +108,7 @@ private
    type Scanner_State is record
       Is_White_Space : Boolean := True;
       Is_Punctuation : Boolean := False;
+      Is_Exclamation : Boolean := False;
    end record;
 
    type Scanner is tagged limited record

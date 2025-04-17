@@ -22,6 +22,7 @@ package Markdown.Annotations is
       Strong,
       Link,
       Code_Span,
+      Image,
       HTML_Open_Tag,
       HTML_Close_Tag,
       HTML_Comment,
@@ -53,10 +54,10 @@ package Markdown.Annotations is
               Code_Span =>
             null;
 
-         when Link =>
+         when Link | Image =>
             Destination : VSS.Strings.Virtual_String;
             Title       : VSS.String_Vectors.Virtual_String_Vector;
-            --  Link title could span several lines
+            --  Link/image title could span several lines
 
          when HTML_Open_Tag =>
             HTML_Open_Tag   : VSS.Strings.Virtual_String;

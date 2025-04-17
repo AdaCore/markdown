@@ -6,7 +6,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        build_mode: [dev, prod, coverage]
+        build_mode: [dev, prod]
     runs-on: ${{ matrix.os }}
     name: Build
     steps:
@@ -22,17 +22,18 @@ jobs:
         with:
           repository: commonmark/commonmark-spec
           path: commonmark-spec
+          ref: 0.31.2
       - name: Get GNAT toolchain with alire
         uses: alire-project/setup-alire@v2
         with:
-          toolchain: gnat_native^13 gprbuild^22
+          toolchain: gnat_native^14 gprbuild^22
+          version: "nightly"
       - name: Build and test
         shell: bash
         run: |
           alr pin vss --use=$PWD/subprojects/VSS
-          eval `alr printenv`
-          make all check coverage BUILD_MODE=${{ matrix.build_mode }}
-          make install PREFIX=/tmp BUILD_MODE=${{ matrix.build_mode }}
+          alr exec -- make all check coverage BUILD_MODE=${{ matrix.build_mode }}
+          alr exec -- make install PREFIX=/tmp BUILD_MODE=${{ matrix.build_mode }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         if: ${{ matrix.build_mode == 'coverage' }}

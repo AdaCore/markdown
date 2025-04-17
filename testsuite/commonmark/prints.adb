@@ -106,7 +106,7 @@ package body Prints is
             declare
                Item : constant Markdown.Annotations.Annotation :=
                  Text.Annotation (From);
-               Last : constant
+               Last :
                  VSS.Strings.Character_Iterators.Character_Iterator :=
                    Before (Item.From);
             begin
@@ -147,6 +147,39 @@ package body Prints is
                         Writer.Start_Element ("a", Attr);
                         Print (From, Next, Item.To);
                         Writer.End_Element ("a");
+                     end;
+
+                  when Markdown.Annotations.Image =>
+                     declare
+                        Attr : HTML_Writers.HTML_Attributes;
+                        Alt  : VSS.Strings.Virtual_String;
+                     begin
+                        Next.Set_At (Before (Item.To + 1));
+
+                        --  Point Last to Item.From
+                        if Last.Forward then
+                           Alt := Text.Plain_Text.Slice (Last, Next);
+                        end if;
+
+                        Attr.Append (("alt", Alt));
+                        Attr.Append (("src", Item.Destination));
+
+                        if not Item.Title.Is_Empty then
+                           Attr.Append
+                             (("title",
+                              Item.Title.Join_Lines (VSS.Strings.LF, False)));
+                        end if;
+
+                        Writer.Start_Element ("img", Attr);
+                        Writer.End_Element ("img");
+                        Ignore := Next.Forward;
+
+                        --  Skip nested items
+                        while From <= Text.Annotation.Last_Index and then
+                          Text.Annotation (From).To <= Item.To
+                        loop
+                           From := From + 1;
+                        end loop;
                      end;
 
                   when others =>

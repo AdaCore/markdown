@@ -78,21 +78,13 @@ package body Markdown.Emphasis_Delimiters is
       if not Item.Is_Deleted then
          case Filter.Kind is
             when Emphasis_Open =>
-               if Item.Kind = Filter.Emphasis
-                 and then Item.Can_Open
-               then
-                  return True;
-               end if;
+               return Item.Kind = Filter.Emphasis and then Item.Can_Open;
             when Emphasis_Close =>
-               if Item.Kind in Emphasis_Kind
-                 and then Item.Can_Close
-               then
-                  return True;
-               end if;
+               return Item.Kind in Emphasis_Kind and then Item.Can_Close;
             when Kind_Of =>
-               if Item.Kind = Filter.Given_Kind then
-                  return True;
-               end if;
+               return Item.Kind = Filter.Given_Kind;
+            when Link_Or_Image =>
+               return Item.Kind in '!' | '[';
             when Any_Element =>
                return True;
          end case;
@@ -166,20 +158,36 @@ package body Markdown.Emphasis_Delimiters is
       Text   : VSS.Strings.Virtual_String;
       Cursor : Character_Iterator) return Scanner_State
    is
+      use type VSS.Strings.Virtual_String;
+
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
       if Cursor.Has_Element then
          Match := Self.Pattern.Match (Text, Cursor);
       else
-         return (Is_White_Space => True, Is_Punctuation => False);
+         return
+           (Is_White_Space => True,
+            Is_Punctuation => False,
+            Is_Exclamation => False);
       end if;
 
-      if Match.Has_Match and then Match.Has_Capture (1) then
-         return (Is_White_Space => True, Is_Punctuation => False);
-      elsif Match.Has_Match and then Match.Has_Capture (2) then
-         return (Is_White_Space => False, Is_Punctuation => True);
+      if not Match.Has_Match then
+         return
+           (Is_White_Space => False,
+            Is_Punctuation => False,
+            Is_Exclamation => False);
+      elsif Match.Has_Capture (1) then
+         return
+           (Is_White_Space => True,
+            Is_Punctuation => False,
+            Is_Exclamation => False);
+      elsif Match.Has_Capture (2) then
+         return
+           (Is_White_Space => False,
+            Is_Punctuation => True,
+            Is_Exclamation => Match.Captured (2) = "!");
       else
-         return (Is_White_Space => False, Is_Punctuation => False);
+         raise Program_Error;
       end if;
    end Get_State;
 
@@ -332,10 +340,19 @@ package body Markdown.Emphasis_Delimiters is
             end;
 
          when '[' =>
+            if Self.State.Is_Exclamation then
+               Found := Cursor.Backward;  --  Step back to `!`
+               Item := (Kind       => '!',  --  ![ found
+                        From       => Cursor.Marker,
+                        Is_Deleted => False);
+               Forward (Cursor);
+            else
+               Item := (Kind       => '[',
+                        From       => Cursor.Marker,
+                        Is_Deleted => False);
+            end if;
+
             Self.State := Self.Get_State (Text, Cursor);
-            Item := (Kind       => '[',
-                     From       => Cursor.Marker,
-                     Is_Deleted => False);
             Forward (Cursor);
             Found := True;
 
@@ -359,10 +376,6 @@ package body Markdown.Emphasis_Delimiters is
             Found := False;
 
       end case;
-
-      --  if Cursor.Column = 1 then
-      --     State := (Is_White_Space => True, Is_Punctuation => False);
-      --  end if;
    end Read_Delimiter;
 
    -----------

@@ -19,14 +19,16 @@ with VSS.Strings.Cursors.Markers;
 
 package body Markdown.Inline_Parsers is
 
-   type Markup_Kind is (Emphasis, Link);
+   type Markup_Kind is (Emphasis, Link, Image);
+
+   subtype Link_Or_Image is Markup_Kind range Link .. Image;
 
    type Markup (Kind : Markup_Kind := Emphasis) is record
       From   : VSS.Strings.Cursors.Markers.Character_Marker;
       To     : VSS.Strings.Cursors.Markers.Character_Marker;
       --  TO DO: Replace with Segment_Marker
       case Kind is
-         when Link =>
+         when Link_Or_Image =>
             URL : VSS.Strings.Virtual_String;
             Title : VSS.String_Vectors.Virtual_String_Vector;
          when Emphasis =>
@@ -567,7 +569,7 @@ package body Markdown.Inline_Parsers is
          begin
             for K in reverse Markdown.Emphasis_Delimiters.Each
               (Delimiter,
-               Filter => (Kind_Of, '['),
+               Filter => (Kind => Emphasis_Delimiters.Link_Or_Image),
                From   => Bottom,
                To     => Closer_Index - 1)
             loop
@@ -594,28 +596,40 @@ package body Markdown.Inline_Parsers is
 
                   if Ok then
                      declare
+                        Kind : constant Link_Or_Image :=
+                          (case Opener.Kind is
+                              when '!' => Image,
+                              when others => Link);
                         First : Inline_Parsers.Markup :=
-                          (Link, Opener.From, Opener.From,
+                          (Kind, Opener.From, Opener.From,
                            URL, Title.Split_Lines);
                         Last  : constant Inline_Parsers.Markup :=
-                          (Link, Closer.From, Closer.To,
+                          (Kind, Closer.From, Closer.To,
                            URL, First.Title);
                      begin
-                        Forward (First.To, 1);
+                        Forward (First.To, (if Kind = Image then 2 else 1));
+
                         Markup.Append (First);
                         Markup.Append (Last);
 
                         Process_Emphasis
                           (Markup, Delimiter, Opener_Index, Closer_Index);
 
-                        for M in Markdown.Emphasis_Delimiters.Each
-                          (Delimiter,
-                           Filter => (Kind_Of, '['),
-                           From   => Bottom,
-                           To     => Closer_Index - 1)
-                        loop
-                           Delimiter (M).Is_Deleted := True;
-                        end loop;
+                        if Kind = Image then
+                           Opener.Is_Deleted := True;
+                        else
+                           for M in Markdown.Emphasis_Delimiters.Each
+                             (Delimiter,
+                              Filter => (Kind_Of, '['),
+                              From   => Bottom,
+                              To     => Closer_Index - 1)
+                           loop
+                              Delimiter (M).Is_Deleted := True;
+                           end loop;
+                        end if;
+
+                        exit;
+
                      end;
                   end if;
                end;
@@ -754,6 +768,12 @@ package body Markdown.Inline_Parsers is
                        VSS.Strings.Character_Count (Info.To.Index),
                        Item.URL,
                        Item.Title);
+            when Image =>
+               return (Markdown.Annotations.Image,
+                       VSS.Strings.Character_Index (Info.From.Index),
+                       VSS.Strings.Character_Count (Info.To.Index),
+                       Item.URL,
+                       Item.Title);
          end case;
       end To_Annotation;
 
@@ -812,12 +832,6 @@ package body Markdown.Inline_Parsers is
          end loop;
       end return;
 
-      --  Marker :=
-      --    VSS.Strings.Cursors.Markers.Internals.New_Segment_Marker
-      --      (Result.Plain_Text.Get_Owner,
-      --       First => From,
-      --       Last  => To);
-
    end To_Annotated_Text;
 
    -----------------
@@ -827,8 +841,7 @@ package body Markdown.Inline_Parsers is
    function To_Emphasis
      (From   : VSS.Strings.Cursors.Markers.Character_Marker;
       Offset : VSS.Strings.Character_Count;
-      Count  : VSS.Strings.Character_Index) return Markup
-   is
+      Count  : VSS.Strings.Character_Index) return Markup is
    begin
       return Result : Markup (Emphasis) do
          Result.From := From;
