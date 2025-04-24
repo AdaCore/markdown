@@ -26,9 +26,9 @@ package body Markdown.Simple_Inline_Parsers is
 
       --  Assign leftmost item in State to Value
       for Item of State loop
-         if Item.Element.Is_Set then
-            if not Value.Is_Set or else Item.Element.From < Value.From then
-               Value := Item.Element;
+         if Item.Item.Is_Set then
+            if not Value.Is_Set or else Item.Item.From < Value.From then
+               Value := Item.Item;
             end if;
          end if;
       end loop;
@@ -41,18 +41,21 @@ package body Markdown.Simple_Inline_Parsers is
             Cursor.Set_At (Value.To);
             Markdown.Implementation.Forward (Cursor, 1);
 
-            for Index in Parsers.First_Index .. Parsers.Last_Index loop
-               if State (Index).Element.Is_Set and then
-                 VSS.Strings.Cursors.Abstract_Character_Cursor'Class
-                   (State (Index).Element.From) < Cursor
-               then
-                  if Cursor.Has_Element then
-                     Parsers (Index).all
-                       (Text, Cursor, State (Index).Element);
-                  else
-                     State (Index).Element := (Is_Set => False);
+            for J in Parsers.First_Index .. Parsers.Last_Index loop
+               declare
+                  Wrapper : Inline_Span renames State (J).Item;
+               begin
+                  if Wrapper.Is_Set and then
+                    VSS.Strings.Cursors.Abstract_Character_Cursor'Class
+                      (Wrapper.From) < Cursor
+                  then
+                     if Cursor.Has_Element then
+                        Parsers (J).all (Text, Cursor, Wrapper);
+                     else
+                        Wrapper := (Is_Set => False);
+                     end if;
                   end if;
-               end if;
+               end;
             end loop;
          end;
       end if;
@@ -70,10 +73,10 @@ package body Markdown.Simple_Inline_Parsers is
    is
    begin
       State := Inline_Span_Vectors.To_Vector
-        ((Element => <>), Parsers.Length);
+        ((Item => <>), Parsers.Length);
 
-      for Index in Parsers.First_Index .. Parsers.Last_Index loop
-         Parsers (Index).all (Text, From, State (Index).Element);
+      for J in Parsers.First_Index .. Parsers.Last_Index loop
+         Parsers (J).all (Text, From, State (J).Item);
       end loop;
    end Initialize;
 
