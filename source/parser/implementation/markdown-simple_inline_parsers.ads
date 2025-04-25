@@ -32,7 +32,7 @@ package Markdown.Simple_Inline_Parsers is
    end record;
 
    type Inline_Span_Wrapper is record
-      Element : Inline_Span;
+      Item : Inline_Span;
    end record;
    --  To be able to update an element of a vector through implicit reference.
 
