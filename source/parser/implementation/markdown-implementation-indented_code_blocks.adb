@@ -30,7 +30,7 @@ package body Markdown.Implementation.Indented_Code_Blocks is
       then
          Ok := True;
          Cursor.Set_At (Input.First);
-         Forward (Cursor, 4);
+         Forward (Cursor, Self.Indent);
          Self.Lines.Append (Input.Line.Unexpanded_Tail (Cursor));
       elsif not Input.First.Has_Element
         or else
