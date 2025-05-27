@@ -14,7 +14,7 @@ with Markdown.Simple_Inline_Parsers;
 
 private with Markdown.Emphasis_Delimiters;
 
-package Markdown.Inlines.Inline_Parsers is
+package Markdown.Inlines.Parsers is
    pragma Preelaborate;
 
    type Inline_Parser is tagged limited private;
@@ -46,4 +46,4 @@ private
         return Markdown.Inlines.Annotated_Text is
           (Self.Parse (Lines.Join_Lines (VSS.Strings.LF, False)));
 
-end Markdown.Inlines.Inline_Parsers;
+end Markdown.Inlines.Parsers;

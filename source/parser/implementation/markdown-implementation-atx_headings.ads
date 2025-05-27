@@ -34,7 +34,7 @@ private
       Level  : Positive range 1 .. 6;
       Title  : VSS.Strings.Virtual_String;
       Parser :
-        access constant Markdown.Inlines.Inline_Parsers.Inline_Parser;
+        access constant Markdown.Inlines.Parsers.Inline_Parser;
    end record;
 
    overriding function Create
@@ -42,7 +42,7 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out ATX_Heading;
-      Parser : Markdown.Inlines.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Inlines.Parsers.Inline_Parser);
 
    function Text (Self : ATX_Heading)
      return Markdown.Inlines.Annotated_Text is

@@ -15,7 +15,7 @@ package body Markdown.Implementation is
 
    overriding procedure Complete_Parsing
      (Self   : in out Abstract_Container_Block;
-      Parser : Markdown.Inlines.Inline_Parsers.Inline_Parser)
+      Parser : Markdown.Inlines.Parsers.Inline_Parser)
    is
       use type Markdown.Implementation.Lists.List_Access;
 

@@ -17,7 +17,7 @@ with VSS.Strings.Cursors.Internals;
 with Markdown.Implementation;
 with VSS.Strings.Cursors.Markers;
 
-package body Markdown.Inlines.Inline_Parsers is
+package body Markdown.Inlines.Parsers is
 
    type Markup_Kind is (Emphasis, Link, Image);
 
@@ -600,10 +600,10 @@ package body Markdown.Inlines.Inline_Parsers is
                           (case Opener.Kind is
                               when '!' => Image,
                               when others => Link);
-                        First : Inline_Parsers.Markup :=
+                        First : Parsers.Markup :=
                           (Kind, Opener.From, Opener.From,
                            URL, Title.Split_Lines);
-                        Last  : constant Inline_Parsers.Markup :=
+                        Last  : constant Parsers.Markup :=
                           (Kind, Closer.From, Closer.To,
                            URL, First.Title);
                      begin
@@ -749,7 +749,7 @@ package body Markdown.Inlines.Inline_Parsers is
       function To_Annotation
         (Info : Annotation_Info) return Markdown.Inlines.Annotation
       is
-         Item : Inline_Parsers.Markup renames Markup (Info.Markup);
+         Item : Parsers.Markup renames Markup (Info.Markup);
       begin
          case Item.Kind is
             when Emphasis =>
@@ -802,7 +802,7 @@ package body Markdown.Inlines.Inline_Parsers is
               From (Index) = Cursor.Character_Index
             then
                declare
-                  Item : Inline_Parsers.Markup renames Markup (Map (Index));
+                  Item : Parsers.Markup renames Markup (Map (Index));
                begin
                   if Map (Index) mod 2 = 1 then  --  Open markup
                      Last := Last + 1;
@@ -851,4 +851,4 @@ package body Markdown.Inlines.Inline_Parsers is
       end return;
    end To_Emphasis;
 
-end Markdown.Inlines.Inline_Parsers;
+end Markdown.Inlines.Parsers;

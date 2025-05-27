@@ -104,7 +104,7 @@ package body Markdown.Implementation.Paragraphs.Tables is
 
    overriding procedure Complete_Parsing
      (Self   : in out Paragraph;
-      Parser : Markdown.Inlines.Inline_Parsers.Inline_Parser) is
+      Parser : Markdown.Inlines.Parsers.Inline_Parser) is
    begin
       Self.Parser := Parser'Unchecked_Access;
    end Complete_Parsing;
