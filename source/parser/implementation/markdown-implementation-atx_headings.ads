@@ -33,7 +33,8 @@ private
    type ATX_Heading is new Abstract_Block with record
       Level  : Positive range 1 .. 6;
       Title  : VSS.Strings.Virtual_String;
-      Parser : access constant Markdown.Inline_Parsers.Inline_Parser;
+      Parser :
+        access constant Markdown.Annotations.Inline_Parsers.Inline_Parser;
    end record;
 
    overriding function Create
@@ -41,7 +42,7 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out ATX_Heading;
-      Parser : Markdown.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Annotations.Inline_Parsers.Inline_Parser);
 
    function Text (Self : ATX_Heading)
      return Markdown.Annotations.Annotated_Text is

@@ -17,7 +17,7 @@ with VSS.Strings.Cursors.Internals;
 with Markdown.Implementation;
 with VSS.Strings.Cursors.Markers;
 
-package body Markdown.Inline_Parsers is
+package body Markdown.Annotations.Inline_Parsers is
 
    type Markup_Kind is (Emphasis, Link, Image);
 
@@ -851,4 +851,4 @@ package body Markdown.Inline_Parsers is
       end return;
    end To_Emphasis;
 
-end Markdown.Inline_Parsers;
+end Markdown.Annotations.Inline_Parsers;

@@ -47,7 +47,8 @@ private
 
    type Paragraph is new Abstract_Block with record
       Lines  : VSS.String_Vectors.Virtual_String_Vector;
-      Parser : access constant Markdown.Inline_Parsers.Inline_Parser;
+      Parser :
+        access constant Markdown.Annotations.Inline_Parsers.Inline_Parser;
    end record;
 
    overriding function Create
@@ -61,7 +62,7 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out Paragraph;
-      Parser : Markdown.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Annotations.Inline_Parsers.Inline_Parser);
 
    function Text (Self : Paragraph)
      return Markdown.Annotations.Annotated_Text is

@@ -52,7 +52,7 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out Paragraph;
-      Parser : Markdown.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Annotations.Inline_Parsers.Inline_Parser);
 
    overriding function Table_Columns (Self : Paragraph) return Natural is
       (Self.Column_Count);

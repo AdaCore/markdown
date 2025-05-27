@@ -10,12 +10,11 @@
 with VSS.String_Vectors;
 with VSS.Strings;
 
-with Markdown.Annotations;
 with Markdown.Simple_Inline_Parsers;
 
 private with Markdown.Emphasis_Delimiters;
 
-package Markdown.Inline_Parsers is
+package Markdown.Annotations.Inline_Parsers is
    pragma Preelaborate;
 
    type Inline_Parser is tagged limited private;
@@ -47,4 +46,4 @@ private
         return Markdown.Annotations.Annotated_Text is
           (Self.Parse (Lines.Join_Lines (VSS.Strings.LF, False)));
 
-end Markdown.Inline_Parsers;
+end Markdown.Annotations.Inline_Parsers;
