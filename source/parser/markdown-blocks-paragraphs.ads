@@ -6,7 +6,7 @@
 
 --  Markdown paragraph block elements
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 private with Markdown.Implementation.Paragraphs;
 
 package Markdown.Blocks.Paragraphs is
@@ -16,7 +16,7 @@ package Markdown.Blocks.Paragraphs is
    --  Paragraph block contains annotated inline content
 
    function Text (Self : Paragraph)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Annotated_Text;
    --  Return nested annotated text
 
    function To_Block (Self : Paragraph) return Markdown.Blocks.Block;

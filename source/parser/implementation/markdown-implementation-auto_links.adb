@@ -6,7 +6,7 @@
 
 with VSS.Regular_Expressions;
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 
 package body Markdown.Implementation.Auto_Links is
 
@@ -49,15 +49,15 @@ package body Markdown.Implementation.Auto_Links is
             Plain  : constant VSS.Strings.Virtual_String :=
               Match.Captured (1);
             URL    : VSS.Strings.Virtual_String := Plain;
-            Vector : Markdown.Annotations.Annotation_Vectors.Vector;
+            Vector : Markdown.Inlines.Annotation_Vectors.Vector;
          begin
             if Match.Has_Capture (2) then
                URL.Prepend ("mailto:");
             end if;
 
             Vector.Append
-              (Markdown.Annotations.Annotation'
-               (Kind        => Markdown.Annotations.Link,
+              (Markdown.Inlines.Annotation'
+               (Kind        => Markdown.Inlines.Link,
                 From        => 1,
                 To          => Plain.Character_Length,
                 Destination => URL,

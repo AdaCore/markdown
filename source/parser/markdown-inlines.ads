@@ -13,7 +13,7 @@ with Ada.Containers.Vectors;
 with VSS.Strings;
 with VSS.String_Vectors;
 
-package Markdown.Annotations is
+package Markdown.Inlines is
    pragma Preelaborate;
 
    type Annotation_Kind is
@@ -90,4 +90,4 @@ package Markdown.Annotations is
    end record;
    --  Annotated text contains plain text and a list of annotations
 
-end Markdown.Annotations;
+end Markdown.Inlines;

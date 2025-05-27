@@ -6,7 +6,7 @@
 
 --  Markdown table block elements (GitHub Flavored Markdown extension).
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 private with Markdown.Implementation.Paragraphs;
 
 package Markdown.Blocks.Tables is
@@ -24,11 +24,11 @@ package Markdown.Blocks.Tables is
    function Columns (Self : Table) return Positive;
 
    function Header (Self : Table; Column : Positive)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Annotated_Text;
    --  Return annotated text nested in a header column
 
    function Cell (Self : Table; Row, Column : Positive)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Annotated_Text;
    --  Return annotated text nested in a cell
 
    type Column_Alignment is (Undefined, Left, Right, Center);

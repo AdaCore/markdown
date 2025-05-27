@@ -17,7 +17,7 @@ with VSS.Strings.Cursors.Internals;
 with Markdown.Implementation;
 with VSS.Strings.Cursors.Markers;
 
-package body Markdown.Annotations.Inline_Parsers is
+package body Markdown.Inlines.Inline_Parsers is
 
    type Markup_Kind is (Emphasis, Link, Image);
 
@@ -72,7 +72,7 @@ package body Markdown.Annotations.Inline_Parsers is
      (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : Markup_Vectors.Vector;
       Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
-      return Markdown.Annotations.Annotated_Text;
+      return Markdown.Inlines.Annotated_Text;
 
    procedure Read_Character
      (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
@@ -94,8 +94,8 @@ package body Markdown.Annotations.Inline_Parsers is
       Ok   : out Boolean);
 
    procedure Append
-     (Self  : in out Markdown.Annotations.Annotated_Text;
-      Value : Markdown.Annotations.Annotated_Text);
+     (Self  : in out Markdown.Inlines.Annotated_Text;
+      Value : Markdown.Inlines.Annotated_Text);
 
    function "<"
      (Left, Right : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
@@ -139,14 +139,14 @@ package body Markdown.Annotations.Inline_Parsers is
    ------------
 
    procedure Append
-     (Self  : in out Markdown.Annotations.Annotated_Text;
-      Value : Markdown.Annotations.Annotated_Text) is
+     (Self  : in out Markdown.Inlines.Annotated_Text;
+      Value : Markdown.Inlines.Annotated_Text) is
    begin
       for X of Value.Annotation loop
          declare
             use type VSS.Strings.Character_Count;
 
-            Next : Markdown.Annotations.Annotation := X;
+            Next : Markdown.Inlines.Annotation := X;
          begin
             Next.From := Next.From + Self.Plain_Text.Character_Length;
             Next.To := Next.To + Self.Plain_Text.Character_Length;
@@ -221,7 +221,7 @@ package body Markdown.Annotations.Inline_Parsers is
    function Parse
      (Self : Inline_Parser'Class;
       Text : VSS.Strings.Virtual_String)
-      return Markdown.Annotations.Annotated_Text
+      return Markdown.Inlines.Annotated_Text
    is
 
       State  : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
@@ -242,7 +242,7 @@ package body Markdown.Annotations.Inline_Parsers is
       Simple_Inline_Parsers.Initialize
         (Self.Parsers, Text, Text.At_First_Character, State);
 
-      return Result : Markdown.Annotations.Annotated_Text do
+      return Result : Markdown.Inlines.Annotated_Text do
          while Cursor.Has_Element loop
             declare
                Markup : Markup_Vectors.Vector;
@@ -671,7 +671,7 @@ package body Markdown.Annotations.Inline_Parsers is
      (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : Markup_Vectors.Vector;
       Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
-      return Markdown.Annotations.Annotated_Text
+      return Markdown.Inlines.Annotated_Text
    is
       use type VSS.Strings.Character_Index;
 
@@ -690,7 +690,7 @@ package body Markdown.Annotations.Inline_Parsers is
           [others => (Index => 1, others => <>)];
 
       function To_Annotation
-        (Info : Annotation_Info) return Markdown.Annotations.Annotation;
+        (Info : Annotation_Info) return Markdown.Inlines.Annotation;
 
       function Next_Char
         (Text : VSS.Strings.Virtual_String)
@@ -747,29 +747,29 @@ package body Markdown.Annotations.Inline_Parsers is
       -------------------
 
       function To_Annotation
-        (Info : Annotation_Info) return Markdown.Annotations.Annotation
+        (Info : Annotation_Info) return Markdown.Inlines.Annotation
       is
          Item : Inline_Parsers.Markup renames Markup (Info.Markup);
       begin
          case Item.Kind is
             when Emphasis =>
                if Item.To.Character_Index - Item.From.Character_Index = 1 then
-                  return (Markdown.Annotations.Emphasis,
+                  return (Markdown.Inlines.Emphasis,
                           VSS.Strings.Character_Index (Info.From.Index),
                           VSS.Strings.Character_Count (Info.To.Index));
                else
-                  return (Markdown.Annotations.Strong,
+                  return (Markdown.Inlines.Strong,
                           VSS.Strings.Character_Index (Info.From.Index),
                           VSS.Strings.Character_Count (Info.To.Index));
                end if;
             when Link =>
-               return (Markdown.Annotations.Link,
+               return (Markdown.Inlines.Link,
                        VSS.Strings.Character_Index (Info.From.Index),
                        VSS.Strings.Character_Count (Info.To.Index),
                        Item.URL,
                        Item.Title);
             when Image =>
-               return (Markdown.Annotations.Image,
+               return (Markdown.Inlines.Image,
                        VSS.Strings.Character_Index (Info.From.Index),
                        VSS.Strings.Character_Count (Info.To.Index),
                        Item.URL,
@@ -794,7 +794,7 @@ package body Markdown.Annotations.Inline_Parsers is
 
       Sort (1, Map'Last);
 
-      return Result : Markdown.Annotations.Annotated_Text do
+      return Result : Markdown.Inlines.Annotated_Text do
 
          --  Fill Result.Plain_Text and annotation info List
          while Cursor.Has_Element and Cursor < Limit loop
@@ -851,4 +851,4 @@ package body Markdown.Annotations.Inline_Parsers is
       end return;
    end To_Emphasis;
 
-end Markdown.Annotations.Inline_Parsers;
+end Markdown.Inlines.Inline_Parsers;

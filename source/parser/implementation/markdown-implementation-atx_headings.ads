@@ -6,7 +6,7 @@
 
 --  Internal representation of a markdown ATX heading
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 
 package Markdown.Implementation.ATX_Headings is
    pragma Preelaborate;
@@ -19,7 +19,7 @@ package Markdown.Implementation.ATX_Headings is
    --  opening sequence.
 
    function Text (Self : ATX_Heading)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Annotated_Text;
    --  Return nested annotated text
 
    procedure Detector
@@ -34,7 +34,7 @@ private
       Level  : Positive range 1 .. 6;
       Title  : VSS.Strings.Virtual_String;
       Parser :
-        access constant Markdown.Annotations.Inline_Parsers.Inline_Parser;
+        access constant Markdown.Inlines.Inline_Parsers.Inline_Parser;
    end record;
 
    overriding function Create
@@ -42,10 +42,10 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out ATX_Heading;
-      Parser : Markdown.Annotations.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Inlines.Inline_Parsers.Inline_Parser);
 
    function Text (Self : ATX_Heading)
-     return Markdown.Annotations.Annotated_Text is
+     return Markdown.Inlines.Annotated_Text is
        (Self.Parser.Parse (Self.Title.Split_Lines));
 
    function Level (Self : ATX_Heading'Class) return Positive

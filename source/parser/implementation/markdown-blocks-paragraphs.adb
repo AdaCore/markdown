@@ -53,7 +53,7 @@ package body Markdown.Blocks.Paragraphs is
    ----------
 
    function Text
-     (Self : Paragraph) return Markdown.Annotations.Annotated_Text is
+     (Self : Paragraph) return Markdown.Inlines.Annotated_Text is
    begin
       return Self.Data.Text;
    end Text;

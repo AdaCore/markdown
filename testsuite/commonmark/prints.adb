@@ -25,7 +25,7 @@ package body Prints is
    pragma Assertion_Policy (Check);
 
    Tag : constant array
-     (Markdown.Annotations.Emphasis .. Markdown.Annotations.Strong)
+     (Markdown.Inlines.Emphasis .. Markdown.Inlines.Strong)
        of VSS.Strings.Virtual_String := ["em", "strong"];
 
    Left : constant HTML_Writers.HTML_Attribute_Lists.List :=
@@ -50,7 +50,7 @@ package body Prints is
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
-      Text   : Markdown.Annotations.Annotated_Text)
+      Text   : Markdown.Inlines.Annotated_Text)
    is
       use type VSS.Strings.Character_Count;
 
@@ -104,7 +104,7 @@ package body Prints is
            Text.Annotation (From).To <= Limit
          loop
             declare
-               Item : constant Markdown.Annotations.Annotation :=
+               Item : constant Markdown.Inlines.Annotation :=
                  Text.Annotation (From);
                Last :
                  VSS.Strings.Character_Iterators.Character_Iterator :=
@@ -119,20 +119,20 @@ package body Prints is
                Ignore := Next.Forward;
 
                case Item.Kind is
-                  when Markdown.Annotations.Emphasis
-                     | Markdown.Annotations.Strong
+                  when Markdown.Inlines.Emphasis
+                     | Markdown.Inlines.Strong
                      =>
 
                      Writer.Start_Element (Tag (Item.Kind));
                      Print (From, Next, Item.To);
                      Writer.End_Element (Tag (Item.Kind));
 
-                  when Markdown.Annotations.Code_Span =>
+                  when Markdown.Inlines.Code_Span =>
                      Writer.Start_Element ("code");
                      Print (From, Next, Item.To);
                      Writer.End_Element ("code");
 
-                  when Markdown.Annotations.Link =>
+                  when Markdown.Inlines.Link =>
                      declare
                         Attr : HTML_Writers.HTML_Attributes;
                      begin
@@ -149,7 +149,7 @@ package body Prints is
                         Writer.End_Element ("a");
                      end;
 
-                  when Markdown.Annotations.Image =>
+                  when Markdown.Inlines.Image =>
                      declare
                         Attr : HTML_Writers.HTML_Attributes;
                         Alt  : VSS.Strings.Virtual_String;

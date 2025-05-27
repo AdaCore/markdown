@@ -4,7 +4,7 @@
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 with Markdown.Block_Containers;
 with Markdown.Blocks;
 with Markdown.Blocks.Lists;
@@ -29,6 +29,6 @@ package Prints is
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
-      Text   : Markdown.Annotations.Annotated_Text);
+      Text   : Markdown.Inlines.Annotated_Text);
 
 end Prints;

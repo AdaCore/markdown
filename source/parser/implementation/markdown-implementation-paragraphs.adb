@@ -30,7 +30,7 @@ package body Markdown.Implementation.Paragraphs is
 
    overriding procedure Complete_Parsing
      (Self   : in out Paragraph;
-      Parser : Markdown.Annotations.Inline_Parsers.Inline_Parser) is
+      Parser : Markdown.Inlines.Inline_Parsers.Inline_Parser) is
    begin
       Self.Parser := Parser'Unchecked_Access;
    end Complete_Parsing;

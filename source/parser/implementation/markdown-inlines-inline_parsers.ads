@@ -14,7 +14,7 @@ with Markdown.Simple_Inline_Parsers;
 
 private with Markdown.Emphasis_Delimiters;
 
-package Markdown.Annotations.Inline_Parsers is
+package Markdown.Inlines.Inline_Parsers is
    pragma Preelaborate;
 
    type Inline_Parser is tagged limited private;
@@ -26,12 +26,12 @@ package Markdown.Annotations.Inline_Parsers is
    function Parse
      (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Annotated_Text;
 
    function Parse
      (Self : Inline_Parser'Class;
       Text : VSS.Strings.Virtual_String)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Annotated_Text;
 
 private
 
@@ -43,7 +43,7 @@ private
    function Parse
      (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
-        return Markdown.Annotations.Annotated_Text is
+        return Markdown.Inlines.Annotated_Text is
           (Self.Parse (Lines.Join_Lines (VSS.Strings.LF, False)));
 
-end Markdown.Annotations.Inline_Parsers;
+end Markdown.Inlines.Inline_Parsers;

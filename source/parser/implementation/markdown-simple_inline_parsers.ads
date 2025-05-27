@@ -13,7 +13,7 @@ with Ada.Containers.Vectors;
 with VSS.Strings.Cursors;
 with VSS.Strings.Cursors.Markers;
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 
 package Markdown.Simple_Inline_Parsers is
    pragma Preelaborate;
@@ -24,7 +24,7 @@ package Markdown.Simple_Inline_Parsers is
             From, To   : VSS.Strings.Cursors.Markers.Character_Marker;
             --  Markers in the original Text
             Plain_Text : VSS.Strings.Virtual_String;
-            Annotation : Markdown.Annotations.Annotation_Vectors.Vector;
+            Annotation : Markdown.Inlines.Annotation_Vectors.Vector;
 
          when False =>
             null;

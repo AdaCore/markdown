@@ -8,7 +8,7 @@
 
 with VSS.String_Vectors;
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 
 package Markdown.Implementation.Paragraphs.Tables is
    pragma Preelaborate;
@@ -28,7 +28,7 @@ package Markdown.Implementation.Paragraphs.Tables is
    overriding function Table_Cell
      (Self   : Paragraph;
       Row    : Positive;
-      Column : Positive) return Markdown.Annotations.Annotated_Text;
+      Column : Positive) return Markdown.Inlines.Annotated_Text;
 
    overriding function Table_Column_Alignment
      (Self : Paragraph; Column : Positive) return Natural;
@@ -52,7 +52,7 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out Paragraph;
-      Parser : Markdown.Annotations.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Inlines.Inline_Parsers.Inline_Parser);
 
    overriding function Table_Columns (Self : Paragraph) return Natural is
       (Self.Column_Count);
@@ -65,7 +65,7 @@ private
    overriding function Table_Cell
      (Self   : Paragraph;
       Row    : Positive;
-      Column : Positive) return Markdown.Annotations.Annotated_Text is
+      Column : Positive) return Markdown.Inlines.Annotated_Text is
         (Self.Parser.Parse
           (Self.Cells ((Row - 1) * Self.Column_Count + Column)));
 
