@@ -17,12 +17,17 @@ package Markdown.Inlines is
    pragma Preelaborate;
 
    type Annotation_Kind is
-     (Soft_Line_Break,
-      Emphasis,
-      Strong,
-      Link,
+     (Text,
+      Soft_Line_Break,
+      Start_Emphasis,
+      End_Emphasis,
+      Start_Strong,
+      End_Strong,
+      Start_Link,
+      End_Link,
+      Start_Image,
+      End_Image,
       Code_Span,
-      Image,
       HTML_Open_Tag,
       HTML_Close_Tag,
       HTML_Comment,
@@ -43,18 +48,24 @@ package Markdown.Inlines is
    --  A vector of HTML attributes
 
    type Annotation (Kind : Annotation_Kind := Annotation_Kind'First) is record
-      From : VSS.Strings.Character_Index := 1;
-      To   : VSS.Strings.Character_Count := 0;
-      --  Corresponding segment in the plain text
-
       case Kind is
-         when Soft_Line_Break |
-              Emphasis |
-              Strong |
-              Code_Span =>
+         when Text =>
+            Text : VSS.Strings.Virtual_String;
+
+         when Code_Span =>
+            Code_Span : VSS.Strings.Virtual_String;
+
+         when Soft_Line_Break
+            | Start_Emphasis
+            | End_Emphasis
+            | Start_Strong
+            | End_Strong
+            | End_Link
+            | End_Image
+         =>
             null;
 
-         when Link | Image =>
+         when Start_Link | Start_Image =>
             Destination : VSS.Strings.Virtual_String;
             Title       : VSS.String_Vectors.Virtual_String_Vector;
             --  Link/image title could span several lines
@@ -67,7 +78,7 @@ package Markdown.Inlines is
             HTML_Close_Tag : VSS.Strings.Virtual_String;
 
          when HTML_Comment =>
-            HTML_Comment   : VSS.String_Vectors.Virtual_String_Vector;
+            HTML_Comment : VSS.String_Vectors.Virtual_String_Vector;
 
          when HTML_Processing_Instruction =>
             HTML_Instruction : VSS.String_Vectors.Virtual_String_Vector;
@@ -84,10 +95,6 @@ package Markdown.Inlines is
    package Annotation_Vectors is new
      Ada.Containers.Vectors (Positive, Annotation);
 
-   type Annotated_Text is tagged limited record
-      Plain_Text : VSS.Strings.Virtual_String;
-      Annotation : Annotation_Vectors.Vector;
-   end record;
-   --  Annotated text contains plain text and a list of annotations
+   type Annotated_Text is new Annotation_Vectors.Vector with null record;
 
 end Markdown.Inlines;

@@ -23,8 +23,8 @@ package Markdown.Simple_Inline_Parsers is
          when True =>
             From, To   : VSS.Strings.Cursors.Markers.Character_Marker;
             --  Markers in the original Text
-            Plain_Text : VSS.Strings.Virtual_String;
-            Annotation : Markdown.Inlines.Annotation_Vectors.Vector;
+
+            Annotation : Markdown.Inlines.Annotated_Text;
 
          when False =>
             null;
