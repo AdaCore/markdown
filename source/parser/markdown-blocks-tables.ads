@@ -24,11 +24,11 @@ package Markdown.Blocks.Tables is
    function Columns (Self : Table) return Positive;
 
    function Header (Self : Table; Column : Positive)
-     return Markdown.Inlines.Annotated_Text;
+     return Markdown.Inlines.Inline_Vector;
    --  Return annotated text nested in a header column
 
    function Cell (Self : Table; Row, Column : Positive)
-     return Markdown.Inlines.Annotated_Text;
+     return Markdown.Inlines.Inline_Vector;
    --  Return annotated text nested in a cell
 
    type Column_Alignment is (Undefined, Left, Right, Center);

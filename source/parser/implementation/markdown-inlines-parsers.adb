@@ -70,7 +70,7 @@ package body Markdown.Inlines.Parsers is
      (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : Markup_Vectors.Vector;
       Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
-      return Markdown.Inlines.Annotated_Text;
+      return Markdown.Inlines.Inline_Vector;
 
    procedure Read_Character
      (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
@@ -192,7 +192,7 @@ package body Markdown.Inlines.Parsers is
    function Parse
      (Self : Inline_Parser'Class;
       Text : VSS.Strings.Virtual_String)
-      return Markdown.Inlines.Annotated_Text
+      return Markdown.Inlines.Inline_Vector
    is
 
       State  : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
@@ -213,7 +213,7 @@ package body Markdown.Inlines.Parsers is
       Simple_Inline_Parsers.Initialize
         (Self.Parsers, Text, Text.At_First_Character, State);
 
-      return Result : Markdown.Inlines.Annotated_Text do
+      return Result : Markdown.Inlines.Inline_Vector do
          while Cursor.Has_Element loop
             declare
                Markup : Markup_Vectors.Vector;
@@ -642,7 +642,7 @@ package body Markdown.Inlines.Parsers is
      (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : Markup_Vectors.Vector;
       Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
-      return Markdown.Inlines.Annotated_Text
+      return Markdown.Inlines.Inline_Vector
    is
       use type VSS.Strings.Character_Index;
 
@@ -651,7 +651,7 @@ package body Markdown.Inlines.Parsers is
 
       function To_Annotation
         (Item : Parsers.Markup;
-         Open : Boolean) return Markdown.Inlines.Annotation;
+         Open : Boolean) return Markdown.Inlines.Inline;
 
       function Less (Left, Right : Positive) return Boolean;
 
@@ -698,7 +698,7 @@ package body Markdown.Inlines.Parsers is
 
       function To_Annotation
         (Item : Parsers.Markup;
-         Open : Boolean) return Markdown.Inlines.Annotation
+         Open : Boolean) return Markdown.Inlines.Inline
       is
       begin
          case Item.Kind is
@@ -746,7 +746,7 @@ package body Markdown.Inlines.Parsers is
 
       Sort (1, Map'Last);
 
-      return Result : Markdown.Inlines.Annotated_Text do
+      return Result : Markdown.Inlines.Inline_Vector do
 
          --  Fill Result.Plain_Text and annotation info List
          while Cursor.Has_Element and Cursor < Limit loop
@@ -755,7 +755,7 @@ package body Markdown.Inlines.Parsers is
             then
                if not Text.Is_Empty then
                   Result.Append
-                    (Annotation'(Markdown.Inlines.Text, Text => Text));
+                    (Inline'(Markdown.Inlines.Text, Text => Text));
                   Text.Clear;
                end if;
 
@@ -775,7 +775,7 @@ package body Markdown.Inlines.Parsers is
 
          if not Text.Is_Empty then
             Result.Append
-              (Annotation'(Markdown.Inlines.Text, Text => Text));
+              (Inline'(Markdown.Inlines.Text, Text => Text));
             Text.Clear;
          end if;
       end return;

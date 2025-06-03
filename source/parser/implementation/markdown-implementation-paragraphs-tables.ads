@@ -28,7 +28,7 @@ package Markdown.Implementation.Paragraphs.Tables is
    overriding function Table_Cell
      (Self   : Paragraph;
       Row    : Positive;
-      Column : Positive) return Markdown.Inlines.Annotated_Text;
+      Column : Positive) return Markdown.Inlines.Inline_Vector;
 
    overriding function Table_Column_Alignment
      (Self : Paragraph; Column : Positive) return Natural;
@@ -65,7 +65,7 @@ private
    overriding function Table_Cell
      (Self   : Paragraph;
       Row    : Positive;
-      Column : Positive) return Markdown.Inlines.Annotated_Text is
+      Column : Positive) return Markdown.Inlines.Inline_Vector is
         (Self.Parser.Parse
           (Self.Cells ((Row - 1) * Self.Column_Count + Column)));
 

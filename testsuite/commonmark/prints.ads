@@ -29,6 +29,6 @@ package Prints is
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
-      Text   : Markdown.Inlines.Annotated_Text);
+      Text   : Markdown.Inlines.Inline_Vector);
 
 end Prints;

@@ -15,8 +15,7 @@ package Markdown.Blocks.Paragraphs is
    type Paragraph is tagged private;
    --  Paragraph block contains annotated inline content
 
-   function Text (Self : Paragraph)
-     return Markdown.Inlines.Annotated_Text;
+   function Text (Self : Paragraph) return Markdown.Inlines.Inline_Vector;
    --  Return nested annotated text
 
    function To_Block (Self : Paragraph) return Markdown.Blocks.Block;

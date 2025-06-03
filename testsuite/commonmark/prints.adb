@@ -49,7 +49,7 @@ package body Prints is
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
-      Text   : Markdown.Inlines.Annotated_Text)
+      Text   : Markdown.Inlines.Inline_Vector)
    is
       type Print_State (In_Image : Boolean := False) is record
          case In_Image is
@@ -64,7 +64,7 @@ package body Prints is
 
       procedure Print
         (State : in out Print_State;
-         Item  : Markdown.Inlines.Annotation);
+         Item  : Markdown.Inlines.Inline);
 
       -----------
       -- Print --
@@ -72,7 +72,7 @@ package body Prints is
 
       procedure Print
         (State : in out Print_State;
-         Item  : Markdown.Inlines.Annotation) is
+         Item  : Markdown.Inlines.Inline) is
       begin
          if State.In_Image then
             case Item.Kind is

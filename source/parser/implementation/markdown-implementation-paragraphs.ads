@@ -16,8 +16,7 @@ package Markdown.Implementation.Paragraphs is
    type Paragraph is new Abstract_Block with private;
    --  Paragraph block contains annotated inline content
 
-   function Text (Self : Paragraph)
-     return Markdown.Inlines.Annotated_Text;
+   function Text (Self : Paragraph) return Markdown.Inlines.Inline_Vector;
    --  Return nested annotated text
 
    procedure Detector
@@ -35,7 +34,7 @@ package Markdown.Implementation.Paragraphs is
    function Table_Cell
      (Self   : Paragraph;
       Row    : Positive;
-      Column : Positive) return Markdown.Inlines.Annotated_Text is
+      Column : Positive) return Markdown.Inlines.Inline_Vector is
         (raise Constraint_Error);
    --  If paragraph contains a table (GFM extension) return a cell
 
@@ -64,8 +63,7 @@ private
      (Self   : in out Paragraph;
       Parser : Markdown.Inlines.Parsers.Inline_Parser);
 
-   function Text (Self : Paragraph)
-     return Markdown.Inlines.Annotated_Text is
-       (Self.Parser.Parse (Self.Lines));
+   function Text (Self : Paragraph) return Markdown.Inlines.Inline_Vector is
+     (Self.Parser.Parse (Self.Lines));
 
 end Markdown.Implementation.Paragraphs;

@@ -26,12 +26,12 @@ package Markdown.Inlines.Parsers is
    function Parse
      (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
-     return Markdown.Inlines.Annotated_Text;
+     return Markdown.Inlines.Inline_Vector;
 
    function Parse
      (Self : Inline_Parser'Class;
       Text : VSS.Strings.Virtual_String)
-     return Markdown.Inlines.Annotated_Text;
+     return Markdown.Inlines.Inline_Vector;
 
 private
 
@@ -43,7 +43,7 @@ private
    function Parse
      (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
-        return Markdown.Inlines.Annotated_Text is
+        return Markdown.Inlines.Inline_Vector is
           (Self.Parse (Lines.Join_Lines (VSS.Strings.LF, False)));
 
 end Markdown.Inlines.Parsers;

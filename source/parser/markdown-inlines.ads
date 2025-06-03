@@ -16,7 +16,7 @@ with VSS.String_Vectors;
 package Markdown.Inlines is
    pragma Preelaborate;
 
-   type Annotation_Kind is
+   type Inline_Kind is
      (Text,
       Soft_Line_Break,
       Start_Emphasis,
@@ -47,7 +47,7 @@ package Markdown.Inlines is
      (Positive, HTML_Attribute);
    --  A vector of HTML attributes
 
-   type Annotation (Kind : Annotation_Kind := Annotation_Kind'First) is record
+   type Inline (Kind : Inline_Kind := Inline_Kind'First) is record
       case Kind is
          when Text =>
             Text : VSS.Strings.Virtual_String;
@@ -92,9 +92,8 @@ package Markdown.Inlines is
    end record;
    --  An annotation for particular inline content segment
 
-   package Annotation_Vectors is new
-     Ada.Containers.Vectors (Positive, Annotation);
+   package Inline_Vectors is new Ada.Containers.Vectors (Positive, Inline);
 
-   type Annotated_Text is new Annotation_Vectors.Vector with null record;
+   type Inline_Vector is new Inline_Vectors.Vector with null record;
 
 end Markdown.Inlines;

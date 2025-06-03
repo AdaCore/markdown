@@ -18,8 +18,7 @@ package Markdown.Implementation.ATX_Headings is
    --  The heading level is equal to the number of `#` characters in the
    --  opening sequence.
 
-   function Text (Self : ATX_Heading)
-     return Markdown.Inlines.Annotated_Text;
+   function Text (Self : ATX_Heading) return Markdown.Inlines.Inline_Vector;
    --  Return nested annotated text
 
    procedure Detector
@@ -44,9 +43,8 @@ private
      (Self   : in out ATX_Heading;
       Parser : Markdown.Inlines.Parsers.Inline_Parser);
 
-   function Text (Self : ATX_Heading)
-     return Markdown.Inlines.Annotated_Text is
-       (Self.Parser.Parse (Self.Title.Split_Lines));
+   function Text (Self : ATX_Heading) return Markdown.Inlines.Inline_Vector is
+     (Self.Parser.Parse (Self.Title.Split_Lines));
 
    function Level (Self : ATX_Heading'Class) return Positive
      is (Self.Level);

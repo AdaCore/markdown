@@ -24,7 +24,7 @@ package Markdown.Simple_Inline_Parsers is
             From, To   : VSS.Strings.Cursors.Markers.Character_Marker;
             --  Markers in the original Text
 
-            Annotation : Markdown.Inlines.Annotated_Text;
+            Annotation : Markdown.Inlines.Inline_Vector;
 
          when False =>
             null;
