@@ -8,7 +8,7 @@
 
 with VSS.String_Vectors;
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 
 package Markdown.Implementation.Paragraphs is
    pragma Preelaborate;
@@ -16,8 +16,7 @@ package Markdown.Implementation.Paragraphs is
    type Paragraph is new Abstract_Block with private;
    --  Paragraph block contains annotated inline content
 
-   function Text (Self : Paragraph)
-     return Markdown.Annotations.Annotated_Text;
+   function Text (Self : Paragraph) return Markdown.Inlines.Inline_Vector;
    --  Return nested annotated text
 
    procedure Detector
@@ -35,7 +34,7 @@ package Markdown.Implementation.Paragraphs is
    function Table_Cell
      (Self   : Paragraph;
       Row    : Positive;
-      Column : Positive) return Markdown.Annotations.Annotated_Text is
+      Column : Positive) return Markdown.Inlines.Inline_Vector is
         (raise Constraint_Error);
    --  If paragraph contains a table (GFM extension) return a cell
 
@@ -47,7 +46,8 @@ private
 
    type Paragraph is new Abstract_Block with record
       Lines  : VSS.String_Vectors.Virtual_String_Vector;
-      Parser : access constant Markdown.Inline_Parsers.Inline_Parser;
+      Parser :
+        access constant Markdown.Inlines.Parsers.Inline_Parser;
    end record;
 
    overriding function Create
@@ -61,10 +61,9 @@ private
 
    overriding procedure Complete_Parsing
      (Self   : in out Paragraph;
-      Parser : Markdown.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Inlines.Parsers.Inline_Parser);
 
-   function Text (Self : Paragraph)
-     return Markdown.Annotations.Annotated_Text is
-       (Self.Parser.Parse (Self.Lines));
+   function Text (Self : Paragraph) return Markdown.Inlines.Inline_Vector is
+     (Self.Parser.Parse (Self.Lines));
 
 end Markdown.Implementation.Paragraphs;

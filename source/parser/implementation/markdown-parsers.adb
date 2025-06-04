@@ -273,6 +273,18 @@ package body Markdown.Parsers is
         (Markdown.Implementation.Auto_Links.Parse_Auto_Link'Access);
    end Register_Common_Mark_Blocks;
 
+   --------------------
+   -- Set_Extensions --
+   --------------------
+
+   procedure Set_Extensions
+     (Self  : in out Markdown_Parser;
+      Value : Extension_Set) is
+   begin
+      Self.Extensions := Value;
+      Self.Inline_Parser.Set_Extensions (Value);
+   end Set_Extensions;
+
    -------------------
    -- Start_Parsing --
    -------------------

@@ -6,7 +6,7 @@
 
 --  Markdown ATX heading elements
 
-with Markdown.Annotations;
+with Markdown.Inlines;
 private with Markdown.Implementation.ATX_Headings;
 
 package Markdown.Blocks.ATX_Headings is
@@ -24,8 +24,7 @@ package Markdown.Blocks.ATX_Headings is
    --  The heading level is equal to the number of `#` characters in the
    --  opening sequence.
 
-   function Text (Self : ATX_Heading)
-     return Markdown.Annotations.Annotated_Text;
+   function Text (Self : ATX_Heading) return Markdown.Inlines.Inline_Vector;
    --  Return nested annotated text
 
    function To_Block (Self : ATX_Heading) return Markdown.Blocks.Block;

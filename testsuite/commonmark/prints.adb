@@ -7,10 +7,9 @@
 with VSS.Characters;
 with VSS.String_Vectors;
 with VSS.Strings;
-with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors.Markers;
---  with VSS.Strings.Character_Iterators;
 
+with Markdown.Attribute_Lists;
 with Markdown.Blocks.ATX_Headings;
 with Markdown.Blocks.Fenced_Code;
 with Markdown.Blocks.HTML;
@@ -25,8 +24,8 @@ package body Prints is
    pragma Assertion_Policy (Check);
 
    Tag : constant array
-     (Markdown.Annotations.Emphasis .. Markdown.Annotations.Strong)
-       of VSS.Strings.Virtual_String := ["em", "strong"];
+     (Markdown.Inlines.Start_Emphasis .. Markdown.Inlines.End_Strong)
+       of VSS.Strings.Virtual_String := ["em", "em", "strong", "strong"];
 
    Left : constant HTML_Writers.HTML_Attribute_Lists.List :=
      [("align", "left")];
@@ -50,166 +49,155 @@ package body Prints is
 
    procedure Print_Annotated_Text
      (Writer : in out HTML_Writers.Writer;
-      Text   : Markdown.Annotations.Annotated_Text)
+      Text   : Markdown.Inlines.Inline_Vector)
    is
-      use type VSS.Strings.Character_Count;
+      type Print_State (In_Image : Boolean := False) is record
+         case In_Image is
+            when True =>
+               Destination : VSS.Strings.Virtual_String;
+               Title       : VSS.String_Vectors.Virtual_String_Vector;
+               Description : VSS.Strings.Virtual_String;
+               Attributes  : Markdown.Attribute_Lists.Attribute_List;
+            when False =>
+               null;
+         end case;
+      end record;
 
       procedure Print
-        (From  : in out Positive;
-         Next  : in out VSS.Strings.Character_Iterators.Character_Iterator;
-         Limit : VSS.Strings.Character_Count);
-      --  From is an index in Text.Annotation to start from
-      --  Next is a not printed yet character in Text.Plain_Text
-      --  Dont go after Limit position in Text.Plain_Text
+        (State : in out Print_State;
+         Item  : Markdown.Inlines.Inline);
 
       -----------
       -- Print --
       -----------
 
       procedure Print
-        (From  : in out Positive;
-         Next  : in out VSS.Strings.Character_Iterators.Character_Iterator;
-         Limit : VSS.Strings.Character_Count)
+        (State : in out Print_State;
+         Item  : Markdown.Inlines.Inline)
       is
-         function Before
-           (From : VSS.Strings.Character_Index)
-              return VSS.Strings.Character_Iterators.Character_Iterator;
+         function To_Style
+           (Attributes : Markdown.Attribute_Lists.Attribute_List)
+             return VSS.String_Vectors.Virtual_String_Vector;
 
-         ------------
-         -- Before --
-         ------------
+         --------------
+         -- To_Style --
+         --------------
 
-         function Before
-           (From : VSS.Strings.Character_Index)
-            return VSS.Strings.Character_Iterators.Character_Iterator
+         function To_Style
+           (Attributes : Markdown.Attribute_Lists.Attribute_List)
+             return VSS.String_Vectors.Virtual_String_Vector
          is
-            Ignore : Boolean;
+            use type VSS.Strings.Virtual_String;
          begin
-            return Iter : VSS.Strings.Character_Iterators.Character_Iterator do
-               Iter.Set_At (Next);
-
-               while Iter.Character_Index >= From and then Iter.Backward loop
-                  null;
-               end loop;
-
-               while Iter.Character_Index + 1 < From and then Iter.Forward loop
-                  null;
+            return Result : VSS.String_Vectors.Virtual_String_Vector do
+               for Item of Attributes loop
+                  Result.Append (Item.Name & ": " & Item.Value);
                end loop;
             end return;
-         end Before;
+         end To_Style;
 
-         Ignore : Boolean;
       begin
-         while From <= Text.Annotation.Last_Index and then
-           Text.Annotation (From).To <= Limit
-         loop
-            declare
-               Item : constant Markdown.Annotations.Annotation :=
-                 Text.Annotation (From);
-               Last :
-                 VSS.Strings.Character_Iterators.Character_Iterator :=
-                   Before (Item.From);
-            begin
-               From := From + 1;
+         if State.In_Image then
+            case Item.Kind is
+               when Markdown.Inlines.Text | Markdown.Inlines.Code_Span =>
+                  State.Description.Append (Item.Text);
 
-               Writer.Characters
-                 (Text.Plain_Text.Slice (Next, Last));
+               when Markdown.Inlines.End_Image =>
+                  declare
+                     Attr : HTML_Writers.HTML_Attributes;
+                  begin
+                     Attr.Append (("alt", State.Description));
+                     Attr.Append (("src", State.Destination));
 
-               Next.Set_At (Last);
-               Ignore := Next.Forward;
+                     if not State.Title.Is_Empty then
+                        Attr.Append
+                          (("title",
+                           State.Title.Join_Lines (VSS.Strings.LF, False)));
+                     end if;
 
-               case Item.Kind is
-                  when Markdown.Annotations.Emphasis
-                     | Markdown.Annotations.Strong
-                     =>
+                     if State.Attributes.Length > 0 then
+                        declare
+                           Value : constant
+                             VSS.String_Vectors.Virtual_String_Vector :=
+                               To_Style (State.Attributes);
+                        begin
+                           Attr.Append (("style", Value.Join (';')));
+                        end;
+                     end if;
 
-                     Writer.Start_Element (Tag (Item.Kind));
-                     Print (From, Next, Item.To);
-                     Writer.End_Element (Tag (Item.Kind));
+                     Writer.Start_Element ("img", Attr);
+                     Writer.End_Element ("img");
 
-                  when Markdown.Annotations.Code_Span =>
-                     Writer.Start_Element ("code");
-                     Print (From, Next, Item.To);
-                     Writer.End_Element ("code");
+                     State := (In_Image => False);
+                  end;
 
-                  when Markdown.Annotations.Link =>
-                     declare
-                        Attr : HTML_Writers.HTML_Attributes;
-                     begin
-                        Attr.Append (("href", Item.Destination));
+               when others =>
+                  null;
+            end case;
 
-                        if not Item.Title.Is_Empty then
-                           Attr.Append
-                             (("title",
-                              Item.Title.Join_Lines (VSS.Strings.LF, False)));
-                        end if;
-
-                        Writer.Start_Element ("a", Attr);
-                        Print (From, Next, Item.To);
-                        Writer.End_Element ("a");
-                     end;
-
-                  when Markdown.Annotations.Image =>
-                     declare
-                        Attr : HTML_Writers.HTML_Attributes;
-                        Alt  : VSS.Strings.Virtual_String;
-                     begin
-                        Next.Set_At (Before (Item.To + 1));
-
-                        --  Point Last to Item.From
-                        if Last.Forward then
-                           Alt := Text.Plain_Text.Slice (Last, Next);
-                        end if;
-
-                        Attr.Append (("alt", Alt));
-                        Attr.Append (("src", Item.Destination));
-
-                        if not Item.Title.Is_Empty then
-                           Attr.Append
-                             (("title",
-                              Item.Title.Join_Lines (VSS.Strings.LF, False)));
-                        end if;
-
-                        Writer.Start_Element ("img", Attr);
-                        Writer.End_Element ("img");
-                        Ignore := Next.Forward;
-
-                        --  Skip nested items
-                        while From <= Text.Annotation.Last_Index and then
-                          Text.Annotation (From).To <= Item.To
-                        loop
-                           From := From + 1;
-                        end loop;
-                     end;
-
-                  when others =>
-                     null;
-               end case;
-            end;
-         end loop;
-
-         if Next.Character_Index <= Limit then
-            declare
-               Last : constant
-                 VSS.Strings.Character_Iterators.Character_Iterator :=
-                   Before (Limit + 1);
-            begin
-               Writer.Characters (Text.Plain_Text.Slice (Next, Last));
-
-               Next.Set_At (Last);
-               Ignore := Next.Forward;
-            end;
+            return;
          end if;
+
+         case Item.Kind is
+            when Markdown.Inlines.Text =>
+               Writer.Characters (Item.Text);
+
+            when Markdown.Inlines.Start_Emphasis
+               | Markdown.Inlines.Start_Strong
+               =>
+
+               Writer.Start_Element (Tag (Item.Kind));
+
+            when Markdown.Inlines.End_Emphasis
+               | Markdown.Inlines.End_Strong
+               =>
+               Writer.End_Element (Tag (Item.Kind));
+
+            when Markdown.Inlines.Code_Span =>
+               Writer.Start_Element ("code");
+               Writer.Characters (Item.Code_Span);
+               Writer.End_Element ("code");
+
+            when Markdown.Inlines.Start_Link =>
+               declare
+                  Attr : HTML_Writers.HTML_Attributes;
+               begin
+                  Attr.Append (("href", Item.Destination));
+
+                  if not Item.Title.Is_Empty then
+                     Attr.Append
+                       (("title",
+                        Item.Title.Join_Lines (VSS.Strings.LF, False)));
+                  end if;
+
+                  Writer.Start_Element ("a", Attr);
+               end;
+
+            when Markdown.Inlines.End_Link =>
+               Writer.End_Element ("a");
+
+            when Markdown.Inlines.Start_Image =>
+               State :=
+                 (In_Image    => True,
+                  Destination => Item.Destination,
+                  Title       => Item.Title,
+                  Attributes  => Item.Attributes,
+                  Description => <>);
+
+            when Markdown.Inlines.End_Image =>
+               null;
+
+            when others =>
+               null;
+         end case;
+
       end Print;
 
-      From  : Positive := Text.Annotation.First_Index;
-      Next  : VSS.Strings.Character_Iterators.Character_Iterator :=
-        Text.Plain_Text.At_First_Character;
+      State : Print_State;
    begin
-      Print
-        (From  => From,
-         Next  => Next,
-         Limit => Text.Plain_Text.Character_Length);
+      for Item of Text loop
+         Print (State, Item);
+      end loop;
    end Print_Annotated_Text;
 
    -----------------

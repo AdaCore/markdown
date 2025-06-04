@@ -23,6 +23,7 @@ procedure GNATdoc_Tests is
    Parser : Markdown.Parsers.Markdown_Parser;
 begin
    Markdown.Parsers.GNATdoc_Enable (Parser);
+   Parser.Set_Extensions ((Link_Attributes => True));
 
    while not Ada.Wide_Wide_Text_IO.End_Of_File loop
       declare

@@ -53,7 +53,7 @@ package body Markdown.Blocks.ATX_Headings is
    ----------
 
    function Text
-     (Self : ATX_Heading) return Markdown.Annotations.Annotated_Text is
+     (Self : ATX_Heading) return Markdown.Inlines.Inline_Vector is
    begin
       return Self.Data.Text;
    end Text;

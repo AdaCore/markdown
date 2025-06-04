@@ -16,7 +16,7 @@ with VSS.Strings;
 with VSS.Strings.Character_Iterators;
 with VSS.Strings.Cursors;
 
-with Markdown.Inline_Parsers;
+with Markdown.Inlines.Parsers;
 
 package Markdown.Implementation is
    pragma Preelaborate;
@@ -90,7 +90,7 @@ package Markdown.Implementation is
 
    not overriding procedure Complete_Parsing
      (Self   : in out Abstract_Block;
-      Parser : Markdown.Inline_Parsers.Inline_Parser) is null;
+      Parser : Markdown.Inlines.Parsers.Inline_Parser) is null;
    --  Adjust block state at the end of parse process
 
    package Block_Vectors is new Ada.Containers.Vectors
@@ -113,7 +113,7 @@ package Markdown.Implementation is
 
    overriding procedure Complete_Parsing
      (Self   : in out Abstract_Container_Block;
-      Parser : Markdown.Inline_Parsers.Inline_Parser);
+      Parser : Markdown.Inlines.Parsers.Inline_Parser);
    --  For all container blocks iterate over children and
    --  create List node when needed and move List_Items inside.
 

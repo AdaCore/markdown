@@ -32,7 +32,7 @@ package body Markdown.Blocks.Tables is
    ----------
 
    function Cell (Self : Table; Row, Column : Positive)
-     return Markdown.Annotations.Annotated_Text is
+     return Markdown.Inlines.Inline_Vector is
         (Self.Data.Table_Cell (Row + 2, Column));
 
    -------------
@@ -76,7 +76,7 @@ package body Markdown.Blocks.Tables is
    ------------
 
    function Header (Self : Table; Column : Positive)
-      return Markdown.Annotations.Annotated_Text is
+      return Markdown.Inlines.Inline_Vector is
         (Self.Data.Table_Cell (1, Column));
 
    ----------

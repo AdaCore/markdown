@@ -10,15 +10,19 @@
 with VSS.String_Vectors;
 with VSS.Strings;
 
-with Markdown.Annotations;
 with Markdown.Simple_Inline_Parsers;
 
 private with Markdown.Emphasis_Delimiters;
 
-package Markdown.Inline_Parsers is
+package Markdown.Inlines.Parsers is
    pragma Preelaborate;
 
    type Inline_Parser is tagged limited private;
+
+   procedure Set_Extensions
+     (Self  : in out Inline_Parser;
+      Value : Extension_Set);
+   --  Set extensions enabled in the parser
 
    procedure Register
      (Self  : in out Inline_Parser'Class;
@@ -27,24 +31,25 @@ package Markdown.Inline_Parsers is
    function Parse
      (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Inline_Vector;
 
    function Parse
      (Self : Inline_Parser'Class;
       Text : VSS.Strings.Virtual_String)
-     return Markdown.Annotations.Annotated_Text;
+     return Markdown.Inlines.Inline_Vector;
 
 private
 
    type Inline_Parser is tagged limited record
-      Scanner : Markdown.Emphasis_Delimiters.Scanner;
-      Parsers : Markdown.Simple_Inline_Parsers.Simple_Parser_Vectors.Vector;
+      Scanner   : Markdown.Emphasis_Delimiters.Scanner;
+      Parsers   : Markdown.Simple_Inline_Parsers.Simple_Parser_Vectors.Vector;
+      Extension : Extension_Set;
    end record;
 
    function Parse
      (Self  : Inline_Parser'Class;
       Lines : VSS.String_Vectors.Virtual_String_Vector)
-        return Markdown.Annotations.Annotated_Text is
+        return Markdown.Inlines.Inline_Vector is
           (Self.Parse (Lines.Join_Lines (VSS.Strings.LF, False)));
 
-end Markdown.Inline_Parsers;
+end Markdown.Inlines.Parsers;

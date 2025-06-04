@@ -25,7 +25,7 @@ package body Markdown.Implementation.ATX_Headings is
 
    overriding procedure Complete_Parsing
      (Self   : in out ATX_Heading;
-      Parser : Markdown.Inline_Parsers.Inline_Parser) is
+      Parser : Markdown.Inlines.Parsers.Inline_Parser) is
    begin
       Self.Parser := Parser'Unchecked_Access;
    end Complete_Parsing;

@@ -13,16 +13,23 @@ with Ada.Containers.Vectors;
 with VSS.Strings;
 with VSS.String_Vectors;
 
-package Markdown.Annotations is
+with Markdown.Attribute_Lists;
+
+package Markdown.Inlines is
    pragma Preelaborate;
 
-   type Annotation_Kind is
-     (Soft_Line_Break,
-      Emphasis,
-      Strong,
-      Link,
+   type Inline_Kind is
+     (Text,
+      Soft_Line_Break,
+      Start_Emphasis,
+      End_Emphasis,
+      Start_Strong,
+      End_Strong,
+      Start_Link,
+      End_Link,
+      Start_Image,
+      End_Image,
       Code_Span,
-      Image,
       HTML_Open_Tag,
       HTML_Close_Tag,
       HTML_Comment,
@@ -31,43 +38,40 @@ package Markdown.Annotations is
       HTML_CDATA);
    --  Kind of annotation for parsed inline content
 
-   type HTML_Attribute is record
-      Name  : VSS.Strings.Virtual_String;
-      Value : VSS.String_Vectors.Virtual_String_Vector;
-      --  An empty vector means no value for the attribute
-   end record;
-   --  A HTML attribute representation
-
-   package HTML_Attribute_Vectors is new Ada.Containers.Vectors
-     (Positive, HTML_Attribute);
-   --  A vector of HTML attributes
-
-   type Annotation (Kind : Annotation_Kind := Annotation_Kind'First) is record
-      From : VSS.Strings.Character_Index := 1;
-      To   : VSS.Strings.Character_Count := 0;
-      --  Corresponding segment in the plain text
-
+   type Inline (Kind : Inline_Kind := Inline_Kind'First) is record
       case Kind is
-         when Soft_Line_Break |
-              Emphasis |
-              Strong |
-              Code_Span =>
+         when Text =>
+            Text : VSS.Strings.Virtual_String;
+
+         when Code_Span =>
+            Code_Span : VSS.Strings.Virtual_String;
+
+         when Soft_Line_Break
+            | Start_Emphasis
+            | End_Emphasis
+            | Start_Strong
+            | End_Strong
+            | End_Link
+            | End_Image
+         =>
             null;
 
-         when Link | Image =>
+         when Start_Link | Start_Image =>
             Destination : VSS.Strings.Virtual_String;
             Title       : VSS.String_Vectors.Virtual_String_Vector;
             --  Link/image title could span several lines
+            Attributes  : Markdown.Attribute_Lists.Attribute_List;
+            --  Link/image attributes if Link_Attributes extension is on
 
          when HTML_Open_Tag =>
             HTML_Open_Tag   : VSS.Strings.Virtual_String;
-            HTML_Attributes : HTML_Attribute_Vectors.Vector;
+            HTML_Attributes : Markdown.Attribute_Lists.Attribute_List;
 
          when HTML_Close_Tag =>
             HTML_Close_Tag : VSS.Strings.Virtual_String;
 
          when HTML_Comment =>
-            HTML_Comment   : VSS.String_Vectors.Virtual_String_Vector;
+            HTML_Comment : VSS.String_Vectors.Virtual_String_Vector;
 
          when HTML_Processing_Instruction =>
             HTML_Instruction : VSS.String_Vectors.Virtual_String_Vector;
@@ -81,13 +85,8 @@ package Markdown.Annotations is
    end record;
    --  An annotation for particular inline content segment
 
-   package Annotation_Vectors is new
-     Ada.Containers.Vectors (Positive, Annotation);
+   package Inline_Vectors is new Ada.Containers.Vectors (Positive, Inline);
 
-   type Annotated_Text is tagged limited record
-      Plain_Text : VSS.Strings.Virtual_String;
-      Annotation : Annotation_Vectors.Vector;
-   end record;
-   --  Annotated text contains plain text and a list of annotations
+   type Inline_Vector is new Inline_Vectors.Vector with null record;
 
-end Markdown.Annotations;
+end Markdown.Inlines;
