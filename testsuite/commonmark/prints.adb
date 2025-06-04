@@ -8,8 +8,8 @@ with VSS.Characters;
 with VSS.String_Vectors;
 with VSS.Strings;
 with VSS.Strings.Cursors.Markers;
---  with VSS.Strings.Character_Iterators;
 
+with Markdown.Attribute_Lists;
 with Markdown.Blocks.ATX_Headings;
 with Markdown.Blocks.Fenced_Code;
 with Markdown.Blocks.HTML;
@@ -57,6 +57,7 @@ package body Prints is
                Destination : VSS.Strings.Virtual_String;
                Title       : VSS.String_Vectors.Virtual_String_Vector;
                Description : VSS.Strings.Virtual_String;
+               Attributes  : Markdown.Attribute_Lists.Attribute_List;
             when False =>
                null;
          end case;
@@ -72,7 +73,29 @@ package body Prints is
 
       procedure Print
         (State : in out Print_State;
-         Item  : Markdown.Inlines.Inline) is
+         Item  : Markdown.Inlines.Inline)
+      is
+         function To_Style
+           (Attributes : Markdown.Attribute_Lists.Attribute_List)
+             return VSS.String_Vectors.Virtual_String_Vector;
+
+         --------------
+         -- To_Style --
+         --------------
+
+         function To_Style
+           (Attributes : Markdown.Attribute_Lists.Attribute_List)
+             return VSS.String_Vectors.Virtual_String_Vector
+         is
+            use type VSS.Strings.Virtual_String;
+         begin
+            return Result : VSS.String_Vectors.Virtual_String_Vector do
+               for Item of Attributes loop
+                  Result.Append (Item.Name & ": " & Item.Value);
+               end loop;
+            end return;
+         end To_Style;
+
       begin
          if State.In_Image then
             case Item.Kind is
@@ -90,6 +113,16 @@ package body Prints is
                         Attr.Append
                           (("title",
                            State.Title.Join_Lines (VSS.Strings.LF, False)));
+                     end if;
+
+                     if State.Attributes.Length > 0 then
+                        declare
+                           Value : constant
+                             VSS.String_Vectors.Virtual_String_Vector :=
+                               To_Style (State.Attributes);
+                        begin
+                           Attr.Append (("style", Value.Join (';')));
+                        end;
                      end if;
 
                      Writer.Start_Element ("img", Attr);
@@ -148,6 +181,7 @@ package body Prints is
                  (In_Image    => True,
                   Destination => Item.Destination,
                   Title       => Item.Title,
+                  Attributes  => Item.Attributes,
                   Description => <>);
 
             when Markdown.Inlines.End_Image =>

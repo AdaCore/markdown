@@ -13,6 +13,8 @@ with Ada.Containers.Vectors;
 with VSS.Strings;
 with VSS.String_Vectors;
 
+with Markdown.Attribute_Lists;
+
 package Markdown.Inlines is
    pragma Preelaborate;
 
@@ -36,17 +38,6 @@ package Markdown.Inlines is
       HTML_CDATA);
    --  Kind of annotation for parsed inline content
 
-   type HTML_Attribute is record
-      Name  : VSS.Strings.Virtual_String;
-      Value : VSS.String_Vectors.Virtual_String_Vector;
-      --  An empty vector means no value for the attribute
-   end record;
-   --  A HTML attribute representation
-
-   package HTML_Attribute_Vectors is new Ada.Containers.Vectors
-     (Positive, HTML_Attribute);
-   --  A vector of HTML attributes
-
    type Inline (Kind : Inline_Kind := Inline_Kind'First) is record
       case Kind is
          when Text =>
@@ -69,10 +60,12 @@ package Markdown.Inlines is
             Destination : VSS.Strings.Virtual_String;
             Title       : VSS.String_Vectors.Virtual_String_Vector;
             --  Link/image title could span several lines
+            Attributes  : Markdown.Attribute_Lists.Attribute_List;
+            --  Link/image attributes if Link_Attributes extension is on
 
          when HTML_Open_Tag =>
             HTML_Open_Tag   : VSS.Strings.Virtual_String;
-            HTML_Attributes : HTML_Attribute_Vectors.Vector;
+            HTML_Attributes : Markdown.Attribute_Lists.Attribute_List;
 
          when HTML_Close_Tag =>
             HTML_Close_Tag : VSS.Strings.Virtual_String;

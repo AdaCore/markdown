@@ -59,7 +59,8 @@ package body Markdown.Implementation.Auto_Links is
               (Markdown.Inlines.Inline'
                (Kind        => Markdown.Inlines.Start_Link,
                 Destination => URL,
-                Title       => <>));
+                Title       => <>,
+                Attributes  => <>));
 
             Vector.Append
               (Markdown.Inlines.Inline'

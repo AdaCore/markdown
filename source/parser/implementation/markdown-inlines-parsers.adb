@@ -12,10 +12,12 @@ with VSS.Characters;
 with VSS.Regular_Expressions;
 with VSS.Strings.Character_Iterators;
 
-with Markdown.Implementation;
+with Markdown.Implementation.HTML;
 with VSS.Strings.Cursors.Markers;
 
 package body Markdown.Inlines.Parsers is
+
+   package HTML renames Markdown.Implementation.HTML;
 
    type Markup_Kind is (Emphasis, Link, Image);
 
@@ -29,6 +31,7 @@ package body Markdown.Inlines.Parsers is
          when Link_Or_Image =>
             URL : VSS.Strings.Virtual_String;
             Title : VSS.String_Vectors.Virtual_String_Vector;
+            Attributes : Markdown.Attribute_Lists.Attribute_List;
          when Emphasis =>
             null;
       end case;
@@ -58,6 +61,7 @@ package body Markdown.Inlines.Parsers is
 
    procedure Process_Links
      (Text      : VSS.Strings.Virtual_String;
+      With_Attr : Boolean;
       Markup    : in out Markup_Vectors.Vector;
       Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
       Bottom    : Natural := 1);
@@ -78,10 +82,12 @@ package body Markdown.Inlines.Parsers is
 
    procedure Parse_Link_Ahead
      (Text      : VSS.Strings.Virtual_String;
+      With_Attr : Boolean;
       Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
       Close     : Positive;
       URL       : out VSS.Strings.Virtual_String;
       Title     : out VSS.Strings.Virtual_String;
+      Attr      : out Markdown.Attribute_Lists.Attribute_List;
       Ok        : out Boolean);
 
    procedure Parse_Link_Destination
@@ -96,7 +102,7 @@ package body Markdown.Inlines.Parsers is
        return Boolean renames Markdown.Implementation."<";
 
    Link_Start_Pattern : constant Wide_Wide_String :=
-     "^\]\([\t\n\v\f\r ]*[^\n]";
+     "^\]\([\t\n\v\f\r ]*\S";
    --  `](` with optional spaces plus one non-space character
 
    Link_Start : VSS.Regular_Expressions.Regular_Expression;
@@ -123,10 +129,22 @@ package body Markdown.Inlines.Parsers is
    ;
 
    Link_Title_Pattern : constant Wide_Wide_String :=
-     "^[ \t\n\v\f\r]*(" & Link_Title_Sub_Pattern & ")?[ \t\n\v\f\r]*\)";
+     "^\s*(" & Link_Title_Sub_Pattern & ")?\s*\)";
 
    Link_Title : VSS.Regular_Expressions.Regular_Expression;
-   --  Regexp of Title_Pattern
+   --  Regexp of Link_Title_Pattern
+
+   Attribute : constant Wide_Wide_String :=
+     "[.#]?" & HTML.Attribute_Name & "(?:" & HTML.Attribute_Value_Spec & ")?";
+
+   Attribute_List : constant Wide_Wide_String :=
+     "(?:" & Attribute & ")?(?:\s+" & Attribute & ")*";
+
+   Attributes_Pattern : constant Wide_Wide_String :=
+     "\{(\s*" & Attribute_List & "\s*)\}";
+
+   Attributes : VSS.Regular_Expressions.Regular_Expression;
+   --  Regexp of Attributes_Pattern
 
    -----------------
    -- Find_Markup --
@@ -139,8 +157,6 @@ package body Markdown.Inlines.Parsers is
       Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
       Markup : out Markup_Vectors.Vector)
    is
-      pragma Unreferenced (Self);
-
       Cursor : VSS.Strings.Character_Iterators.Character_Iterator;
 
       Is_Delimiter : Boolean;
@@ -159,7 +175,7 @@ package body Markdown.Inlines.Parsers is
          end if;
       end loop;
 
-      Process_Links (Text, Markup, List);
+      Process_Links (Text, Self.Extension.Link_Attributes, Markup, List);
       Process_Emphasis (Markup, List);
    end Find_Markup;
 
@@ -208,6 +224,9 @@ package body Markdown.Inlines.Parsers is
 
          Link_Title := VSS.Regular_Expressions.To_Regular_Expression
            (VSS.Strings.To_Virtual_String (Link_Title_Pattern));
+
+         Attributes := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Attributes_Pattern));
       end if;
 
       Simple_Inline_Parsers.Initialize
@@ -260,10 +279,12 @@ package body Markdown.Inlines.Parsers is
 
    procedure Parse_Link_Ahead
      (Text      : VSS.Strings.Virtual_String;
+      With_Attr : Boolean;
       Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
       Close     : Positive;
       URL       : out VSS.Strings.Virtual_String;
       Title     : out VSS.Strings.Virtual_String;
+      Attr      : out Markdown.Attribute_Lists.Attribute_List;
       Ok        : out Boolean)
    is
       procedure To_Inline_Link
@@ -314,6 +335,21 @@ package body Markdown.Inlines.Parsers is
 
                To := Match.Last_Marker;
                Forward (To, 1);  --  Skip `)`
+            end if;
+         end;
+
+         if not Ok or not With_Attr then
+            return;
+         end if;
+
+         declare
+            Match : constant VSS.Regular_Expressions.Regular_Expression_Match
+              := Attributes.Match (Text, Last);
+         begin
+            if Match.Has_Match then
+               Attr.Parse (Match.Captured (1));
+               To := Match.Last_Marker;
+               Forward (To, 1);  --  Skip `}`
             end if;
          end;
       end To_Inline_Link;
@@ -521,6 +557,7 @@ package body Markdown.Inlines.Parsers is
 
    procedure Process_Links
      (Text      : VSS.Strings.Virtual_String;
+      With_Attr : Boolean;
       Markup    : in out Markup_Vectors.Vector;
       Delimiter : in out Emphasis_Delimiters.Delimiter_Vectors.Vector;
       Bottom    : Natural := 1)
@@ -554,15 +591,18 @@ package body Markdown.Inlines.Parsers is
 
                   URL   : VSS.Strings.Virtual_String;
                   Title : VSS.Strings.Virtual_String;
+                  Attr  : Markdown.Attribute_Lists.Attribute_List;
                   Ok    : Boolean;
                begin
                   Parse_Link_Ahead
                     (Text,
+                     With_Attr,
                      Delimiter,
                      --  Opener_Index,
                      Closer_Index,
                      URL,
                      Title,
+                     Attr,
                      Ok);
 
                   if Ok then
@@ -573,10 +613,10 @@ package body Markdown.Inlines.Parsers is
                               when others => Link);
                         First : Parsers.Markup :=
                           (Kind, Opener.From, Opener.From,
-                           URL, Title.Split_Lines);
+                           URL, Title.Split_Lines, Attr);
                         Last  : constant Parsers.Markup :=
                           (Kind, Closer.From, Closer.To,
-                           URL, First.Title);
+                           URL, First.Title, Attribute_Lists.Empty);
                      begin
                         Forward (First.To, (if Kind = Image then 2 else 1));
 
@@ -585,6 +625,8 @@ package body Markdown.Inlines.Parsers is
 
                         Process_Emphasis
                           (Markup, Delimiter, Opener_Index, Closer_Index);
+
+                        --  TBD: delete all delimiter before Closer.To?
 
                         if Kind = Image then
                            Opener.Is_Deleted := True;
@@ -633,6 +675,17 @@ package body Markdown.Inlines.Parsers is
    begin
       Self.Parsers.Append (Value);
    end Register;
+
+   --------------------
+   -- Set_Extensions --
+   --------------------
+
+   procedure Set_Extensions
+     (Self  : in out Inline_Parser;
+      Value : Extension_Set) is
+   begin
+      Self.Extension := Value;
+   end Set_Extensions;
 
    -----------------------
    -- To_Annotated_Text --
@@ -717,14 +770,16 @@ package body Markdown.Inlines.Parsers is
                  (if Open then
                     (Markdown.Inlines.Start_Link,
                      Item.URL,
-                     Item.Title)
+                     Item.Title,
+                     Item.Attributes)
                   else (Kind => Markdown.Inlines.End_Link));
             when Image =>
                return
                  (if Open then
                     (Markdown.Inlines.Start_Image,
                      Item.URL,
-                     Item.Title)
+                     Item.Title,
+                     Item.Attributes)
                   else (Kind => Markdown.Inlines.End_Image));
          end case;
       end To_Annotation;

@@ -19,6 +19,11 @@ package Markdown.Inlines.Parsers is
 
    type Inline_Parser is tagged limited private;
 
+   procedure Set_Extensions
+     (Self  : in out Inline_Parser;
+      Value : Extension_Set);
+   --  Set extensions enabled in the parser
+
    procedure Register
      (Self  : in out Inline_Parser'Class;
       Value : not null Simple_Inline_Parsers.Simple_Inline_Parser_Access);
@@ -36,8 +41,9 @@ package Markdown.Inlines.Parsers is
 private
 
    type Inline_Parser is tagged limited record
-      Scanner : Markdown.Emphasis_Delimiters.Scanner;
-      Parsers : Markdown.Simple_Inline_Parsers.Simple_Parser_Vectors.Vector;
+      Scanner   : Markdown.Emphasis_Delimiters.Scanner;
+      Parsers   : Markdown.Simple_Inline_Parsers.Simple_Parser_Vectors.Vector;
+      Extension : Extension_Set;
    end record;
 
    function Parse

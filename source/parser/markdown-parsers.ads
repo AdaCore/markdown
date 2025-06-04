@@ -17,6 +17,11 @@ package Markdown.Parsers is
    type Markdown_Parser is tagged limited private;
    --  Markdown parser representation
 
+   procedure Set_Extensions
+     (Self  : in out Markdown_Parser;
+      Value : Extension_Set);
+   --  Set extensions enabled in the parser
+
    procedure Parse_Line
      (Self : in out Markdown_Parser'Class;
       Line : VSS.Strings.Virtual_String);
@@ -48,14 +53,21 @@ private
       State    : Parser_State := Initial;
       Document : Markdown.Documents.Document;
       --  Resulting markdown document
-      Open      : Container_Vectors.Vector;
+
+      Open : Container_Vectors.Vector;
       --  Current open container blocks, e.g. block-quote
+
       Open_Leaf : Abstract_Block_Access;
       --  Current open non-container block (if any), e.g. paragraph
-      Block_Detectors  : Block_Detector_Vectors.Vector;
+
+      Block_Detectors : Block_Detector_Vectors.Vector;
       --  Known block detectors
+
       Inline_Parser : Markdown.Inlines.Parsers.Inline_Parser;
       --  Parser of inline markups (links, emphasis, code spans, etc)
+
+      Extensions : Extension_Set;
+      --  Enabled extensions
    end record;
 
    procedure Register_Block

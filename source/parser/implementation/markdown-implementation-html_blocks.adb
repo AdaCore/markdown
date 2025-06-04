@@ -8,6 +8,8 @@
 
 with VSS.Regular_Expressions;
 
+with Markdown.Implementation.HTML;
+
 package body Markdown.Implementation.HTML_Blocks is
 
    Tag_List : constant Wide_Wide_String :=
@@ -75,24 +77,9 @@ package body Markdown.Implementation.HTML_Blocks is
      "ul";
 
    Tag_Name  : constant Wide_Wide_String := "[a-zA-Z][a-zA-Z0-9\-]*";
-   Attribute_Name : constant Wide_Wide_String := "[a-zA-Z_:][a-zA-Z0-9_.:\-]*";
-
-   Unquoted_Attribute_Value : constant Wide_Wide_String :=
-     "[^ \t\v\f""'=<>`]+";
-
-   Single_Quoted_Attribute_Value : constant Wide_Wide_String := "'[^']*'";
-   Double_Quoted_Attribute_Value : constant Wide_Wide_String := """[^""]*""";
-
-   Attribute_Value : constant Wide_Wide_String :=
-     Unquoted_Attribute_Value & "|" &
-     Single_Quoted_Attribute_Value & "|" &
-     Double_Quoted_Attribute_Value;
-
-   Attribute_Value_Spec : constant Wide_Wide_String :=
-     "[ \t]*=[ \t]*(?:" & Attribute_Value & ")";
 
    Attribute : constant Wide_Wide_String :=
-     "[ \t]+" & Attribute_Name & "(?:" & Attribute_Value_Spec & ")?";
+     "[ \t]+" & HTML.Attribute_Name & "(?:" & HTML.Attribute_Value_Spec & ")?";
 
    Open_Tag : constant Wide_Wide_String :=
      "<" & Tag_Name & "(?:" & Attribute & ")*[ \t]*/?>";
