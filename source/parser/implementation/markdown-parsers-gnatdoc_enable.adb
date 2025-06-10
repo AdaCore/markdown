@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2025, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -20,4 +20,6 @@ begin
 
    Self.Inline_Parser.Register
      (Markdown.Implementation.Code_Spans.Parse_Code_Span'Access);
+
+   Self.Set_Extensions ((Link_Attributes => True));
 end Markdown.Parsers.GNATdoc_Enable;
