@@ -73,10 +73,14 @@ package body Markdown.Emphasis_Delimiters is
 
    function Check
      (Item   : Delimiter;
-      Filter : Delimiter_Filter) return Boolean is
+      Filter : Delimiter_Filter) return Boolean
+   is
+      use type VSS.Strings.Character_Index;
    begin
       if not Item.Is_Deleted then
          case Filter.Kind is
+            when Before =>
+               return Item.From.Character_Index < Filter.Index;
             when Emphasis_Open =>
                return Item.Kind = Filter.Emphasis and then Item.Can_Open;
             when Emphasis_Close =>

@@ -626,7 +626,15 @@ package body Markdown.Inlines.Parsers is
                         Process_Emphasis
                           (Markup, Delimiter, Opener_Index, Closer_Index);
 
-                        --  TBD: delete all delimiter before Closer.To?
+                        --  Delete all delimiter before ')'
+                        for M
+                          in Markdown.Emphasis_Delimiters.Each
+                               (Delimiter,
+                                Filter => (Before, Closer.To.Character_Index),
+                                From   => Opener_Index)
+                        loop
+                           Delimiter (M).Is_Deleted := True;
+                        end loop;
 
                         if Kind = Image then
                            Opener.Is_Deleted := True;

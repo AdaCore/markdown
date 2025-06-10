@@ -69,6 +69,7 @@ package Markdown.Emphasis_Delimiters is
 
    type Delimiter_Filter_Kind is
      (Any_Element,
+      Before,
       Kind_Of,
       Link_Or_Image,
       Emphasis_Close,
@@ -79,6 +80,8 @@ package Markdown.Emphasis_Delimiters is
          case Kind is
             when Any_Element | Emphasis_Close | Link_Or_Image =>
                null;
+            when Before =>
+               Index : VSS.Strings.Character_Index;
             when Kind_Of =>
                Given_Kind : Delimiter_Kind;
             when Emphasis_Open =>
