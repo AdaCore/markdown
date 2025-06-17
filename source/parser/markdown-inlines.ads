@@ -21,6 +21,7 @@ package Markdown.Inlines is
    type Inline_Kind is
      (Text,
       Soft_Line_Break,
+      Hard_Line_Break,
       Start_Emphasis,
       End_Emphasis,
       Start_Strong,
@@ -47,6 +48,7 @@ package Markdown.Inlines is
             Code_Span : VSS.Strings.Virtual_String;
 
          when Soft_Line_Break
+            | Hard_Line_Break
             | Start_Emphasis
             | End_Emphasis
             | Start_Strong

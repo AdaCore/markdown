@@ -4,7 +4,7 @@
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
-with VSS.Characters;
+with VSS.Characters.Latin;
 with VSS.String_Vectors;
 with VSS.Strings;
 with VSS.Strings.Cursors.Markers;
@@ -186,6 +186,18 @@ package body Prints is
 
             when Markdown.Inlines.End_Image =>
                null;
+
+            when Markdown.Inlines.Hard_Line_Break =>
+               Writer.Start_Element ("br");
+               Writer.End_Element ("br");
+
+            when Markdown.Inlines.Soft_Line_Break =>
+               declare
+                  Line_Feed : VSS.Strings.Virtual_String;
+               begin
+                  Line_Feed.Append (VSS.Characters.Latin.Line_Feed);
+                  Writer.Characters (Line_Feed);
+               end;
 
             when others =>
                null;

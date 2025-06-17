@@ -64,11 +64,14 @@ package Markdown.Emphasis_Delimiters is
    --  Return `Found = True` and Item if the delimiter is found.
    --  Move Cursor after delimiter or forward one character if not found.
 
-   procedure Reset (Self : in out Scanner);
+   procedure Reset
+     (Self        : in out Scanner;
+      After_Space : Boolean);
    --  Reset the scanner to an initial state
 
    type Delimiter_Filter_Kind is
      (Any_Element,
+      Before,
       Kind_Of,
       Link_Or_Image,
       Emphasis_Close,
@@ -79,6 +82,8 @@ package Markdown.Emphasis_Delimiters is
          case Kind is
             when Any_Element | Emphasis_Close | Link_Or_Image =>
                null;
+            when Before =>
+               Index : VSS.Strings.Character_Index;
             when Kind_Of =>
                Given_Kind : Delimiter_Kind;
             when Emphasis_Open =>
