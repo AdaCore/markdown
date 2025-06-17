@@ -11,7 +11,6 @@ Example 11 (lines 472-476) Tabs
 Example 12 (lines 489-493) Backslash escapes
 Example 14 (lines 509-529) Backslash escapes
 Example 15 (lines 534-538) Backslash escapes
-Example 16 (lines 543-549) Backslash escapes
 Example 22 (lines 597-601) Backslash escapes
 Example 23 (lines 604-610) Backslash escapes
 Example 24 (lines 613-620) Backslash escapes
@@ -83,7 +82,6 @@ Example 215 (lines 3459-3467) Link reference definitions
 Example 216 (lines 3469-3476) Link reference definitions
 Example 217 (lines 3482-3495) Link reference definitions
 Example 218 (lines 3503-3511) Link reference definitions
-Example 226 (lines 3615-3621) Paragraphs
 Example 227 (lines 3632-3644) Blank lines
 Example 232 (lines 3760-3770) Block quotes
 Example 233 (lines 3776-3786) Block quotes
@@ -198,13 +196,6 @@ Example 629 (lines 9172-9176) Raw HTML
 Example 630 (lines 9182-9186) Raw HTML
 Example 631 (lines 9191-9195) Raw HTML
 Example 632 (lines 9198-9202) Raw HTML
-Example 633 (lines 9212-9218) Hard line breaks
-Example 634 (lines 9224-9230) Hard line breaks
-Example 635 (lines 9235-9241) Hard line breaks
-Example 636 (lines 9246-9252) Hard line breaks
-Example 637 (lines 9255-9261) Hard line breaks
-Example 638 (lines 9267-9273) Hard line breaks
-Example 639 (lines 9276-9282) Hard line breaks
 Example 642 (lines 9305-9311) Hard line breaks
 Example 643 (lines 9314-9320) Hard line breaks
-443 passed, 209 failed, 0 errored, 0 skipped
+452 passed, 200 failed, 0 errored, 0 skipped

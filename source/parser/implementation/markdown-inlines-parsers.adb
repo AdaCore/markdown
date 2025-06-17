@@ -75,13 +75,8 @@ package body Markdown.Inlines.Parsers is
 
    function To_Annotated_Text
      (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
-      Markup : Markup_Vectors.Vector;
-      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
+      Markup : Markup_Vectors.Vector)
       return Markdown.Inlines.Inline_Vector;
-
-   procedure Read_Character
-     (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
-      Result : in out VSS.Strings.Virtual_String);
 
    procedure Parse_Link_Ahead
      (Text      : VSS.Strings.Virtual_String;
@@ -148,6 +143,14 @@ package body Markdown.Inlines.Parsers is
 
    Attributes : VSS.Regular_Expressions.Regular_Expression;
    --  Regexp of Attributes_Pattern
+
+   End_Of_Line_Pattern : constant Wide_Wide_String := "(.\\|\S *)?\n *";
+   --  The first character in the group 1 matches the last character in the
+   --  line (excluding markup). Like `abc__\n__`, where `abc` text of the line
+   --  and `__\n__` is line break markup.
+
+   End_Of_Line : VSS.Regular_Expressions.Regular_Expression;
+   --  Regexp of End_Of_Line_Pattern
 
    -----------------
    -- Find_Markup --
@@ -227,6 +230,9 @@ package body Markdown.Inlines.Parsers is
 
          Attributes := VSS.Regular_Expressions.To_Regular_Expression
            (VSS.Strings.To_Virtual_String (Attributes_Pattern));
+
+         End_Of_Line := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (End_Of_Line_Pattern));
       end if;
 
       Simple_Inline_Parsers.Initialize
@@ -286,9 +292,7 @@ package body Markdown.Inlines.Parsers is
       Process_Emphasis (Markup, List);
 
       --  Convert Markup pairs into Result
-      return
-        To_Annotated_Text
-          (Text.At_First_Character, Markup, Text.After_Last_Character);
+      return To_Annotated_Text (Text.At_First_Character, Markup);
 
    end Parse;
 
@@ -680,18 +684,6 @@ package body Markdown.Inlines.Parsers is
       end loop;
    end Process_Links;
 
-   --------------------
-   -- Read_Character --
-   --------------------
-
-   procedure Read_Character
-     (Cursor : in out VSS.Strings.Character_Iterators.Character_Iterator;
-      Result : in out VSS.Strings.Virtual_String) is
-   begin
-      Result.Append (Cursor.Element);
-      Markdown.Implementation.Forward (Cursor);
-   end Read_Character;
-
    --------------
    -- Register --
    --------------
@@ -720,8 +712,7 @@ package body Markdown.Inlines.Parsers is
 
    function To_Annotated_Text
      (Start  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
-      Markup : Markup_Vectors.Vector;
-      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class)
+      Markup : Markup_Vectors.Vector)
       return Markdown.Inlines.Inline_Vector
    is
       use type VSS.Strings.Character_Index;
@@ -743,6 +734,93 @@ package body Markdown.Inlines.Parsers is
       procedure Swap (Left, Right : Positive);
 
       function From (Index : Positive) return VSS.Strings.Character_Index;
+
+      procedure Append_Text
+        (Result : in out Markdown.Inlines.Inline_Vector;
+         Text   : in out VSS.Strings.Virtual_String);
+      --  Append Text to Result and search for '\n' to detect line breaks
+
+      -----------------
+      -- Append_Text --
+      -----------------
+
+      procedure Append_Text
+        (Result : in out Markdown.Inlines.Inline_Vector;
+         Text   : in out VSS.Strings.Virtual_String)
+      is
+         Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
+           Text.Before_First_Character;
+      begin
+         if Text.Is_Empty then
+            return;
+         end if;
+
+         --  Find '\n' and replace ith with soft/hard line breaks markup
+
+         while Cursor.Forward loop
+            declare
+               Match : constant
+                 VSS.Regular_Expressions.Regular_Expression_Match :=
+                   End_Of_Line.Match (Text, Cursor);
+            begin
+               if not Match.Has_Match then
+                  --  No '\n', append rest of the text
+                  Result.Append
+                    (Inline'(Markdown.Inlines.Text, Text.Tail_From (Cursor)));
+
+                  Cursor.Set_At_Last (Text);
+
+               elsif Match.Has_Capture (1) then
+                  --  Have spaces or backslash before '\n'
+                  if Match.Captured (1).Ends_With ('\')
+                    or else Match.Captured (1).Ends_With ("  ")
+                  then
+                     --  Append "text" excluding spaces and '\' and Hard_Line
+                     Result.Append
+                       (Inline'
+                          (Markdown.Inlines.Text,
+                           Text.Slice (Cursor, Match.First_Marker (1))));
+
+                     Result.Append
+                       (Inline'(Kind => Markdown.Inlines.Hard_Line_Break));
+
+                     Cursor.Set_At (Match.Last_Marker);
+
+                  else
+                     --  Append "text" excluding spaces
+                     Result.Append
+                       (Inline'
+                          (Markdown.Inlines.Text,
+                           Text.Slice (Cursor, Match.First_Marker (1))));
+
+                     Result.Append
+                       (Inline'(Kind => Markdown.Inlines.Soft_Line_Break));
+
+                     Cursor.Set_At (Match.Last_Marker);
+
+                  end if;
+               elsif Match.First_Marker.Character_Index
+                 - Cursor.Character_Index
+                 < 2
+               then
+                  --  We have no text and zero or one space
+                  Result.Append
+                    (Inline'(Kind => Markdown.Inlines.Soft_Line_Break));
+
+                  Cursor.Set_At (Match.Last_Marker);
+
+               else
+                  --  We have no text and two or more spaces
+                  Result.Append
+                    (Inline'(Kind => Markdown.Inlines.Hard_Line_Break));
+
+                  Cursor.Set_At (Match.Last_Marker);
+               end if;
+            end;
+         end loop;
+
+         Text.Clear;
+      end Append_Text;
 
       ----------
       -- From --
@@ -858,15 +936,11 @@ package body Markdown.Inlines.Parsers is
       return Result : Markdown.Inlines.Inline_Vector do
 
          --  Fill Result
-         while Cursor.Has_Element and Cursor < Limit loop
+         while Cursor.Has_Element loop
             if Index in Map'Range and then
               From (Index) = Cursor.Character_Index
             then
-               if not Text.Is_Empty then
-                  Result.Append
-                    (Inline'(Markdown.Inlines.Text, Text => Text));
-                  Text.Clear;
-               end if;
+               Append_Text (Result, Text);
 
                declare
                   Item : Parsers.Markup renames Markup (Map (Index));
@@ -882,15 +956,13 @@ package body Markdown.Inlines.Parsers is
 
                end;
             else
-               Read_Character (Cursor, Text);
+               Text.Append (Cursor.Element);
+               Markdown.Implementation.Forward (Cursor);
+               --  Read_Character (Cursor, Text);
             end if;
          end loop;
 
-         if not Text.Is_Empty then
-            Result.Append
-              (Inline'(Markdown.Inlines.Text, Text => Text));
-            Text.Clear;
-         end if;
+         Append_Text (Result, Text);
       end return;
    end To_Annotated_Text;
 
