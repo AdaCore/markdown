@@ -386,9 +386,11 @@ package body Markdown.Emphasis_Delimiters is
    -- Reset --
    -----------
 
-   procedure Reset (Self : in out Scanner) is
+   procedure Reset
+     (Self        : in out Scanner;
+      After_Space : Boolean) is
    begin
-      Self.State := (others => <>);
+      Self.State := (Is_White_Space => After_Space, others => <>);
    end Reset;
 
 end Markdown.Emphasis_Delimiters;

@@ -58,7 +58,7 @@ package body Markdown.Implementation.Code_Spans is
                Plain  : VSS.Strings.Virtual_String;
                Start  : VSS.Strings.Character_Iterators.Character_Iterator;
                Stop   : VSS.Strings.Character_Iterators.Character_Iterator;
-               Vector : Markdown.Inlines.Inline_Vector;
+               Inline : Markdown.Inlines.Inline;
                Ignore : Boolean;
             begin
                Start.Set_At (From);
@@ -75,16 +75,16 @@ package body Markdown.Implementation.Code_Spans is
 
                Plain := Text.Slice (Start, Stop);
 
-               Vector.Append
-                 (Markdown.Inlines.Inline'
-                  (Kind      => Markdown.Inlines.Code_Span,
-                   Code_Span => Plain));
+               Inline :=
+                 (Kind      => Markdown.Inlines.Code_Span,
+                  Code_Span => Plain);
 
                Span :=
                  (Is_Set     => True,
                   From       => From,
                   To         => Match.Last_Marker,
-                  Annotation => Vector);
+                  Annotation => Inline,
+                  Text       => <>);
 
                return;
             end;

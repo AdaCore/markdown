@@ -64,7 +64,9 @@ package Markdown.Emphasis_Delimiters is
    --  Return `Found = True` and Item if the delimiter is found.
    --  Move Cursor after delimiter or forward one character if not found.
 
-   procedure Reset (Self : in out Scanner);
+   procedure Reset
+     (Self        : in out Scanner;
+      After_Space : Boolean);
    --  Reset the scanner to an initial state
 
    type Delimiter_Filter_Kind is

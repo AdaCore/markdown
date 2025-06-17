@@ -115,8 +115,6 @@ Example 452 (lines 7226-7230) Emphasis and strong emphasis
 Example 475 (lines 7409-7413) Emphasis and strong emphasis
 Example 476 (lines 7416-7420) Emphasis and strong emphasis
 Example 477 (lines 7423-7427) Emphasis and strong emphasis
-Example 478 (lines 7430-7434) Emphasis and strong emphasis
-Example 479 (lines 7437-7441) Emphasis and strong emphasis
 Example 491 (lines 7608-7614) Links
 Example 493 (lines 7627-7631) Links
 Example 494 (lines 7636-7644) Links
@@ -129,9 +127,7 @@ Example 507 (lines 7776-7780) Links
 Example 512 (lines 7840-7844) Links
 Example 513 (lines 7847-7851) Links
 Example 515 (lines 7861-7865) Links
-Example 516 (lines 7870-7874) Links
 Example 520 (lines 7900-7904) Links
-Example 522 (lines 7917-7921) Links
 Example 524 (lines 7937-7941) Links
 Example 527 (lines 7989-7995) Links
 Example 528 (lines 8004-8010) Links
@@ -211,4 +207,4 @@ Example 638 (lines 9267-9273) Hard line breaks
 Example 639 (lines 9276-9282) Hard line breaks
 Example 642 (lines 9305-9311) Hard line breaks
 Example 643 (lines 9314-9320) Hard line breaks
-439 passed, 213 failed, 0 errored, 0 skipped
+443 passed, 209 failed, 0 errored, 0 skipped

@@ -49,33 +49,24 @@ package body Markdown.Implementation.Auto_Links is
             Plain  : constant VSS.Strings.Virtual_String :=
               Match.Captured (1);
             URL    : VSS.Strings.Virtual_String := Plain;
-            Vector : Markdown.Inlines.Inline_Vector;
+            Inline : Markdown.Inlines.Inline;
          begin
             if Match.Has_Capture (2) then
                URL.Prepend ("mailto:");
             end if;
 
-            Vector.Append
-              (Markdown.Inlines.Inline'
-               (Kind        => Markdown.Inlines.Start_Link,
-                Destination => URL,
-                Title       => <>,
-                Attributes  => <>));
-
-            Vector.Append
-              (Markdown.Inlines.Inline'
-               (Kind  => Markdown.Inlines.Text,
-                Text  => Plain));
-
-            Vector.Append
-              (Markdown.Inlines.Inline'
-               (Kind => Markdown.Inlines.End_Link));
+            Inline :=
+              (Kind        => Markdown.Inlines.Start_Link,
+               Destination => URL,
+               Title       => <>,
+               Attributes  => <>);
 
             Span :=
               (Is_Set     => True,
                From       => Match.First_Marker,
                To         => Match.Last_Marker,
-               Annotation => Vector);
+               Annotation => Inline,
+               Text       => Plain);
          end;
       else
          Span := (Is_Set => False);

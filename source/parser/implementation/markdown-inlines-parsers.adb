@@ -19,14 +19,13 @@ package body Markdown.Inlines.Parsers is
 
    package HTML renames Markdown.Implementation.HTML;
 
-   type Markup_Kind is (Emphasis, Link, Image);
+   type Markup_Kind is (Emphasis, Link, Image, Simple);
 
    subtype Link_Or_Image is Markup_Kind range Link .. Image;
 
    type Markup (Kind : Markup_Kind := Emphasis) is record
       From   : VSS.Strings.Cursors.Markers.Character_Marker;
       To     : VSS.Strings.Cursors.Markers.Character_Marker;
-      --  TO DO: Replace with Segment_Marker
       case Kind is
          when Link_Or_Image =>
             URL : VSS.Strings.Virtual_String;
@@ -34,6 +33,10 @@ package body Markdown.Inlines.Parsers is
             Attributes : Markdown.Attribute_Lists.Attribute_List;
          when Emphasis =>
             null;
+         when Simple =>
+            Annotation : Markdown.Inlines.Inline;
+            Text       : VSS.Strings.Virtual_String;
+            --  Extra internal text for links/images
       end case;
    end record;
 
@@ -46,12 +49,12 @@ package body Markdown.Inlines.Parsers is
 
    package Markup_Vectors is new Ada.Containers.Vectors (Markup_Index, Markup);
 
-   procedure Find_Markup
-     (Self   : Inline_Parser'Class;
-      Text   : VSS.Strings.Virtual_String;
-      From   : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
-      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
-      Markup : out Markup_Vectors.Vector);
+   procedure Find_Delimiters
+     (Scanner : in out Emphasis_Delimiters.Scanner;
+      Text    : VSS.Strings.Virtual_String;
+      From    : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      Limit   : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      List    : in out Emphasis_Delimiters.Delimiter_Vectors.Vector);
 
    procedure Process_Emphasis
      (Markup    : in out Markup_Vectors.Vector;
@@ -150,21 +153,18 @@ package body Markdown.Inlines.Parsers is
    -- Find_Markup --
    -----------------
 
-   procedure Find_Markup
-     (Self   : Inline_Parser'Class;
-      Text   : VSS.Strings.Virtual_String;
-      From   : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
-      Limit  : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
-      Markup : out Markup_Vectors.Vector)
+   procedure Find_Delimiters
+     (Scanner : in out Emphasis_Delimiters.Scanner;
+      Text    : VSS.Strings.Virtual_String;
+      From    : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      Limit   : VSS.Strings.Cursors.Abstract_Character_Cursor'Class;
+      List    : in out Emphasis_Delimiters.Delimiter_Vectors.Vector)
    is
       Cursor : VSS.Strings.Character_Iterators.Character_Iterator;
 
       Is_Delimiter : Boolean;
       Item         : Emphasis_Delimiters.Delimiter;
-      Scanner      : Emphasis_Delimiters.Scanner;
-      List         : Emphasis_Delimiters.Delimiter_Vectors.Vector;
    begin
-      Scanner.Reset;
       Cursor.Set_At (From);
 
       while Cursor < Limit loop
@@ -174,10 +174,7 @@ package body Markdown.Inlines.Parsers is
             List.Append (Item);
          end if;
       end loop;
-
-      Process_Links (Text, Self.Extension.Link_Attributes, Markup, List);
-      Process_Emphasis (Markup, List);
-   end Find_Markup;
+   end Find_Delimiters;
 
    -------------
    -- Forward --
@@ -211,8 +208,11 @@ package body Markdown.Inlines.Parsers is
       return Markdown.Inlines.Inline_Vector
    is
 
-      State  : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
-      Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
+      List    : Emphasis_Delimiters.Delimiter_Vectors.Vector;
+      Markup  : Markup_Vectors.Vector;
+      State   : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
+      Scanner : Emphasis_Delimiters.Scanner;
+      Cursor  : VSS.Strings.Character_Iterators.Character_Iterator :=
         Text.At_First_Character;
    begin
       if not Link_Start.Is_Valid then
@@ -232,45 +232,64 @@ package body Markdown.Inlines.Parsers is
       Simple_Inline_Parsers.Initialize
         (Self.Parsers, Text, Text.At_First_Character, State);
 
-      return Result : Markdown.Inlines.Inline_Vector do
-         while Cursor.Has_Element loop
-            declare
-               Markup : Markup_Vectors.Vector;
-               Span   : Simple_Inline_Parsers.Inline_Span;
-               Ignore : Boolean;
-            begin
+      --  Iterate over simple parsers and collect their findings into Markup.
+      --  Parse intermediate spans to find emphasis/links delimiters and
+      --  collect delimiters into List.
 
-               Simple_Inline_Parsers.Get_Next_Inline
-                 (Self.Parsers, Text, State, Span);
+      while Cursor.Has_Element loop
+         declare
+            Span   : Simple_Inline_Parsers.Inline_Span;
+            Ignore : Boolean;
+            Item   : Parsers.Markup;
+         begin
 
-               if Span.Is_Set then
-                  if Cursor < Span.From then
-                     Self.Find_Markup (Text, Cursor, Span.From, Markup);
+            Simple_Inline_Parsers.Get_Next_Inline
+              (Self.Parsers, Text, State, Span);
 
-                     Append
-                       (Result,
-                        To_Annotated_Text (Cursor, Markup, Span.From));
-                  end if;
-
-                  Result.Append (Span.Annotation);
-                  Cursor.Set_At (Span.To);
-                  Ignore := Cursor.Forward;
-
-               else
-
-                  Self.Find_Markup
-                    (Text, Cursor, Text.After_Last_Character, Markup);
-
-                  Append
-                    (Result,
-                     To_Annotated_Text
-                       (Cursor, Markup, Text.After_Last_Character));
-
-                  Cursor.Set_After_Last (Text);
+            if Span.Is_Set then
+               if Cursor < Span.From then
+                  Find_Delimiters (Scanner, Text, Cursor, Span.From, List);
                end if;
-            end;
-         end loop;
-      end return;
+
+               Item :=
+                 (Kind       => Simple,
+                  From       => Span.From,
+                  To         => Span.To,
+                  Annotation => Span.Annotation,
+                  Text       => Span.Text);
+
+               Markup.Append (Item);  --  Store begin markup
+
+               Item.From := Span.To;
+               Forward (Item.To, 1);
+
+               Markup.Append (Item);  --  Store end markup
+
+               Cursor.Set_At (Span.To);
+               Ignore := Cursor.Forward;
+
+               Scanner.Reset (After_Space => False);
+
+            else
+
+               Find_Delimiters
+                 (Scanner, Text, Cursor, Text.After_Last_Character, List);
+
+               Cursor.Set_After_Last (Text);
+            end if;
+         end;
+      end loop;
+
+      --  Extract links/images from delimiters' List into Markup
+      Process_Links (Text, Self.Extension.Link_Attributes, Markup, List);
+      --  Extract emphasis from delimiters' List into Markup
+      Process_Emphasis (Markup, List);
+
+      --  Convert Markup pairs into Result
+      return
+        To_Annotated_Text
+          (Text.At_First_Character, Markup, Text.After_Last_Character);
+
    end Parse;
 
    ----------------------
@@ -710,9 +729,14 @@ package body Markdown.Inlines.Parsers is
       Map : array
         (Positive range 1 .. Natural (Markup.Length)) of Markup_Index;
 
+      subtype Positive_2 is Positive range 1 .. 2;
+
+      type Inline_Array is array (Positive_2 range <>) of
+        Markdown.Inlines.Inline;
+
       function To_Annotation
         (Item : Parsers.Markup;
-         Open : Boolean) return Markdown.Inlines.Inline;
+         Open : Boolean) return Inline_Array;
 
       function Less (Left, Right : Positive) return Boolean;
 
@@ -739,7 +763,7 @@ package body Markdown.Inlines.Parsers is
       function Less (Left, Right : Positive) return Boolean is
       begin
          return From (Left) < From (Right)
-           or else (From (Left) = From (Right) and Left < Right);
+           or else (From (Left) = From (Right) and Map (Left) < Map (Right));
       end Less;
 
       ----------
@@ -759,36 +783,58 @@ package body Markdown.Inlines.Parsers is
 
       function To_Annotation
         (Item : Parsers.Markup;
-         Open : Boolean) return Markdown.Inlines.Inline
+         Open : Boolean) return Inline_Array
       is
       begin
          case Item.Kind is
             when Emphasis =>
                if Item.To.Character_Index - Item.From.Character_Index = 1 then
                   return
-                    (if Open then (Kind => Markdown.Inlines.Start_Emphasis)
-                     else (Kind => Markdown.Inlines.End_Emphasis));
+                    [(if Open then (Kind => Markdown.Inlines.Start_Emphasis)
+                     else (Kind => Markdown.Inlines.End_Emphasis))];
                else
                   return
-                    (if Open then (Kind => Markdown.Inlines.Start_Strong)
-                     else (Kind => Markdown.Inlines.End_Strong));
+                    [(if Open then (Kind => Markdown.Inlines.Start_Strong)
+                     else (Kind => Markdown.Inlines.End_Strong))];
                end if;
             when Link =>
                return
-                 (if Open then
+                 [(if Open then
                     (Markdown.Inlines.Start_Link,
                      Item.URL,
                      Item.Title,
                      Item.Attributes)
-                  else (Kind => Markdown.Inlines.End_Link));
+                  else (Kind => Markdown.Inlines.End_Link))];
             when Image =>
                return
-                 (if Open then
+                 [(if Open then
                     (Markdown.Inlines.Start_Image,
                      Item.URL,
                      Item.Title,
                      Item.Attributes)
-                  else (Kind => Markdown.Inlines.End_Image));
+                  else (Kind => Markdown.Inlines.End_Image))];
+            when Simple =>
+               if Open then
+                  case Item.Annotation.Kind is
+                     when Code_Span =>
+                        return [Item.Annotation];
+                     when Start_Link =>
+                        return
+                          [Item.Annotation,
+                           (Markdown.Inlines.Text, Text => Item.Text)];
+                     when others =>
+                        return raise Program_Error;
+                  end case;
+               else
+                  case Item.Annotation.Kind is
+                     when Code_Span =>
+                        return [];
+                     when Start_Link =>
+                        return [(Kind => End_Link)];
+                     when others =>
+                        return raise Program_Error;
+                  end case;
+               end if;
          end case;
       end To_Annotation;
 
@@ -811,7 +857,7 @@ package body Markdown.Inlines.Parsers is
 
       return Result : Markdown.Inlines.Inline_Vector do
 
-         --  Fill Result.Plain_Text and annotation info List
+         --  Fill Result
          while Cursor.Has_Element and Cursor < Limit loop
             if Index in Map'Range and then
               From (Index) = Cursor.Character_Index
@@ -825,11 +871,15 @@ package body Markdown.Inlines.Parsers is
                declare
                   Item : Parsers.Markup renames Markup (Map (Index));
                begin
-                  Result.Append
-                    (To_Annotation (Item, Open => Map (Index) mod 2 = 1));
+                  for Each of
+                    To_Annotation (Item, Open => Map (Index) mod 2 = 1)
+                  loop
+                     Result.Append (Each);
+                  end loop;
 
                   Cursor.Set_At (Item.To);
                   Index := Index + 1;
+
                end;
             else
                Read_Character (Cursor, Text);
