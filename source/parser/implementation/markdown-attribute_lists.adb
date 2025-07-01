@@ -21,11 +21,11 @@ package body Markdown.Attribute_Lists is
    Attribute_Value_Spec : constant Wide_Wide_String :=
      "[ \t]*=[ \t]*(?:" & Attribute_Value & ")";
 
-   Attr : constant Wide_Wide_String :=
+   Attribute_Pattern : constant Wide_Wide_String :=
      "\s*([.#]?" & HTML.Attribute_Name & ")(?:" & Attribute_Value_Spec & ")?";
    --  1 group is Attribute_Name
 
-   Attr_Pattern : VSS.Regular_Expressions.Regular_Expression;
+   Pattern : VSS.Regular_Expressions.Regular_Expression;
 
    -----------
    -- Parse --
@@ -38,10 +38,10 @@ package body Markdown.Attribute_Lists is
       Cursor : VSS.Strings.Character_Iterators.Character_Iterator :=
         Text.Before_First_Character;
    begin
-      if not Attr_Pattern.Is_Valid then
-         Attr_Pattern :=
+      if not Pattern.Is_Valid then
+         Pattern :=
            VSS.Regular_Expressions.To_Regular_Expression
-             (VSS.Strings.To_Virtual_String (Attr));
+             (VSS.Strings.To_Virtual_String (Attribute_Pattern));
       end if;
 
       Self.Text := Text;
@@ -50,7 +50,7 @@ package body Markdown.Attribute_Lists is
          declare
             Match : constant
               VSS.Regular_Expressions.Regular_Expression_Match :=
-                Attr_Pattern.Match (Text, Cursor);
+                Pattern.Match (Text, Cursor);
          begin
             exit when not Match.Has_Match;
 
