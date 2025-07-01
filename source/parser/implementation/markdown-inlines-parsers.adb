@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2025, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -139,7 +139,7 @@ package body Markdown.Inlines.Parsers is
      "(?:" & Attribute & ")?(?:\s+" & Attribute & ")*";
 
    Attributes_Pattern : constant Wide_Wide_String :=
-     "\{(\s*" & Attribute_List & "\s*)\}";
+     "^\{(\s*" & Attribute_List & "\s*)\}";
 
    Attributes : VSS.Regular_Expressions.Regular_Expression;
    --  Regexp of Attributes_Pattern
@@ -367,7 +367,7 @@ package body Markdown.Inlines.Parsers is
 
          declare
             Match : constant VSS.Regular_Expressions.Regular_Expression_Match
-              := Attributes.Match (Text, Last);
+              := Attributes.Match (Text, To);
          begin
             if Match.Has_Match then
                Attr.Parse (Match.Captured (1));

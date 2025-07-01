@@ -1,0 +1,21 @@
+# Introduction
+
+## gnatdoc tests
+
+A simplest markdown test with a single paragraph
+
+```````````````````````````````` example
+Hello world!
+.
+<p>Hello world!</p>
+```````````````````````````````` 
+
+Image attributes loaded from a wrong image (#8)
+
+```````````````````````````````` example
+Img ![a](a.png),
+![b](b.png){width=14pt height=14pt}.
+.
+<p>Img <img alt="a" src="a.png">,
+<img alt="b" src="b.png" style="width: 14pt;height: 14pt">.</p>
+```````````````````````````````` 

@@ -41,6 +41,8 @@ check_markdown: commonmark-spec
 	  grep -E "^Example|^[0-9]+.passed" |\
 	  tee markdown_tests_result | tail
 	diff -u testsuite/commonmark/xfails.txt commonmark-spec/markdown_tests_result
+	python3 commonmark-spec/test/spec_tests.py --program .objs/static/tests/gnatdoc_tests \
+	  --spec testsuite/gnatdoc/tests.txt
 
 commonmark-spec:
 	@echo Checkout commonmark repo with:
