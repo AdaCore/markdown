@@ -31,17 +31,17 @@ package Markdown.Attribute_Lists is
       Text : VSS.Strings.Virtual_String);
 
    function Length (Self : Attribute_List'Class) return Natural;
-   --  Number of attibutes in the attribute list
+   --  Number of attributes in the attribute list
 
    function Name
      (Self  : Attribute_List'Class;
       Index : Positive) return VSS.Strings.Virtual_String;
-   --  Name of the attibute
+   --  Name of the attribute
 
    function Value
      (Self  : Attribute_List'Class;
       Index : Positive) return VSS.Strings.Virtual_String;
-   --  Value of the attibute. No line separator is supported for now
+   --  Value of the attribute. No line separator is supported for now
 
    function Origin_Text
      (Self : Attribute_List'Class) return VSS.Strings.Virtual_String;
