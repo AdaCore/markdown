@@ -96,6 +96,20 @@ package body Markdown.Implementation.Code_Spans is
       end loop;
    end Find_Code_Span;
 
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Open.Is_Valid then  --  Construct Open/Close regexps
+         Open := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Open_Pattern));
+         Close := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Close_Pattern));
+      end if;
+   end Initialize;
+
    ---------------------
    -- Parse_Code_Span --
    ---------------------
@@ -108,12 +122,7 @@ package body Markdown.Implementation.Code_Spans is
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
       Pos   : VSS.Strings.Character_Iterators.Character_Iterator;
    begin
-      if not Open.Is_Valid then  --  Construct Open/Close regexps
-         Open := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Open_Pattern));
-         Close := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Close_Pattern));
-      end if;
+      Initialize;
 
       Span := (Is_Set => False);
 

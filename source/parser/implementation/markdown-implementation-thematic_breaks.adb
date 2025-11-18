@@ -43,10 +43,7 @@ package body Markdown.Implementation.Thematic_Breaks is
       Match  : VSS.Regular_Expressions.Regular_Expression_Match;
 
    begin
-      if not Break.Is_Valid then  --  Construct Break regexp
-         Break := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Break_Pattern));
-      end if;
+      Initialize;
 
       CIP := True;  --  Suppress a warning about uninitialized parameter
       Match := Break.Match (Input.Line.Expanded, Input.First);
@@ -55,5 +52,17 @@ package body Markdown.Implementation.Thematic_Breaks is
          Tag := Thematic_Break'Tag;
       end if;
    end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Break.Is_Valid then  --  Construct Break regexp
+         Break := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Break_Pattern));
+      end if;
+   end Initialize;
 
 end Markdown.Implementation.Thematic_Breaks;

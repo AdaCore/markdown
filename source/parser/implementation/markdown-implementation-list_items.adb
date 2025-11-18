@@ -132,15 +132,7 @@ package body Markdown.Implementation.List_Items is
       Suffix_Length       : VSS.Strings.Character_Count;
       End_Of_Line_Matched : Boolean;
    begin
-      if not Prefix.Is_Valid then  --  Construct Prefix regexp
-         Prefix := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Marker_Pattern));
-      end if;
-
-      if not Indent_1.Is_Valid then  --  Construct Indent_1 regexp
-         Indent_1 := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String ("^  *"));  --  XXX: Fix with "^ +"
-      end if;
+      Initialize;
 
       CIP := True;  --  Suppress a warning about uninitialized parameter
       Match := Prefix.Match (Input.Line.Expanded, Input.First);
@@ -181,6 +173,21 @@ package body Markdown.Implementation.List_Items is
               True);
       end if;
    end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Prefix.Is_Valid then  --  Construct Prefix regexp
+         Prefix := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Marker_Pattern));
+
+         Indent_1 := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String ("^  *"));  --  XXX: Fix with "^ +"
+      end if;
+   end Initialize;
 
    ----------------
    -- Is_Ordered --

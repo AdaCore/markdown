@@ -31,6 +31,9 @@ package Markdown.Parsers is
      (Self : in out Markdown_Parser) return Markdown.Documents.Document;
    --  Return parsed document. After this call the Parse_Line has no effect.
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    use Markdown.Implementation;

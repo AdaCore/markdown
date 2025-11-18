@@ -121,10 +121,7 @@ package body Markdown.Implementation.Fenced_Code_Blocks is
    is
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
-      if not Fence.Is_Valid then  --  Construct Fence regexp
-         Fence := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Fence_Pattern));
-      end if;
+      Initialize;
 
       Match := Fence.Match (Input.Line.Expanded, Input.First);
 
@@ -133,6 +130,18 @@ package body Markdown.Implementation.Fenced_Code_Blocks is
          CIP := False;
       end if;
    end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Fence.Is_Valid then  --  Construct Fence regexp
+         Fence := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Fence_Pattern));
+      end if;
+   end Initialize;
 
    ----------
    -- Text --

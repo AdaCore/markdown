@@ -18,4 +18,7 @@ package Markdown.Implementation.Auto_Links is
    --  Find next auto-link in Text staring From given position. Return
    --  `Is_Set => False` if not found.
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 end Markdown.Implementation.Auto_Links;

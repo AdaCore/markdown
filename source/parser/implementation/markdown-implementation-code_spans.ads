@@ -18,4 +18,7 @@ package Markdown.Implementation.Code_Spans is
    --  Find next code span in Text staring From given position. Return
    --  `Is_Set => False` if not found.
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 end Markdown.Implementation.Code_Spans;

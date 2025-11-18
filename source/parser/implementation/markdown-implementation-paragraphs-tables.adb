@@ -135,8 +135,21 @@ package body Markdown.Implementation.Paragraphs.Tables is
    procedure Detector
      (Input : Input_Position;
       Tag   : in out Ada.Tags.Tag;
-      CIP   : out Can_Interrupt_Paragraph)
-   is
+      CIP   : out Can_Interrupt_Paragraph) is
+   begin
+      Initialize;
+
+      if Input.First.Has_Element then  --  XXX: use Blank_Pattern here
+         Tag := Paragraph'Tag;
+         CIP := False;
+      end if;
+   end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
    begin
       if not Cell.Is_Valid then  --  Construct regexps
          Cell := VSS.Regular_Expressions.To_Regular_Expression
@@ -144,12 +157,7 @@ package body Markdown.Implementation.Paragraphs.Tables is
          Delimiter := VSS.Regular_Expressions.To_Regular_Expression
            (VSS.Strings.To_Virtual_String (Delimiter_Pattern));
       end if;
-
-      if Input.First.Has_Element then  --  XXX: use Blank_Pattern here
-         Tag := Paragraph'Tag;
-         CIP := False;
-      end if;
-   end Detector;
+   end Initialize;
 
    ---------------------
    -- Split_Table_Row --

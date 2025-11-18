@@ -26,6 +26,18 @@ package body Markdown.Implementation.Auto_Links is
    Link : VSS.Regular_Expressions.Regular_Expression;
    --  Regexp of Link_Pattern
 
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Link.Is_Valid then  --  Construct Link regexp
+         Link := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Link_Pattern));
+      end if;
+   end Initialize;
+
    ---------------------
    -- Parse_Auto_Link --
    ---------------------
@@ -37,10 +49,7 @@ package body Markdown.Implementation.Auto_Links is
    is
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
-      if not Link.Is_Valid then  --  Construct Link regexp
-         Link := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Link_Pattern));
-      end if;
+      Initialize;
 
       Match := Link.Match (Text, From);
 
