@@ -29,7 +29,6 @@ Example 59 (lines 1053-1060) Thematic breaks
 Example 65 (lines 1158-1162) ATX headings
 Example 66 (lines 1167-1171) ATX headings
 Example 76 (lines 1269-1277) ATX headings
-Example 79 (lines 1307-1315) ATX headings
 Example 80 (lines 1347-1356) Setext headings
 Example 81 (lines 1361-1368) Setext headings
 Example 82 (lines 1375-1382) Setext headings
@@ -198,4 +197,4 @@ Example 631 (lines 9191-9195) Raw HTML
 Example 632 (lines 9198-9202) Raw HTML
 Example 642 (lines 9305-9311) Hard line breaks
 Example 643 (lines 9314-9320) Hard line breaks
-452 passed, 200 failed, 0 errored, 0 skipped
+453 passed, 199 failed, 0 errored, 0 skipped
