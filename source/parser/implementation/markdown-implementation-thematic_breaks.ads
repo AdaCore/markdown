@@ -18,6 +18,9 @@ package Markdown.Implementation.Thematic_Breaks is
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a Thematic_Break
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    type Thematic_Break is new Abstract_Block with null record;

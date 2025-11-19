@@ -34,6 +34,9 @@ package Markdown.Implementation.List_Items is
    function Has_Blank_Line (Self : List_Item'Class) return Boolean;
    function Ends_With_Blank_Line (Self : List_Item'Class) return Boolean;
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
    type List_Item is new Abstract_Container_Block with record
       Is_Ordered             : Boolean;

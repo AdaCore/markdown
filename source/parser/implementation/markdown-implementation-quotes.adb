@@ -66,10 +66,7 @@ package body Markdown.Implementation.Quotes is
       Match  : VSS.Regular_Expressions.Regular_Expression_Match;
 
    begin
-      if not Prefix.Is_Valid then  --  Construct Prefix regexp
-         Prefix := VSS.Regular_Expressions.To_Regular_Expression
-           (VSS.Strings.To_Virtual_String (Prefix_Pattern));
-      end if;
+      Initialize;
 
       CIP := True;  --  Suppress a warning about uninitialized parameter
       Match := Prefix.Match (Input.Line.Expanded, Input.First);
@@ -78,5 +75,17 @@ package body Markdown.Implementation.Quotes is
          Tag := Quote'Tag;
       end if;
    end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Prefix.Is_Valid then  --  Construct Prefix regexp
+         Prefix := VSS.Regular_Expressions.To_Regular_Expression
+           (VSS.Strings.To_Virtual_String (Prefix_Pattern));
+      end if;
+   end Initialize;
 
 end Markdown.Implementation.Quotes;

@@ -12,6 +12,8 @@ with Markdown.Implementation.Paragraphs;
 procedure Markdown.Parsers.GNATdoc_Enable
   (Self : in out Markdown_Parser'Class) is
 begin
+   Markdown.Implementation.Indented_Code_Blocks.GNATdoc.Initialize;
+
    Self.Register_Block
      (Markdown.Implementation.Indented_Code_Blocks.GNATdoc.Detector'Access);
 

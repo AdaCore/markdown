@@ -34,6 +34,9 @@ package Markdown.Implementation.Paragraphs.Tables is
      (Self : Paragraph; Column : Positive) return Natural;
    --  return 0 for undefined alignment, 1, 2, 3 for left, right and center
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    type Paragraph is new Paragraphs.Paragraph with record

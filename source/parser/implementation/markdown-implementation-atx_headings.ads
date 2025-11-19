@@ -27,6 +27,9 @@ package Markdown.Implementation.ATX_Headings is
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a ATX_Heading
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    type ATX_Heading is new Abstract_Block with record

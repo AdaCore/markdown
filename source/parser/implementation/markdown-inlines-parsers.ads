@@ -38,6 +38,9 @@ package Markdown.Inlines.Parsers is
       Text : VSS.Strings.Virtual_String)
      return Markdown.Inlines.Inline_Vector;
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    type Inline_Parser is tagged limited record

@@ -32,10 +32,7 @@ package body Markdown.Implementation.Indented_Code_Blocks.GNATdoc is
    is
       Match : VSS.Regular_Expressions.Regular_Expression_Match;
    begin
-      if not Indent.Is_Valid then  --  Construct Indent regexp
-         Indent := VSS.Regular_Expressions.To_Regular_Expression
-           ("^  *");  --  XXX: Replace with "^ +"
-      end if;
+      Initialize;
 
       Match := Indent.Match (Input.Line.Expanded, Input.First);
 
@@ -44,5 +41,17 @@ package body Markdown.Implementation.Indented_Code_Blocks.GNATdoc is
          CIP := False;
       end if;
    end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      if not Indent.Is_Valid then  --  Construct Indent regexp
+         Indent := VSS.Regular_Expressions.To_Regular_Expression
+           ("^  *");  --  XXX: Replace with "^ +"
+      end if;
+   end Initialize;
 
 end Markdown.Implementation.Indented_Code_Blocks.GNATdoc;

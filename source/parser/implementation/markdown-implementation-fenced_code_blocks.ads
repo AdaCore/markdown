@@ -28,6 +28,9 @@ package Markdown.Implementation.Fenced_Code_Blocks is
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a Fenced_Code_Block
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    type Fenced_Code_Block is new Abstract_Block with record

@@ -201,22 +201,11 @@ package body Markdown.Inlines.Parsers is
       end if;
    end Forward;
 
-   -----------
-   -- Parse --
-   -----------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   function Parse
-     (Self : Inline_Parser'Class;
-      Text : VSS.Strings.Virtual_String)
-      return Markdown.Inlines.Inline_Vector
-   is
-
-      List    : Emphasis_Delimiters.Delimiter_Vectors.Vector;
-      Markup  : Markup_Vectors.Vector;
-      State   : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
-      Scanner : Emphasis_Delimiters.Scanner;
-      Cursor  : VSS.Strings.Character_Iterators.Character_Iterator :=
-        Text.At_First_Character;
+   procedure Initialize is
    begin
       if not Link_Start.Is_Valid then
          Link_Start := VSS.Regular_Expressions.To_Regular_Expression
@@ -234,6 +223,26 @@ package body Markdown.Inlines.Parsers is
          End_Of_Line := VSS.Regular_Expressions.To_Regular_Expression
            (VSS.Strings.To_Virtual_String (End_Of_Line_Pattern));
       end if;
+   end Initialize;
+
+   -----------
+   -- Parse --
+   -----------
+
+   function Parse
+     (Self : Inline_Parser'Class;
+      Text : VSS.Strings.Virtual_String)
+      return Markdown.Inlines.Inline_Vector
+   is
+
+      List    : Emphasis_Delimiters.Delimiter_Vectors.Vector;
+      Markup  : Markup_Vectors.Vector;
+      State   : Simple_Inline_Parsers.Inline_Span_Vectors.Vector;
+      Scanner : Emphasis_Delimiters.Scanner;
+      Cursor  : VSS.Strings.Character_Iterators.Character_Iterator :=
+        Text.At_First_Character;
+   begin
+      Initialize;
 
       Simple_Inline_Parsers.Initialize
         (Self.Parsers, Text, Text.At_First_Character, State);

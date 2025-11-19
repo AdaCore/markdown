@@ -121,8 +121,6 @@ package body Markdown.Implementation.HTML_Blocks is
    Blank_Pattern : VSS.Regular_Expressions.Regular_Expression;
    --  Blank line pattern
 
-   procedure Initialize_Patterns;
-
    -----------------
    -- Append_Line --
    -----------------
@@ -201,9 +199,7 @@ package body Markdown.Implementation.HTML_Blocks is
       CIP   : out Can_Interrupt_Paragraph)
    is
    begin
-      if not Open_Pattern.Is_Valid then
-         Initialize_Patterns;
-      end if;
+      Initialize;
 
       declare
          Match : constant VSS.Regular_Expressions.Regular_Expression_Match :=
@@ -219,11 +215,11 @@ package body Markdown.Implementation.HTML_Blocks is
       end;
    end Detector;
 
-   -------------------------
-   -- Initialize_Patterns --
-   -------------------------
+   ----------------
+   -- Initialize --
+   ----------------
 
-   procedure Initialize_Patterns is
+   procedure Initialize is
       function "+"
         (Pattern : Wide_Wide_String)
           return VSS.Regular_Expressions.Regular_Expression is
@@ -233,16 +229,18 @@ package body Markdown.Implementation.HTML_Blocks is
                  others                                   => False]));
 
    begin
-      Open_Pattern := +Open_Regexp;
+      if not Open_Pattern.Is_Valid then
+         Open_Pattern := +Open_Regexp;
 
-      Close_Pattern :=
-        [1 => +"</script>|</pre>|</style>",
-         2 => +"-->",
-         3 => +"\?>",
-         4 => +">",
-         5 => +"\]\]>"];
+         Close_Pattern :=
+           [1 => +"</script>|</pre>|</style>",
+            2 => +"-->",
+            3 => +"\?>",
+            4 => +">",
+            5 => +"\]\]>"];
 
-      Blank_Pattern := +"[ \t]*";
-   end Initialize_Patterns;
+         Blank_Pattern := +"[ \t]*";
+      end if;
+   end Initialize;
 
 end Markdown.Implementation.HTML_Blocks;

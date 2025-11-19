@@ -24,6 +24,9 @@ package Markdown.Implementation.HTML_Blocks is
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a HTML_Block
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
 
    subtype HTML_Block_Kind is Positive range 1 .. 7;

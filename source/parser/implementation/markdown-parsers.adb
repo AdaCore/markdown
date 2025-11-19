@@ -15,6 +15,7 @@ with Markdown.Implementation.Fenced_Code_Blocks;
 with Markdown.Implementation.HTML_Blocks;
 with Markdown.Implementation.Indented_Code_Blocks;
 with Markdown.Implementation.List_Items;
+with Markdown.Implementation.Paragraphs.Tables;
 with Markdown.Implementation.Paragraphs;
 with Markdown.Implementation.Quotes;
 with Markdown.Implementation.Thematic_Breaks;
@@ -123,6 +124,25 @@ package body Markdown.Parsers is
          exit when Tag /= Ada.Tags.No_Tag;
       end loop;
    end Find_Block_Start;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
+      Markdown.Implementation.ATX_Headings.Initialize;
+      Markdown.Implementation.Auto_Links.Initialize;
+      Markdown.Implementation.Code_Spans.Initialize;
+      Markdown.Implementation.Fenced_Code_Blocks.Initialize;
+      Markdown.Implementation.HTML_Blocks.Initialize;
+      Markdown.Implementation.Indented_Code_Blocks.Initialize;
+      Markdown.Implementation.List_Items.Initialize;
+      Markdown.Implementation.Paragraphs.Tables.Initialize;
+      Markdown.Implementation.Quotes.Initialize;
+      Markdown.Implementation.Thematic_Breaks.Initialize;
+      Markdown.Inlines.Parsers.Initialize;
+   end Initialize;
 
    ----------------
    -- Parse_Line --

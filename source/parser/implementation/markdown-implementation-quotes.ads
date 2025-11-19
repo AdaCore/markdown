@@ -21,6 +21,9 @@ package Markdown.Implementation.Quotes is
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a block quote
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 private
    type Quote is new Abstract_Container_Block with null record;
 

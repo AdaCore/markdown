@@ -82,6 +82,22 @@ package body Markdown.Implementation.ATX_Headings is
       Match  : VSS.Regular_Expressions.Regular_Expression_Match;
 
    begin
+      Initialize;
+
+      CIP := True;  --  Suppress a warning about uninitialized parameter
+      Match := Prefix.Match (Input.Line.Expanded, Input.First);
+
+      if Match.Has_Match then
+         Tag := ATX_Heading'Tag;
+      end if;
+   end Detector;
+
+   ----------------
+   -- Initialize --
+   ----------------
+
+   procedure Initialize is
+   begin
       if not Prefix.Is_Valid then  --  Construct Prefix regexp
          Prefix := VSS.Regular_Expressions.To_Regular_Expression
            (VSS.Strings.To_Virtual_String (Prefix_Pattern));
@@ -91,13 +107,6 @@ package body Markdown.Implementation.ATX_Headings is
 
          pragma Assert (Prefix.Is_Valid and Suffix.Is_Valid);
       end if;
-
-      CIP := True;  --  Suppress a warning about uninitialized parameter
-      Match := Prefix.Match (Input.Line.Expanded, Input.First);
-
-      if Match.Has_Match then
-         Tag := ATX_Heading'Tag;
-      end if;
-   end Detector;
+   end Initialize;
 
 end Markdown.Implementation.ATX_Headings;

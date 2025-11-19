@@ -21,4 +21,7 @@ package Markdown.Implementation.Indented_Code_Blocks.GNATdoc is
       CIP   : out Can_Interrupt_Paragraph);
    --  The detector procedure to find start of a gnatdoc code block
 
+   procedure Initialize;
+   --  Prepare regexp patterns
+
 end Markdown.Implementation.Indented_Code_Blocks.GNATdoc;
