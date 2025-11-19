@@ -16,7 +16,7 @@ Preferred way to install is to download sources and run
 
 ### Dependencies
 
-This code requires the [VSS library](https://github.com/AdaCore/VSS).
+This code requires the [VSS library](https://github.com/AdaCore/vss-extra).
 
 ## Maintainers
 

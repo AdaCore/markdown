@@ -9,7 +9,7 @@ with VSS.Regular_Expressions;
 package body Markdown.Implementation.ATX_Headings is
 
    Prefix_Pattern : constant Wide_Wide_String :=
-     "^(?:   |  | |)(######|#####|####|###|##|#)(?: |$)";
+     "^(?:   |  | |)(######|#####|####|###|##|#)(?: +|$)";
 
    Suffix_Pattern : constant Wide_Wide_String := " +#* *$";
 
@@ -37,6 +37,8 @@ package body Markdown.Implementation.ATX_Headings is
    overriding function Create
      (Input : not null access Input_Position) return ATX_Heading
    is
+      Ignore : Boolean;
+
       Prefix_Match  : constant VSS.Regular_Expressions.Regular_Expression_Match
         := Prefix.Match (Input.Line.Expanded, Input.First);
 
@@ -50,11 +52,11 @@ package body Markdown.Implementation.ATX_Headings is
          Result.Level := Positive (Prefix_Match.Marker (1).Character_Length);
 
          Input.First.Set_At (Prefix_Match.Last_Marker);
+         Ignore := Input.First.Forward;  --  Move to char after space
 
          if Suffix_Match.Has_Match then
             declare
                Last   : VSS.Strings.Character_Iterators.Character_Iterator;
-               Ignore : Boolean;
             begin
                Last.Set_At (Suffix_Match.First_Marker);
                Ignore := Last.Backward;

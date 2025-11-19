@@ -1,6 +1,6 @@
 name = "markdown"
 description = "Markdown parser"
-version = "25.0.0-dev"
+version = "26.0.0-dev"
 tags = ["markdown", "gfm", "commonmark"]
 
 authors = ["AdaCore"]
@@ -18,4 +18,9 @@ generate_c = false
 "*".ada_version = "Ada2022"
 
 [[depends-on]]
-vss = ">=22.0.0"
+vss_text = "^26"
+vss_extra = "^26"
+
+[[pins]]
+vss_text = { url='https://github.com/AdaCore/vss-text' }
+vss_extra = { url='https://github.com/AdaCore/vss-extra' }

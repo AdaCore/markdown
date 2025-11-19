@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2023, AdaCore
+--  Copyright (C) 2020-2025, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0
 --
@@ -9,6 +9,8 @@
 --
 --  Set of switches for all build modes are the same with Alire. Project
 --  specific switches should be added in Markdown project file itself.
+
+with "vss_text";
 
 abstract project Markdown_Config is
    Crate_Version := "wavefront";
