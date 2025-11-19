@@ -12,11 +12,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Get VSS
-        uses: actions/checkout@v3
-        with:
-          repository: AdaCore/VSS
-          path: subprojects/VSS
       - name: Get CommonMark Spec
         uses: actions/checkout@v3
         with:
@@ -26,14 +21,12 @@ jobs:
       - name: Get GNAT toolchain with alire
         uses: alire-project/setup-alire@v2
         with:
-          toolchain: gnat_native^14 gprbuild^22
+          toolchain: gnat_native^15 gprbuild^25
           version: "nightly"
       - name: Build and test
         shell: bash
         run: |
-          alr pin vss --use=$PWD/subprojects/VSS
+          #alr pin vss_text --use=https://github.com/AdaCore/vss-text
+          #alr pin vss_extra --use=https://github.com/AdaCore/vss-extra
           alr exec -- make all check coverage BUILD_MODE=${{ matrix.build_mode }}
           alr exec -- make install PREFIX=/tmp BUILD_MODE=${{ matrix.build_mode }}
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        if: ${{ matrix.build_mode == 'coverage' }}
