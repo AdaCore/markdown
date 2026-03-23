@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -19,12 +19,11 @@ package Markdown.Implementation.Lists is
    --  Return True if list has an ordered list markers.
 
    function Start (Self : List'Class) return Natural
-     with Pre => Self.Is_Ordered;
+   with Pre => Self.Is_Ordered;
    --  An integer to start counting from for the list items.
 
    function Match
-     (Self : List'Class;
-      Item : Abstract_Block_Access) return Boolean;
+     (Self : List'Class; Item : Abstract_Block_Access) return Boolean;
 
    function Is_Loose (Self : List'Class) return Boolean;
    --  A list is loose if any of its constituent list items are separated by
@@ -36,14 +35,15 @@ private
       null;
    end record;
 
-   overriding function Create (Input : not null access Input_Position)
-     return List is (raise Program_Error with "Unexpected Create");
-   --  List isn't expected to be created with the Create function
+   overriding
+   function Create (Input : not null access Input_Position) return List;
+   --  Calling this will raise Program_Error, since List is not expected
+   --  to be created with the Create function.
 
-   overriding procedure Consume_Continuation_Markers
-     (Self  : in out List;
-      Input : in out Input_Position;
-      Ok    : out Boolean) is null;
+   overriding
+   procedure Consume_Continuation_Markers
+     (Self : in out List; Input : in out Input_Position; Ok : out Boolean)
+   is null;
    --  List doesn't participate in the parsing. It's created in an extra pass
    --  over parsed structure at the latest stage.
 

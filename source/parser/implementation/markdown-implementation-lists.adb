@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -51,8 +51,7 @@ package body Markdown.Implementation.Lists is
    -----------
 
    function Match
-     (Self : List'Class;
-      Item : Abstract_Block_Access) return Boolean
+     (Self : List'Class; Item : Abstract_Block_Access) return Boolean
    is
       use type VSS.Characters.Virtual_Character;
 
@@ -63,11 +62,12 @@ package body Markdown.Implementation.Lists is
       Next : Markdown.Implementation.List_Items.List_Item renames
         Markdown.Implementation.List_Items.List_Item (Item.all);
 
-      First_Marker  : constant VSS.Strings.Virtual_String := First.Marker;
-      Next_Marker : constant VSS.Strings.Virtual_String := Next.Marker;
+      First_Marker : constant VSS.Strings.Virtual_String := First.Marker;
+      Next_Marker  : constant VSS.Strings.Virtual_String := Next.Marker;
    begin
-      return First_Marker.At_Last_Character.Element =
-        Next_Marker.At_Last_Character.Element;
+      return
+        First_Marker.At_Last_Character.Element
+        = Next_Marker.At_Last_Character.Element;
    end Match;
 
    -----------
@@ -82,5 +82,18 @@ package body Markdown.Implementation.Lists is
    begin
       return First.Marker;
    end Start;
+
+   ------------
+   -- Create --
+   ------------
+
+   overriding
+   function Create (Input : not null access Input_Position) return List is
+   begin
+      raise Program_Error with "Unexpected Create";
+      --  This return statement is not executed, but required for the gnatcov
+      --  instrumentation to compile.
+      return (others => <>);
+   end Create;
 
 end Markdown.Implementation.Lists;
