@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -54,8 +54,9 @@ private
       Ok    : in out Boolean);
 
    overriding procedure Complete_Parsing
-     (Self   : in out Paragraph;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser);
+     (Self     : in out Paragraph;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive);
 
    overriding function Table_Columns (Self : Paragraph) return Natural is
       (Self.Column_Count);

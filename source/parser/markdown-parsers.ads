@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -26,6 +26,16 @@ package Markdown.Parsers is
      (Self : in out Markdown_Parser'Class;
       Line : VSS.Strings.Virtual_String);
    --  Parse next line of Markdown text and update internal state of the parser
+
+   procedure Complete_Parsing
+     (Self     : in out Markdown_Parser'Class;
+      Max_Nest : Positive := 100);
+   --  Complete parsing. After this call the Parse_Line has no effect.
+   --  Max_Nest is the maximum number of nested blocks allowed. If exceeded,
+   --  the parser will raise Too_Many_Nested_Block exception.
+
+   Too_Many_Nested_Blocks : exception;
+   --  Raised when the number of nested blocks exceeds the limit.
 
    function Document
      (Self : in out Markdown_Parser) return Markdown.Documents.Document;

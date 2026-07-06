@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -29,8 +29,9 @@ package body Markdown.Implementation.Paragraphs is
    ----------------------
 
    overriding procedure Complete_Parsing
-     (Self   : in out Paragraph;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser) is
+     (Self     : in out Paragraph;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive) is
    begin
       Self.Parser := Parser'Unchecked_Access;
    end Complete_Parsing;

@@ -1,11 +1,12 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
 with Markdown.Implementation.Lists;
 with Markdown.Implementation.List_Items;
+with Markdown.Parsers;
 
 package body Markdown.Implementation is
 
@@ -14,8 +15,9 @@ package body Markdown.Implementation is
    ---------------------
 
    overriding procedure Complete_Parsing
-     (Self   : in out Abstract_Container_Block;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser)
+     (Self     : in out Abstract_Container_Block;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive)
    is
       use type Markdown.Implementation.Lists.List_Access;
 
@@ -23,8 +25,12 @@ package body Markdown.Implementation is
       Result : Block_Vectors.Vector;
       List   : Markdown.Implementation.Lists.List_Access;
    begin
+      if Max_Nest = 1 then
+         raise Markdown.Parsers.Too_Many_Nested_Blocks;
+      end if;
+
       for Item of Self.Children loop
-         Item.Complete_Parsing (Parser);
+         Item.Complete_Parsing (Parser, Max_Nest - 1);
 
          if Item.all in Markdown.Implementation.List_Items.List_Item then
             if List = null or else not List.Match (Item) then
