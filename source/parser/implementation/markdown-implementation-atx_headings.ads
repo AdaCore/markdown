@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -43,8 +43,9 @@ private
      (Input : not null access Input_Position) return ATX_Heading;
 
    overriding procedure Complete_Parsing
-     (Self   : in out ATX_Heading;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser);
+     (Self     : in out ATX_Heading;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive);
 
    function Text (Self : ATX_Heading) return Markdown.Inlines.Inline_Vector is
      (Self.Parser.Parse (Self.Title.Split_Lines));

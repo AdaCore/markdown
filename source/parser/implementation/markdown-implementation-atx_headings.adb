@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -24,8 +24,9 @@ package body Markdown.Implementation.ATX_Headings is
    ----------------------
 
    overriding procedure Complete_Parsing
-     (Self   : in out ATX_Heading;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser) is
+     (Self     : in out ATX_Heading;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive) is
    begin
       Self.Parser := Parser'Unchecked_Access;
    end Complete_Parsing;

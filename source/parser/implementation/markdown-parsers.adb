@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -39,18 +39,18 @@ package body Markdown.Parsers is
    --  put it into Leaf.
 
    procedure Start_Parsing (Self : in out Markdown_Parser'Class);
-   procedure Complete_Parsing (Self : in out Markdown_Parser'Class);
    --  Complete parsing and produce Self.Document
 
    ----------------------
    -- Complete_Parsing --
    ----------------------
 
-   procedure Complete_Parsing (Self : in out Markdown_Parser'Class) is
+   procedure Complete_Parsing
+     (Self : in out Markdown_Parser'Class; Max_Nest : Positive := 100) is
    begin
       Self.State := Completed;
 
-      Self.Open.First_Element.Complete_Parsing (Self.Inline_Parser);
+      Self.Open.First_Element.Complete_Parsing (Self.Inline_Parser, Max_Nest);
 
       Markdown.Documents.Internals.Set
         (Self.Document, Self.Open.First_Element.all);

@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -89,8 +89,9 @@ package Markdown.Implementation is
    --  Return Ok if input was appended to the block.
 
    not overriding procedure Complete_Parsing
-     (Self   : in out Abstract_Block;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser) is null;
+     (Self     : in out Abstract_Block;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive) is null;
    --  Adjust block state at the end of parse process
 
    package Block_Vectors is new Ada.Containers.Vectors
@@ -112,8 +113,9 @@ package Markdown.Implementation is
    --  shift Line.First to skip the marker.
 
    overriding procedure Complete_Parsing
-     (Self   : in out Abstract_Container_Block;
-      Parser : Markdown.Inlines.Parsers.Inline_Parser);
+     (Self     : in out Abstract_Container_Block;
+      Parser   : Markdown.Inlines.Parsers.Inline_Parser;
+      Max_Nest : Positive);
    --  For all container blocks iterate over children and
    --  create List node when needed and move List_Items inside.
 
