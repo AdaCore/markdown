@@ -48,7 +48,6 @@ Example 115 (lines 1878-1893) Indented code blocks
 Example 127 (lines 2078-2088) Fenced code blocks
 Example 129 (lines 2107-2116) Fenced code blocks
 Example 138 (lines 2226-2232) Fenced code blocks
-Example 140 (lines 2249-2260) Fenced code blocks
 Example 141 (lines 2266-2278) Fenced code blocks
 Example 142 (lines 2288-2299) Fenced code blocks
 Example 143 (lines 2302-2313) Fenced code blocks
@@ -84,7 +83,6 @@ Example 218 (lines 3503-3511) Link reference definitions
 Example 227 (lines 3632-3644) Blank lines
 Example 232 (lines 3760-3770) Block quotes
 Example 233 (lines 3776-3786) Block quotes
-Example 237 (lines 3851-3861) Block quotes
 Example 238 (lines 3867-3875) Block quotes
 Example 239 (lines 3891-3896) Block quotes
 Example 240 (lines 3899-3906) Block quotes
@@ -197,4 +195,4 @@ Example 631 (lines 9191-9195) Raw HTML
 Example 632 (lines 9198-9202) Raw HTML
 Example 642 (lines 9305-9311) Hard line breaks
 Example 643 (lines 9314-9320) Hard line breaks
-453 passed, 199 failed, 0 errored, 0 skipped
+455 passed, 197 failed, 0 errored, 0 skipped

@@ -19,3 +19,85 @@ Img ![a](a.png),
 <p>Img <img alt="a" src="a.png">,
 <img alt="b" src="b.png" style="width: 14pt;height: 14pt">.</p>
 ```````````````````````````````` 
+
+An indented code block starts at three spaces, not four
+
+```````````````````````````````` example
+Text.
+
+   code
+.
+<p>Text.</p>
+<pre><code>code
+</code></pre>
+```````````````````````````````` 
+
+A fenced code block
+
+```````````````````````````````` example
+Text.
+
+```
+code
+```
+.
+<p>Text.</p>
+<pre><code>code
+</code></pre>
+```````````````````````````````` 
+
+A code fence is indented by no more than two spaces
+
+```````````````````````````````` example
+Text.
+
+  ```
+  code
+  ```
+.
+<p>Text.</p>
+<pre><code>code
+</code></pre>
+```````````````````````````````` 
+
+A code fence indented by three spaces is a content of an indented code block
+
+```````````````````````````````` example
+Text.
+
+   ```
+   code
+   ```
+.
+<p>Text.</p>
+<pre><code>```
+code
+```
+</code></pre>
+```````````````````````````````` 
+
+A code fence interrupts a paragraph
+
+```````````````````````````````` example
+Text.
+```
+code
+```
+.
+<p>Text.</p>
+<pre><code>code
+</code></pre>
+```````````````````````````````` 
+
+A closing code fence indented by three spaces doesn't close the block
+
+```````````````````````````````` example
+```
+code
+   ```
+```
+.
+<pre><code>code
+   ```
+</code></pre>
+```````````````````````````````` 
