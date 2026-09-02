@@ -1,20 +1,16 @@
 --
---  Copyright (C) 2021-2023, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
 with VSS.Characters;
-with VSS.Regular_Expressions;
 
 package body Markdown.Implementation.Fenced_Code_Blocks is
 
    Fence_Pattern : constant Wide_Wide_String :=
      "^(   |  | |)(?:(``(?:`+)) *([^`]*)|(~~(?:~+)) *([^\f]*))$";
    --  1             2           3        4           5  <- group index
-
-   Fence : VSS.Regular_Expressions.Regular_Expression;
-   --  Regexp of Fence_Pattern
 
    -----------------
    -- Append_Line --
@@ -41,6 +37,9 @@ package body Markdown.Implementation.Fenced_Code_Blocks is
          return;
 
       elsif Match.Has_Match
+         --  Closing fences cannot be indented more than the opening one is
+         --  allowed to be
+        and then Match.Marker (1).Character_Length <= Self.Max_Indent
          --  Closing fences cannot have info string
         and then Match.Captured (3).Is_Empty
         and then Match.Captured (5).Is_Empty

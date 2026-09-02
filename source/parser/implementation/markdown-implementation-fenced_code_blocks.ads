@@ -6,6 +6,8 @@
 
 --  Internal representation of a fenced code block
 
+private with VSS.Regular_Expressions;
+
 with VSS.String_Vectors;
 
 package Markdown.Implementation.Fenced_Code_Blocks is
@@ -34,6 +36,8 @@ package Markdown.Implementation.Fenced_Code_Blocks is
 private
 
    type Fenced_Code_Block is new Abstract_Block with record
+      Max_Indent    : VSS.Strings.Character_Count := 3;
+      --  Maximum indentation of a code fence. Overridden in GNATdoc.
       Indent        : VSS.Strings.Character_Count;
       Fence_Length  : VSS.Strings.Character_Count;
       Is_Tick_Fence : Boolean;
@@ -54,5 +58,8 @@ private
 
    function Info_String (Self : Fenced_Code_Block)
      return VSS.Strings.Virtual_String is (Self.Info_String);
+
+   Fence : VSS.Regular_Expressions.Regular_Expression;
+   --  Regexp of a code fence, see Fence_Pattern in the body
 
 end Markdown.Implementation.Fenced_Code_Blocks;
