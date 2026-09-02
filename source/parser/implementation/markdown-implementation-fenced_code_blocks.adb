@@ -126,7 +126,7 @@ package body Markdown.Implementation.Fenced_Code_Blocks is
 
       if Match.Has_Match then
          Tag := Fenced_Code_Block'Tag;
-         CIP := False;
+         CIP := True;  --  A code fence can interrupt a paragraph
       end if;
    end Detector;
 

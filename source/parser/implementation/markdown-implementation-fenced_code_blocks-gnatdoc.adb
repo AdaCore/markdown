@@ -59,7 +59,7 @@ package body Markdown.Implementation.Fenced_Code_Blocks.GNATdoc is
         and then Match.Marker (1).Character_Length <= Max_Indent
       then
          Tag := GNATdoc_Fenced_Code_Block'Tag;
-         CIP := False;
+         CIP := True;  --  A code fence can interrupt a paragraph
       end if;
    end Detector;
 
