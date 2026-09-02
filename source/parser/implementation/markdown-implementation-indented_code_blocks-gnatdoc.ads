@@ -19,9 +19,8 @@ package Markdown.Implementation.Indented_Code_Blocks.GNATdoc is
      (Input : Input_Position;
       Tag   : in out Ada.Tags.Tag;
       CIP   : out Can_Interrupt_Paragraph);
-   --  The detector procedure to find start of a gnatdoc code block
-
-   procedure Initialize;
-   --  Prepare regexp patterns
+   --  The detector procedure to find start of a gnatdoc code block.
+   --  Regexp patterns are prepared by Indented_Code_Blocks.Initialize, this
+   --  variant has no patterns of its own.
 
 end Markdown.Implementation.Indented_Code_Blocks.GNATdoc;
