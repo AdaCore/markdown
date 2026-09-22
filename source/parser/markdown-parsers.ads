@@ -73,6 +73,9 @@ private
       Open_Leaf : Abstract_Block_Access;
       --  Current open non-container block (if any), e.g. paragraph
 
+      Current_Line : Positive := 1;
+      --  Current source line number
+
       Block_Detectors : Block_Detector_Vectors.Vector;
       --  Known block detectors
 

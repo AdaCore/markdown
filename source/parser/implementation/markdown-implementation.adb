@@ -35,11 +35,13 @@ package body Markdown.Implementation is
          if Item.all in Markdown.Implementation.List_Items.List_Item then
             if List = null or else not List.Match (Item) then
                List := new Markdown.Implementation.Lists.List;
+               List.First_Line_Number := Item.First_Line_Number;
                Result.Append (Abstract_Block_Access (List));
                Found := True;
             end if;
 
             List.Children.Append (Item);
+            List.Last_Line_Number := Item.Last_Line_Number;
          else
             List := null;
             Result.Append (Item);

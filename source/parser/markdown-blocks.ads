@@ -53,6 +53,14 @@ package Markdown.Blocks is
    function Is_Table (Self : Block'Class) return Boolean;
    --  Check if given block is a table (GFM extension)
 
+   function First_Line (Self : Block'Class) return Positive;
+   --  Line number (counting from 1) of the first line of the source text
+   --  spanned by the block
+
+   function Last_Line (Self : Block'Class) return Positive;
+   --  Line number (counting from 1) of the last line of the source text
+   --  spanned by the block
+
    function To_Thematic_Break (Self : Block)
      return Markdown.Blocks.Thematic_Breaks.Thematic_Break
         with Pre => Self.Is_Thematic_Break;

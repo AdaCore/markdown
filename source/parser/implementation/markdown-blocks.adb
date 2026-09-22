@@ -54,6 +54,15 @@ package body Markdown.Blocks is
       end if;
    end Finalize;
 
+   ----------------
+   -- First_Line --
+   ----------------
+
+   function First_Line (Self : Block'Class) return Positive is
+   begin
+      return Self.Data.First_Line_Number;
+   end First_Line;
+
    --------------------
    -- Is_ATX_Heading --
    --------------------
@@ -156,6 +165,15 @@ package body Markdown.Blocks is
         and then Self.Data.all in
           Markdown.Implementation.Thematic_Breaks.Thematic_Break;
    end Is_Thematic_Break;
+
+   ---------------
+   -- Last_Line --
+   ---------------
+
+   function Last_Line (Self : Block'Class) return Positive is
+   begin
+      return Self.Data.Last_Line_Number;
+   end Last_Line;
 
    --------------------
    -- To_ATX_Heading --

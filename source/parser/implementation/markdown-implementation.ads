@@ -29,7 +29,13 @@ package Markdown.Implementation is
    procedure Reference (Self : Abstract_Block_Access);
 
    type Abstract_Block is abstract tagged limited record
-      Counter : System.Atomic_Counters.Atomic_Counter;
+      Counter           : System.Atomic_Counters.Atomic_Counter;
+      First_Line_Number : Positive := 1;
+      --  Line number (counting from 1) of the first line of the source text
+      --  spanned by the block
+      Last_Line_Number  : Positive := 1;
+      --  Line number (counting from 1) of the last line of the source text
+      --  spanned by the block
    end record
      with No_Task_Parts;
 
@@ -45,6 +51,8 @@ package Markdown.Implementation is
       --  One line of the markdown document without end of line characters
       Expanded : VSS.Strings.Virtual_String;
       --  Text with all tabulation characters expanded to spaces
+      Number   : Positive := 1;
+      --  Line number (counting from 1) of this line in the source document
    end record;
    --  One line of the markdown including original and tab expanded values
 
