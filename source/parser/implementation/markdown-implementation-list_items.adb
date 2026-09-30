@@ -58,14 +58,14 @@ package body Markdown.Implementation.List_Items is
          Ok := not
            (Self.Ends_With_Blank_Line
              and Self.Starts_With_Blank_Line
-             and not Self.First_Line);
+             and not Self.On_Marker_Line);
 
          if Ok then
             Self.Ends_With_Blank_Line := True;
          end if;
       end if;
 
-      Self.First_Line := False;
+      Self.On_Marker_Line := False;
    end Consume_Continuation_Markers;
 
    ------------
@@ -92,7 +92,7 @@ package body Markdown.Implementation.List_Items is
          then
             --  Empty line marker: ^\ {0,3}(Marker)(\ {0,4}$).
             Result.Marker_Width := Match.Marker (1).Character_Length + 1;
-            Result.First_Line := True;
+            Result.On_Marker_Line := True;
             Result.Starts_With_Blank_Line := True;
             --  Shift Input.First to end-of-line
             Input.First.Set_After_Last (Input.Line.Expanded);

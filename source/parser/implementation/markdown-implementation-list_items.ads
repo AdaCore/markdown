@@ -51,7 +51,7 @@ private
       --  The last known line of the item was empty
       Has_Blank_Line         : Boolean := False;
       --  The item has at least one empty line (excluding line with the marker)
-      First_Line             : Boolean := False;
+      On_Marker_Line         : Boolean := False;
       --  This is true only for the line with the marker
    end record;
 

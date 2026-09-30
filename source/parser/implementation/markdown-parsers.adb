@@ -72,6 +72,8 @@ package body Markdown.Parsers is
       Block  : Abstract_Block_Access;
    begin
       Block := new Abstract_Block'Class'(Constructor (Tag, Line'Access));
+      Block.First_Line_Number := Line.Line.Number;
+      Block.Last_Line_Number  := Line.Line.Number;
 
       if not Containers.Is_Empty then
          Containers.Last_Element.Children.Append (Block);
@@ -161,7 +163,8 @@ package body Markdown.Parsers is
       New_Containers : Container_Vectors.Vector;
       New_Leaf       : Abstract_Block_Access;
       CIP            : Can_Interrupt_Paragraph;
-      Expanded_Line  : aliased Input_Line := (Line, Line);
+      Line_Number    : constant Positive := Self.Current_Line;
+      Expanded_Line  : aliased Input_Line := (Line, Line, Line_Number);
       Input          : aliased Input_Position :=
         (Line  => Expanded_Line'Unchecked_Access,
          First => Expanded_Line.Expanded.At_First_Character);
@@ -176,6 +179,8 @@ package body Markdown.Parsers is
             null;
       end case;
 
+      Self.Current_Line := Self.Current_Line + 1;
+
       --  First we iterate through the open container blocks. Each block
       --  imposes a condition that the line must satisfy if the block is to
       --  remain open. For example, a block quote requires a '>' character. We
@@ -186,6 +191,7 @@ package body Markdown.Parsers is
 
          exit when not Match;
 
+         Block.Last_Line_Number := Line_Number;
          Open.Append (Block);
       end loop;
 
@@ -200,6 +206,7 @@ package body Markdown.Parsers is
          Self.Open_Leaf.Append_Line (Input, CIP, Match);
 
          if Match then
+            Self.Open_Leaf.Last_Line_Number := Line_Number;
             Done := True;
             Tag := Ada.Tags.No_Tag;
          else
